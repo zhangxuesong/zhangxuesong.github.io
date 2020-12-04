@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>文章列表 on 扫地小僧</title>
+		<title>文章列表 on 码农Joseph</title>
 		<link>https://zhangxuesong.github.io/posts/</link>
-		<description>Recent content in 文章列表 on 扫地小僧</description>
+		<description>Recent content in 文章列表 on 码农Joseph</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
-		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 扫地小僧 和出处链接。</copyright>
+		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
 		<lastBuildDate>Fri, 04 Dec 2020 10:11:10 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
 		
