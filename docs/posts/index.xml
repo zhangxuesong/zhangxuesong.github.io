@@ -35,24 +35,33 @@
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;github.com/labstack/echo&#34;</span>
 </code></pre></div><p>在工作区中，一个代码包的导入路径就是从<code>src</code>的子目录，到该包的实际存储位置的相对路径。</p>
 <p>所以说，<code>Go</code>语言源码的组织方式就是以环境变量<code>GOPATH</code>、工作区、<code>src</code>目录和代码包为主线的。一般情况下，<code>Go</code>语言的源码文件都需要被存放在环境变量<code>GOPATH</code>包含的某个工作区（目录）中的<code>src</code>目录下的某个代码包（目录）中。</p>
-<h3 id="2了解源码安装后的结果">2、了解源码安装后的结果</h3>
+<h3 id="2源码安装后的结果">2、源码安装后的结果</h3>
 <p>源码文件通常放在工作区下的<code>src</code>子目录下；安装后如果产生了归档文件，就会放到该工作区的<code>pkg</code>子目录；如果产生了可以执行文件，就会放进该工作区的<code>bin</code>子目录下。</p>
 <p>源码文件是以代码包的形式组织起来的，一个代码包其实就对应一个目录。安装某个代码包而产生的归档文件是与这个代码包同名的。</p>
-<p>放置他的相对目录就是该包的导入路径的直接父级。比如，一个已存在的代码包的导入路径是：<code>github.com/labstack/echo</code>那么执行命令</p>
+<p>放置他的相对目录就是该包的导入路径的直接父级。</p>
+<p>比如，一个已存在的代码包的导入路径是：<code>github.com/labstack/echo</code>那么执行命令</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">install</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">labstack</span><span class="o">/</span><span class="nx">echo</span>
 </code></pre></div><p>生成的归档文件就是：<code>github.com/labstack</code>，文件名为<code>echo.a</code>。</p>
 <p>上面这个代码包还有一层含义就是：该代码包的源码文件存放与<code>Github</code>上的<code>labstack</code>组的代码仓库<code>echo</code>中。</p>
-<p>工作区通常会有<code>src</code>，<code>pkg</code>，<code>bin</code>，期中<code>src</code>存放源码文件，<code>pkg</code>存放归档文件，<code>bin</code>存放可执行文件</p>
+<p>归档文件的相对目录与<code>pkg</code>目录直接还有一层平台相关目录。平台相关目录的名称是由<code>build</code>（也称“构建”）的目标操作系统、下划线和目标计算架构的代号组成的。如：<code>linux_amd64</code>。</p>
 <p><p class="md__image">
   <img src="../image/2fdfb5620e072d864907870e61ae5f3c.png"
     alt=""  />
 </p>
 </p>
-<p>上图 <code>pkg</code> 下的 <code>平台相关目录</code> 在新版本已经被 <code>mod</code> 代替</p>
-<p>源码文件分命令源码文件和库源码文件，有<code>main</code>入库的是命令源码文件，没有的是库源码文件，只能被命令源码文件引用</p>
-<p>多工作区查找依赖包会根据<code>GOPATH</code>指定的工作区顺序查找，找到后就不再继续查找后面工作区</p>
-<p>多工作区存在相同依赖包不会产生冲突，原因如上</p>
-<p>编译时默认不编译依赖包，优先使用<code>pkg</code>中编译好的归档文件做静态链接</p>
+<p>所以，我们知道某个工作区的 src 子目录下的源码文件在安装后一般会被放置到当前工作区的 pkg 子目录下对应的目录中，或者被直接放置到该工作区的 bin 子目录中。</p>
+<h3 id="3构建和安装-go-程序的过程">3、构建和安装 Go 程序的过程</h3>
+<p>构建使用命令<code>go build</code>，安装使用命令<code>go install</code>。构建和安装代码时都会执行编译、打包等操作，并且这些操作生成的任何文件都会先保存在某个临时目录中。</p>
+<p>如果构建的是库源码文件，操作产生的结果文件只会存放在临时目录中。这里的构建的主要意义在于检查和验证。</p>
+<p>如果构建的是命令源码文件，操作产生过的结果文件会被搬运到源码文件所在的目录中。</p>
+<p>安装操作会先执行构建，然后执行链接操作，并且把结果文件搬运到指定目录。</p>
+<p>进一步说，如果安装的是库源码文件，那么结果文件会被搬运到所在工作区的<code>pkg</code>目录下的某个子目录中。</p>
+<p>如果安装的是命令源码文件，那么结果过文件会被搬运到所在工作区的<code>bin</code>目录中或者环境变量<code>GOBIN</code>指向的目录中。</p>
+<h2 id="补充">补充</h2>
+<h3 id="1go语言在多个工作区中查找依赖包是以怎样的顺序进行的">1、<code>Go</code>语言在多个工作区中查找依赖包是以怎样的顺序进行的？</h3>
+<p>以<code>GOPATH</code>指定的工作区顺序查找，找到即返回，找不到则报错。</p>
+<h3 id="2多个工作区中都存在导入路径相同的代码包会产生冲突吗">2、多个工作区中都存在导入路径相同的代码包会产生冲突吗？</h3>
+<p>不会冲突，原因同上。同理，不同工作区的两个相同导入路径的代码包，编译的时候不会编译第二个工作区的代码包。</p>
 ]]></content>
 		</item>
 		
