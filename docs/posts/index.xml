@@ -6,8 +6,30 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Fri, 04 Dec 2020 10:11:10 +0800</lastBuildDate>
+		<lastBuildDate>Sat, 05 Dec 2020 11:10:05 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Gopath和工作区</title>
+			<link>https://zhangxuesong.github.io/posts/basic/gopath/</link>
+			<pubDate>Sat, 05 Dec 2020 11:10:05 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/basic/gopath/</guid>
+			<description>工作区：存放go源码的目录，可以设置多个 GOPATH：指向工作区的路径，默认第一个为当前工作区 工作区通常会有src，pkg，bin，期中sr</description>
+			<content type="html"><![CDATA[<p>工作区：存放go源码的目录，可以设置多个
+GOPATH：指向工作区的路径，默认第一个为当前工作区</p>
+<p>工作区通常会有src，pkg，bin，期中src存放源码文件，pkg存放归档文件，bin存放可执行文件</p>
+<p><p class="md__image">
+  <img src="../posts/basic/image/2fdfb5620e072d864907870e61ae5f3c.png"
+    alt=""  />
+</p>
+</p>
+<p>源码文件分命令源码文件和库源码文件，有main入库的是命令源码文件，没有的是库源码文件，只能被命令源码文件引用</p>
+<p>多工作区查找依赖包会根据GOPATH指定的工作区顺序查找，找到后就不再继续查找后面工作区</p>
+<p>多工作区存在相同依赖包不会产生冲突，原因如上</p>
+<p>编译时默认不编译依赖包，优先使用pkg中编译好的归档文件做静态链接</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>My First Post</title>

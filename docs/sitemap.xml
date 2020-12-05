@@ -3,27 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://zhangxuesong.github.io/tags/go/</loc>
+    <lastmod>2020-12-05T11:10:05+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/tags/golang/</loc>
+    <lastmod>2020-12-05T11:10:05+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/basic/gopath/</loc>
+    <lastmod>2020-12-05T11:10:05+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/tags/</loc>
+    <lastmod>2020-12-05T11:10:05+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/</loc>
+    <lastmod>2020-12-05T11:10:05+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/</loc>
+    <lastmod>2020-12-05T11:10:05+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://zhangxuesong.github.io/posts/basic/my-first-post/</loc>
     <lastmod>2020-12-04T10:11:10+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://zhangxuesong.github.io/tags/</loc>
-    <lastmod>2020-12-04T10:11:10+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://zhangxuesong.github.io/tags/%E6%96%87%E7%AB%A0/</loc>
-    <lastmod>2020-12-04T10:11:10+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zhangxuesong.github.io/posts/</loc>
-    <lastmod>2020-12-04T10:11:10+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zhangxuesong.github.io/</loc>
     <lastmod>2020-12-04T10:11:10+08:00</lastmod>
   </url>
   
