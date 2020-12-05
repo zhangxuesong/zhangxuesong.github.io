@@ -101,7 +101,7 @@
 <p>比如，一个已存在的代码包的导入路径是：<code>github.com/labstack/echo</code>那么执行命令</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">install</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">labstack</span><span class="o">/</span><span class="nx">echo</span>
 </code></pre></div><p>生成的归档文件就是：<code>github.com/labstack</code>，文件名为<code>echo.a</code>。</p>
-<p>上面这个代码包还有一层含义就是：该代码包的源码文件存放与<code>Github</code>上的<code>labstack</code>组的代码仓库<code>echo</code>中。</p>
+<p>上面这个代码包还有一层含义就是：该代码包的源码文件存放于<code>Github</code>上的<code>labstack</code>组的代码仓库<code>echo</code>中。</p>
 <p>归档文件的相对目录与<code>pkg</code>目录直接还有一层平台相关目录。平台相关目录的名称是由<code>build</code>（也称“构建”）的目标操作系统、下划线和目标计算架构的代号组成的。如：<code>linux_amd64</code>。</p>
 <p><p class="md__image">
   <img src="../image/2fdfb5620e072d864907870e61ae5f3c.png"
