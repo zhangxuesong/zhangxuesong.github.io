@@ -16,18 +16,19 @@
 			
 			<guid>https://zhangxuesong.github.io/posts/basic/gopath/</guid>
 			<description>工作区：存放go源码的目录，可以设置多个 GOPATH：指向工作区的路径，默认第一个为当前工作区 工作区通常会有src，pkg，bin，期中sr</description>
-			<content type="html"><![CDATA[<p>工作区：存放go源码的目录，可以设置多个
-GOPATH：指向工作区的路径，默认第一个为当前工作区</p>
-<p>工作区通常会有src，pkg，bin，期中src存放源码文件，pkg存放归档文件，bin存放可执行文件</p>
+			<content type="html"><![CDATA[<p>工作区：存放<code>go</code>源码的目录，可以设置多个</p>
+<p>GOPATH：指向工作区的路径，默认第一个为当前工作区</p>
+<p>工作区通常会有<code>src</code>，<code>pkg</code>，<code>bin</code>，期中<code>src</code>存放源码文件，<code>pkg</code>存放归档文件，<code>bin</code>存放可执行文件</p>
 <p><p class="md__image">
-  <img src="../posts/basic/image/2fdfb5620e072d864907870e61ae5f3c.png"
+  <img src="../image/2fdfb5620e072d864907870e61ae5f3c.png"
     alt=""  />
 </p>
 </p>
-<p>源码文件分命令源码文件和库源码文件，有main入库的是命令源码文件，没有的是库源码文件，只能被命令源码文件引用</p>
-<p>多工作区查找依赖包会根据GOPATH指定的工作区顺序查找，找到后就不再继续查找后面工作区</p>
+<p>上图 <code>pkg</code> 下的 <code>平台相关目录</code> 在新版本已经被 <code>mod</code> 代替</p>
+<p>源码文件分命令源码文件和库源码文件，有<code>main</code>入库的是命令源码文件，没有的是库源码文件，只能被命令源码文件引用</p>
+<p>多工作区查找依赖包会根据<code>GOPATH</code>指定的工作区顺序查找，找到后就不再继续查找后面工作区</p>
 <p>多工作区存在相同依赖包不会产生冲突，原因如上</p>
-<p>编译时默认不编译依赖包，优先使用pkg中编译好的归档文件做静态链接</p>
+<p>编译时默认不编译依赖包，优先使用<code>pkg</code>中编译好的归档文件做静态链接</p>
 ]]></content>
 		</item>
 		
