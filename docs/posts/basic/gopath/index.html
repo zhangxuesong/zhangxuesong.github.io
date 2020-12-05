@@ -8,23 +8,23 @@
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="Gopath和工作区">
-<meta itemprop="description" content="工作区：存放go源码的目录，可以设置多个 GOPATH：指向工作区的路径，默认第一个为当前工作区 工作区通常会有src，pkg，bin，期中sr">
+<meta itemprop="description" content="前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G">
 <meta itemprop="datePublished" content="2020-12-05T11:10:05+08:00" />
 <meta itemprop="dateModified" content="2020-12-05T11:10:05+08:00" />
-<meta itemprop="wordCount" content="273">
+<meta itemprop="wordCount" content="1349">
 
 
 
 <meta itemprop="keywords" content="Go," />
 <meta property="og:title" content="Gopath和工作区" />
-<meta property="og:description" content="工作区：存放go源码的目录，可以设置多个 GOPATH：指向工作区的路径，默认第一个为当前工作区 工作区通常会有src，pkg，bin，期中sr" />
+<meta property="og:description" content="前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://zhangxuesong.github.io/posts/basic/gopath/" />
 <meta property="article:published_time" content="2020-12-05T11:10:05+08:00" />
 <meta property="article:modified_time" content="2020-12-05T11:10:05+08:00" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Gopath和工作区"/>
-<meta name="twitter:description" content="工作区：存放go源码的目录，可以设置多个 GOPATH：指向工作区的路径，默认第一个为当前工作区 工作区通常会有src，pkg，bin，期中sr"/>
+<meta name="twitter:description" content="前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -75,8 +75,32 @@
 				<h1>Gopath和工作区</h1>
 			</header>
 			<div class="content">
-				<p>工作区：存放<code>go</code>源码的目录，可以设置多个</p>
-<p>GOPATH：指向工作区的路径，默认第一个为当前工作区</p>
+				<h1 id="前言">前言<a href="#前言" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>我们都知道 <code>Go</code> 的环境安装需要配置三个环境变量，他们分别是：</p>
+<ul>
+<li>GPROOT：<code>Go</code>语言安装根目录的路径，也就是<code>Go</code>语言的安装路径。</li>
+<li>GOBIN：<code>Go</code>程序生成的可执行文件（executable file）的路径。</li>
+<li>GOPATH：指向工作区目录的路径，是我们自定义的工作空间，可定义多个。</li>
+</ul>
+<h1 id="设置-gopath-有什么意义">设置 <code>GOPATH</code> 有什么意义？<a href="#设置-gopath-有什么意义" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>之前只知道<code>GOPATH</code>是<code>Go</code>语言的工作目录，他的值是一个或者多个路径（不同系统分隔符不同），每个路径代表<code>Go</code>语言的一个工作区。</p>
+<p>我们利用这些工作区去防止<code>Go</code>语言的源码文件（source file），已经安装后的归档文件（archive file）和可执行文件（executable file）。</p>
+<p>事实上，由于<code>Go</code>语言项目在其生命周期内的所有操作（编码、依赖管理、构建、测试、安装等）基本上都是围绕<code>GOPATH</code>和工作区进行的。所以它的背后还有以下几个知识点，分别是：</p>
+<h2 id="1go语言源码的组织方式">1、<code>Go</code>语言源码的组织方式<a href="#1go语言源码的组织方式" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><code>Go</code>语言的源码是以代码包为基本单位的。在文件系统中，这些代码包和目录是一一对应的。由于目录可以有子目录，所以代码包也可以有子包。</p>
+<p>一个代码包中可以包含任意个以<code>.go</code>为扩展名的源码文件，这些源码文件都需要被声明属于同一个代码包。</p>
+<p>代码包的名称一般会与源码文件所在的目录同名。如果不同名，那么在构建、安装的过程中会以代码包名称为准。</p>
+<p>每个代码包都有导入路径。代码包的导入路径是其他代码在使用该包中的程序实体时，需要引入的路径。在实际使用程序实体前，我们必须先导入其所在的代码包。具体方式就是<code>import</code>该包的导入路径。就像这样：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;github.com/labstack/echo&#34;</span>
+</code></pre></div><p>在工作区中，一个代码包的导入路径就是从<code>src</code>的子目录，到该包的实际存储位置的相对路径。</p>
+<p>所以说，<code>Go</code>语言源码的组织方式就是以环境变量<code>GOPATH</code>、工作区、<code>src</code>目录和代码包为主线的。一般情况下，<code>Go</code>语言的源码文件都需要被存放在环境变量<code>GOPATH</code>包含的某个工作区（目录）中的<code>src</code>目录下的某个代码包（目录）中。</p>
+<h2 id="2了解源码安装后的结果">2、了解源码安装后的结果<a href="#2了解源码安装后的结果" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>源码文件通常放在工作区下的<code>src</code>子目录下；安装后如果产生了归档文件，就会放到该工作区的<code>pkg</code>子目录；如果产生了可以执行文件，就会放进该工作区的<code>bin</code>子目录下。</p>
+<p>源码文件是以代码包的形式组织起来的，一个代码包其实就对应一个目录。安装某个代码包而产生的归档文件是与这个代码包同名的。</p>
+<p>放置他的相对目录就是该包的导入路径的直接父级。比如，一个已存在的代码包的导入路径是：<code>github.com/labstack/echo</code>那么执行命令</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">install</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">labstack</span><span class="o">/</span><span class="nx">echo</span>
+</code></pre></div><p>生成的归档文件就是：<code>github.com/labstack</code>，文件名为<code>echo.a</code>。</p>
+<p>上面这个代码包还有一层含义就是：该代码包的源码文件存放与<code>Github</code>上的<code>labstack</code>组的代码仓库<code>echo</code>中。</p>
 <p>工作区通常会有<code>src</code>，<code>pkg</code>，<code>bin</code>，期中<code>src</code>存放源码文件，<code>pkg</code>存放归档文件，<code>bin</code>存放可执行文件</p>
 <p><p class="md__image">
   <img src="../image/2fdfb5620e072d864907870e61ae5f3c.png"
@@ -96,13 +120,18 @@
 				<p>
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
 				</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>273 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1349 字</p>
 				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-05 11:10 &#43;0800</p>
 			</footer>
 		</article>
 		<aside id="toc">
 			<div class="toc-title">目录</div>
-			<nav id="TableOfContents"></nav>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1go语言源码的组织方式">1、<code>Go</code>语言源码的组织方式</a></li>
+    <li><a href="#2了解源码安装后的结果">2、了解源码安装后的结果</a></li>
+  </ul>
+</nav>
 		</aside>
 		<div class="post-nav thin">
 			<a class="prev-post" href="https://zhangxuesong.github.io/posts/basic/my-first-post/">

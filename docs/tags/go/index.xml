@@ -14,7 +14,7 @@
       <pubDate>Sat, 05 Dec 2020 11:10:05 +0800</pubDate>
       
       <guid>https://zhangxuesong.github.io/posts/basic/gopath/</guid>
-      <description>工作区：存放go源码的目录，可以设置多个 GOPATH：指向工作区的路径，默认第一个为当前工作区 工作区通常会有src，pkg，bin，期中sr</description>
+      <description>前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G</description>
     </item>
     
   </channel>
