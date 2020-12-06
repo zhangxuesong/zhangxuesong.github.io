@@ -6,8 +6,34 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Sat, 05 Dec 2020 11:10:05 +0800</lastBuildDate>
+		<lastBuildDate>Sun, 06 Dec 2020 16:42:20 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>go build和go get</title>
+			<link>https://zhangxuesong.github.io/posts/basic/go_build_get/</link>
+			<pubDate>Sun, 06 Dec 2020 16:42:20 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/basic/go_build_get/</guid>
+			<description>go build go build运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。 使用命令g</description>
+			<content type="html"><![CDATA[<h2 id="go-build"><code>go build</code></h2>
+<p><code>go build</code>运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。</p>
+<p>使用命令<code>go build -a</code>可以强制编译依赖包，即使依赖的是标准库中的代码包。</p>
+<p>使用命令<code>go build -i</code>不但能强制编译依赖包，还会安装他们的归档文件。</p>
+<p>使用命令<code>go build -x</code>可以看到具体执行了哪些操作，也可以使用<code>go build -n</code>只查看而不操作。</p>
+<p>使用命令<code>go build -v</code>可以看到编译的代码包的名称。</p>
+<h2 id="go-get"><code>go get</code></h2>
+<p><code>go get</code>会自动从一些主流共用代码仓库下载代码包，并且安装到<code>GOPATH</code>指向的第一个工作区中的对应目录。如果设置了<code>GOBIN</code>,那面仅包含命令源码文件的代码包会被安装到<code>GOBIN</code>指向的目录。</p>
+<p>常用参数：</p>
+<ul>
+<li><code>-u</code>下载并安装代码包，不论工作区中是否已存在。</li>
+<li><code>-d</code>只下载不安装代码包。</li>
+<li><code>-fix</code>下载代码包后先运行一个当前<code>Go</code>版本的修正代码工具，然后安装。</li>
+<li><code>-t</code>同时下载测试所需代码包。</li>
+<li><code>-insecure</code>允许通过非安全的网络协议下载和安装代码包，比如<code>HTTP</code>协议。</li>
+</ul>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Gopath和工作区</title>

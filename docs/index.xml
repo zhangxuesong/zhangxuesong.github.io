@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Sat, 05 Dec 2020 11:10:05 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 06 Dec 2020 16:42:20 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>go build和go get</title>
+      <link>https://zhangxuesong.github.io/posts/basic/go_build_get/</link>
+      <pubDate>Sun, 06 Dec 2020 16:42:20 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/basic/go_build_get/</guid>
+      <description>go build go build运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。 使用命令g</description>
+    </item>
+    
     <item>
       <title>Gopath和工作区</title>
       <link>https://zhangxuesong.github.io/posts/basic/gopath/</link>
