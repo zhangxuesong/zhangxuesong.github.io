@@ -1,22 +1,81 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-	<channel>
-		<title>文章列表 on 码农Joseph</title>
-		<link>https://zhangxuesong.github.io/posts/</link>
-		<description>Recent content in 文章列表 on 码农Joseph</description>
-		<generator>Hugo -- gohugo.io</generator>
-		<language>en</language>
-		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Mon, 07 Dec 2020 14:05:35 +0800</lastBuildDate>
-		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-		
-		<item>
-			<title>命令源码文件和 flag 库</title>
-			<link>https://zhangxuesong.github.io/posts/basic/command_source/</link>
-			<pubDate>Mon, 07 Dec 2020 14:05:35 +0800</pubDate>
-			
-			<guid>https://zhangxuesong.github.io/posts/basic/command_source/</guid>
-			<description>前言 写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如： 命令源码文件 库源码文件 测试源码文件 他们也有不同的用途和规则。 命令源码文件</description>
-			<content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="命令源码文件和 flag 库">
+<meta itemprop="description" content="前言 写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如： 命令源码文件 库源码文件 测试源码文件 他们也有不同的用途和规则。 命令源码文件">
+<meta itemprop="datePublished" content="2020-12-07T14:05:35+08:00" />
+<meta itemprop="dateModified" content="2020-12-07T14:05:35+08:00" />
+<meta itemprop="wordCount" content="1725">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="命令源码文件和 flag 库" />
+<meta property="og:description" content="前言 写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如： 命令源码文件 库源码文件 测试源码文件 他们也有不同的用途和规则。 命令源码文件" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/basic/command_source/" />
+<meta property="article:published_time" content="2020-12-07T14:05:35+08:00" />
+<meta property="article:modified_time" content="2020-12-07T14:05:35+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="命令源码文件和 flag 库"/>
+<meta name="twitter:description" content="前言 写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如： 命令源码文件 库源码文件 测试源码文件 他们也有不同的用途和规则。 命令源码文件"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>命令源码文件和 flag 库</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-07</span></div>
+				<h1>命令源码文件和 flag 库</h1>
+			</header>
+			<div class="content">
+				<h2 id="前言">前言<a href="#前言" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如：</p>
 <ul>
 <li>命令源码文件</li>
@@ -24,7 +83,7 @@
 <li>测试源码文件</li>
 </ul>
 <p>他们也有不同的用途和规则。</p>
-<h2 id="命令源码文件">命令源码文件</h2>
+<h2 id="命令源码文件">命令源码文件<a href="#命令源码文件" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p>命令源码文件是程序的运行入口，是每个可独立运行的程序必须拥有的。通过执行构建和安装，生成其对应的可执行文件，可执行文件一般与命令源码文件的父级目录同名。</p>
 <p>如果一个源码文件声明属于<code>main</code>包，并且包含一个无参数声明并且无结果声明的<code>main</code>函数，那面它就是命令源码文件，如：</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
@@ -39,7 +98,7 @@
 <p>通常模块化编程时，我们会把代码拆分到多个文件，甚至拆分到不同的代码包中。但不管怎样，对于一个独立的程序来说，命令源码文件永远也只会有一个。如果有与命令源码文件同包的源码文件，那么它们也应该声明属于main包。</p>
 </blockquote>
 <p>通过构建或安装命令源码文件可以生成可执行文件，这里的可执行文件就可以视为“命令”，既然是命令，那面就应该具备接受参数的能力。</p>
-<h3 id="命令源码文件怎样接收参数">命令源码文件怎样接收参数</h3>
+<h3 id="命令源码文件怎样接收参数">命令源码文件怎样接收参数<a href="#命令源码文件怎样接收参数" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>接收参数我们需要用到 <code>flag</code> 包 ，它是 <code>Go</code> 语言标准库提供的专门解析命令行参数的代码包。具体怎么使用呢，我们来看代码：</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
@@ -69,7 +128,7 @@
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">flag</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
 </code></pre></div><p>参数列表少了第一个。</p>
 <p>函数  <code>flag.Parse()</code> 用于真正解析命令参数，并把它们赋值给相应变量。对该函数的调用必须在所有命令参数存储载体声明（变量 <code>name</code> 声明）和设置（对 <code>flag.StringVal()</code> 调用）之后，并且在读取任何命令参数值之前进行。所以，我们最好把它放在 <code>main</code> 函数体的第一行。</p>
-<h3 id="怎样在运行命令源码文件的时候传入参数怎样查看参数说明">怎样在运行命令源码文件的时候传入参数，怎样查看参数说明</h3>
+<h3 id="怎样在运行命令源码文件的时候传入参数怎样查看参数说明">怎样在运行命令源码文件的时候传入参数，怎样查看参数说明<a href="#怎样在运行命令源码文件的时候传入参数怎样查看参数说明" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>把上面代码保存到 <code>main.go</code> 文件，运行下面命令就可以为参数 <code>name</code> 传值：</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">run</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span> <span class="o">-</span><span class="nx">name</span><span class="p">=</span><span class="s">&#34;golang&#34;</span>
 </code></pre></div><p>运行后，输出结果：</p>
@@ -90,8 +149,8 @@
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Usage</span> <span class="nx">of</span> <span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">:</span>
   <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
         <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
-</code></pre></div><h3 id="怎样自定义命令源码文件的参数使用说明">怎样自定义命令源码文件的参数使用说明</h3>
-<h4 id="1对变量-flagusage-重新赋值">1、对变量 <code>flag.Usage</code> 重新赋值</h4>
+</code></pre></div><h3 id="怎样自定义命令源码文件的参数使用说明">怎样自定义命令源码文件的参数使用说明<a href="#怎样自定义命令源码文件的参数使用说明" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<h4 id="1对变量-flagusage-重新赋值">1、对变量 <code>flag.Usage</code> 重新赋值<a href="#1对变量-flagusage-重新赋值" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <p><code>flag.Usage</code> 的类型是 <code>func()</code>，是一种无参数声明且无返回结果声明的函数类型。其在声明的时候就已经被赋值了，所以运行命令 <code>--help</code> 时才能看到结果。</p>
 <p>我们对 <code>flag.Usage</code> 进行赋值必须在 <code>flag.Parse</code> 之前，如：</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span>  <span class="p">{</span>
@@ -106,7 +165,7 @@
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">参数使用说明</span><span class="p">:</span>
   <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
         <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
-</code></pre></div><h4 id="2对变量-flagcommandline-重新赋值">2、对变量 <code>flag.CommandLine</code> 重新赋值</h4>
+</code></pre></div><h4 id="2对变量-flagcommandline-重新赋值">2、对变量 <code>flag.CommandLine</code> 重新赋值<a href="#2对变量-flagcommandline-重新赋值" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <p>我们在调用 <code>flag</code> 包中的一些函数如：<code>StringVal</code>、<code>Parse</code> 时实际在调用 <code>flag.CommandLine</code> 变量的对应方法。</p>
 <p><code>flag.CommandLine</code> 相当于默认的命令参数容器，通过对其重新赋值，可以更深层次的定制当前命令源码文件的参数说明。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
@@ -168,7 +227,7 @@
 <span class="nx">main</span><span class="p">.</span><span class="nf">main</span><span class="p">()</span>
         <span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">zhangxuesong</span><span class="o">/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">commandSource</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">27</span> <span class="o">+</span><span class="mh">0x85</span>
 <span class="nx">exit</span> <span class="nx">status</span> <span class="mi">2</span>
-</code></pre></div><h4 id="3创建私有命令参数容器">3、创建私有命令参数容器</h4>
+</code></pre></div><h4 id="3创建私有命令参数容器">3、创建私有命令参数容器<a href="#3创建私有命令参数容器" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
@@ -205,101 +264,83 @@
 <span class="p">}</span>
 
 </code></pre></div><p>需要注意的是 <code>os.Args[1:]</code> 表示解析参数从第二个开始，第一个是文件名。</p>
-]]></content>
-		</item>
-		
-		<item>
-			<title>go build和go get</title>
-			<link>https://zhangxuesong.github.io/posts/basic/go_build_get/</link>
-			<pubDate>Sun, 06 Dec 2020 16:42:20 +0800</pubDate>
-			
-			<guid>https://zhangxuesong.github.io/posts/basic/go_build_get/</guid>
-			<description>go build go build运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。 使用命令g</description>
-			<content type="html"><![CDATA[<h2 id="go-build"><code>go build</code></h2>
-<p><code>go build</code>运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。</p>
-<p>使用命令<code>go build -a</code>可以强制编译依赖包，即使依赖的是标准库中的代码包。</p>
-<p>使用命令<code>go build -i</code>不但能强制编译依赖包，还会安装他们的归档文件。</p>
-<p>使用命令<code>go build -x</code>可以看到具体执行了哪些操作，也可以使用<code>go build -n</code>只查看而不操作。</p>
-<p>使用命令<code>go build -v</code>可以看到编译的代码包的名称。</p>
-<h2 id="go-get"><code>go get</code></h2>
-<p><code>go get</code>会自动从一些主流共用代码仓库下载代码包，并且安装到<code>GOPATH</code>指向的第一个工作区中的对应目录。如果设置了<code>GOBIN</code>,那面仅包含命令源码文件的代码包会被安装到<code>GOBIN</code>指向的目录。</p>
-<p>常用参数：</p>
-<ul>
-<li><code>-u</code>下载并安装代码包，不论工作区中是否已存在。</li>
-<li><code>-d</code>只下载不安装代码包。</li>
-<li><code>-fix</code>下载代码包后先运行一个当前<code>Go</code>版本的修正代码工具，然后安装。</li>
-<li><code>-t</code>同时下载测试所需代码包。</li>
-<li><code>-insecure</code>允许通过非安全的网络协议下载和安装代码包，比如<code>HTTP</code>协议。</li>
-</ul>
-]]></content>
-		</item>
-		
-		<item>
-			<title>Gopath和工作区</title>
-			<link>https://zhangxuesong.github.io/posts/basic/gopath/</link>
-			<pubDate>Sat, 05 Dec 2020 11:10:05 +0800</pubDate>
-			
-			<guid>https://zhangxuesong.github.io/posts/basic/gopath/</guid>
-			<description>前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G</description>
-			<content type="html"><![CDATA[<h2 id="前言">前言</h2>
-<p>我们都知道 <code>Go</code> 的环境安装需要配置三个环境变量，他们分别是：</p>
-<ul>
-<li>GPROOT：<code>Go</code>语言安装根目录的路径，也就是<code>Go</code>语言的安装路径。</li>
-<li>GOBIN：<code>Go</code>程序生成的可执行文件（executable file）的路径。</li>
-<li>GOPATH：指向工作区目录的路径，是我们自定义的工作空间，可定义多个。</li>
-</ul>
-<h2 id="设置-gopath-有什么意义">设置 <code>GOPATH</code> 有什么意义？</h2>
-<p>之前只知道<code>GOPATH</code>是<code>Go</code>语言的工作目录，他的值是一个或者多个路径（不同系统分隔符不同），每个路径代表<code>Go</code>语言的一个工作区。</p>
-<p>我们利用这些工作区去防止<code>Go</code>语言的源码文件（source file），已经安装后的归档文件（archive file）和可执行文件（executable file）。</p>
-<p>事实上，由于<code>Go</code>语言项目在其生命周期内的所有操作（编码、依赖管理、构建、测试、安装等）基本上都是围绕<code>GOPATH</code>和工作区进行的。所以它的背后还有以下几个知识点，分别是：</p>
-<h3 id="1go语言源码的组织方式">1、<code>Go</code>语言源码的组织方式</h3>
-<p><code>Go</code>语言的源码是以代码包为基本单位的。在文件系统中，这些代码包和目录是一一对应的。由于目录可以有子目录，所以代码包也可以有子包。</p>
-<p>一个代码包中可以包含任意个以<code>.go</code>为扩展名的源码文件，这些源码文件都需要被声明属于同一个代码包。</p>
-<p>代码包的名称一般会与源码文件所在的目录同名。如果不同名，那么在构建、安装的过程中会以代码包名称为准。</p>
-<p>每个代码包都有导入路径。代码包的导入路径是其他代码在使用该包中的程序实体时，需要引入的路径。在实际使用程序实体前，我们必须先导入其所在的代码包。具体方式就是<code>import</code>该包的导入路径。就像这样：</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;github.com/labstack/echo&#34;</span>
-</code></pre></div><p>在工作区中，一个代码包的导入路径就是从<code>src</code>的子目录，到该包的实际存储位置的相对路径。</p>
-<p>所以说，<code>Go</code>语言源码的组织方式就是以环境变量<code>GOPATH</code>、工作区、<code>src</code>目录和代码包为主线的。一般情况下，<code>Go</code>语言的源码文件都需要被存放在环境变量<code>GOPATH</code>包含的某个工作区（目录）中的<code>src</code>目录下的某个代码包（目录）中。</p>
-<h3 id="2源码安装后的结果">2、源码安装后的结果</h3>
-<p>源码文件通常放在工作区下的<code>src</code>子目录下；安装后如果产生了归档文件，就会放到该工作区的<code>pkg</code>子目录；如果产生了可以执行文件，就会放进该工作区的<code>bin</code>子目录下。</p>
-<p>源码文件是以代码包的形式组织起来的，一个代码包其实就对应一个目录。安装某个代码包而产生的归档文件是与这个代码包同名的。</p>
-<p>放置他的相对目录就是该包的导入路径的直接父级。</p>
-<p>比如，一个已存在的代码包的导入路径是：<code>github.com/labstack/echo</code>那么执行命令</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">install</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">labstack</span><span class="o">/</span><span class="nx">echo</span>
-</code></pre></div><p>生成的归档文件就是：<code>github.com/labstack</code>，文件名为<code>echo.a</code>。</p>
-<p>上面这个代码包还有一层含义就是：该代码包的源码文件存放于<code>Github</code>上的<code>labstack</code>组的代码仓库<code>echo</code>中。</p>
-<p>归档文件的相对目录与<code>pkg</code>目录直接还有一层平台相关目录。平台相关目录的名称是由<code>build</code>（也称“构建”）的目标操作系统、下划线和目标计算架构的代号组成的。如：<code>linux_amd64</code>。</p>
-<p><p class="md__image">
-  <img src="../image/2fdfb5620e072d864907870e61ae5f3c.png"
-    alt=""  />
-</p>
-</p>
-<p>所以，我们知道某个工作区的 src 子目录下的源码文件在安装后一般会被放置到当前工作区的 pkg 子目录下对应的目录中，或者被直接放置到该工作区的 bin 子目录中。</p>
-<h3 id="3构建和安装-go-程序的过程">3、构建和安装 Go 程序的过程</h3>
-<p>构建使用命令<code>go build</code>，安装使用命令<code>go install</code>。构建和安装代码时都会执行编译、打包等操作，并且这些操作生成的任何文件都会先保存在某个临时目录中。</p>
-<p>如果构建的是库源码文件，操作产生的结果文件只会存放在临时目录中。这里的构建的主要意义在于检查和验证。</p>
-<p>如果构建的是命令源码文件，操作产生过的结果文件会被搬运到源码文件所在的目录中。</p>
-<p>安装操作会先执行构建，然后执行链接操作，并且把结果文件搬运到指定目录。</p>
-<p>进一步说，如果安装的是库源码文件，那么结果文件会被搬运到所在工作区的<code>pkg</code>目录下的某个子目录中。</p>
-<p>如果安装的是命令源码文件，那么结果过文件会被搬运到所在工作区的<code>bin</code>目录中或者环境变量<code>GOBIN</code>指向的目录中。</p>
-<h2 id="补充">补充</h2>
-<h3 id="1go语言在多个工作区中查找依赖包是以怎样的顺序进行的">1、<code>Go</code>语言在多个工作区中查找依赖包是以怎样的顺序进行的？</h3>
-<p>以<code>GOPATH</code>指定的工作区顺序查找，找到即返回，找不到则报错。</p>
-<h3 id="2多个工作区中都存在导入路径相同的代码包会产生冲突吗">2、多个工作区中都存在导入路径相同的代码包会产生冲突吗？</h3>
-<p>不会冲突，原因同上。同理，不同工作区的两个相同导入路径的代码包，编译的时候不会编译第二个工作区的代码包。</p>
-]]></content>
-		</item>
-		
-		<item>
-			<title>My First Post</title>
-			<link>https://zhangxuesong.github.io/posts/basic/my-first-post/</link>
-			<pubDate>Fri, 04 Dec 2020 10:11:10 +0800</pubDate>
-			
-			<guid>https://zhangxuesong.github.io/posts/basic/my-first-post/</guid>
-			<description>这是第一篇文章</description>
-			<content type="html"><![CDATA[<p>这是第一篇文章</p>
-]]></content>
-		</item>
-		
-	</channel>
-</rss>
+
+			</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/basic/go_build_get/">go build和go get</a></li>
+	
+	<li><a href="/posts/basic/gopath/">Gopath和工作区</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1725 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-07 14:05 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#命令源码文件">命令源码文件</a>
+      <ul>
+        <li><a href="#命令源码文件怎样接收参数">命令源码文件怎样接收参数</a></li>
+        <li><a href="#怎样在运行命令源码文件的时候传入参数怎样查看参数说明">怎样在运行命令源码文件的时候传入参数，怎样查看参数说明</a></li>
+        <li><a href="#怎样自定义命令源码文件的参数使用说明">怎样自定义命令源码文件的参数使用说明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/basic/go_build_get/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>go build和go get</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
