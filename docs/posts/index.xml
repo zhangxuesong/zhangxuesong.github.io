@@ -6,8 +6,166 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Mon, 07 Dec 2020 14:05:35 +0800</lastBuildDate>
+		<lastBuildDate>Tue, 08 Dec 2020 13:12:08 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>库源码文件和代码拆分</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/lib_source/</link>
+			<pubDate>Tue, 08 Dec 2020 13:12:08 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/lib_source/</guid>
+			<description>什么是库源码文件 库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如： package lib5 import &amp;#34;fmt&amp;#34; func Hello(name string) { fmt.Printf(&amp;#34;Hello %s!\n&amp;#34;, name) } 把上面代码保存到 libSource.go 执行 go run</description>
+			<content type="html"><![CDATA[<h2 id="什么是库源码文件">什么是库源码文件</h2>
+<p>库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">lib5</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>把上面代码保存到 <code>libSource.go</code> 执行 <code>go run libSource.go</code> 得到：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">run</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">run</span> <span class="nx">non</span><span class="o">-</span><span class="nx">main</span> <span class="kn">package</span>
+</code></pre></div><h2 id="怎样把命令源码文件中的代码拆分到其他库源码文件">怎样把命令源码文件中的代码拆分到其他库源码文件？</h2>
+<p>首先来看代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nf">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>这里 <code>main</code> 没有直接输出，而是调用了 <code>hello()</code> 函数，函数声明在另一个源码文件中，我们把他命名为 <code>libSource.go</code> 并且把他放在和 <code>main.go</code> 相同的目录下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>执行命令 <code>go run main.go libSource.go</code>，得到结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Hello</span> <span class="nx">Joseph</span><span class="p">!</span>
+</code></pre></div><p>注意，<code>main.go</code> 和 <code>libSource.go</code> 都声明自己属于 <code>main</code> 包，这是因为同一个目录下的源码文件必须要被声明为同一代码包，否则会报错：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">found</span> <span class="nx">packages</span> <span class="nf">main</span> <span class="p">(</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">)</span> <span class="nx">and</span> <span class="nf">main1</span> <span class="p">(</span><span class="nx">libSource</span><span class="p">.</span><span class="k">go</span><span class="p">)</span> <span class="nx">in</span> <span class="cm">/***/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">libSource</span>
+</code></pre></div><p>这句话是说在目录下找到了两个包。</p>
+<p>另外也要注意源码文件声明的包名和所在的目录可以不相同，只要这些文件声明的包名一致就可以。</p>
+<h2 id="怎么把命令源码文件拆分到其他代码包">怎么把命令源码文件拆分到其他代码包</h2>
+<p>在 <code>main.go</code> 目录下新建目录 <code>lib</code> 并且创建文件 <code>libSource.go</code> 代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">lib5</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>目前结构如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span>
+<span class="err">├──</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span>
+<span class="err">├──</span> <span class="nx">lib</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">└──</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span>
+</code></pre></div><p>这里和外面的 <code>libSource.go</code> 对比改了两个地方，一个是包名改了，并且和目录名不同，一个是 <code>Hello</code> 函数首字母改成了大写。</p>
+<h2 id="代码包的导入路径和其所在的目录的相对路径是否一致">代码包的导入路径和其所在的目录的相对路径是否一致</h2>
+<p>库文件源码 <code>libSource.go</code> 所在目录的相对目录是 <code>lib</code> 但它却声明自己属于 <code>lib5</code> 包，那么该包的导入路径是 <code>libsource/lib</code> 呢还是 <code>libsource/lib5</code> 呢？<code>libsource</code> 是我的 <code>main.go</code> 所在目录。</p>
+<p>我们来安装下库源码文件，执行命令 <code>go install lib/libSource.go</code> 然后看 <code>main.go</code> 做了哪些改动：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;libsource/lib&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="c1">//hello(name)
+</span><span class="c1"></span>	<span class="nx">lib5</span><span class="p">.</span><span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>首先在以 <code>import</code> 为前导的代码包导入语句中加入 <code>libsource/lib</code> 试图导入代码包。</p>
+<p>然后把对 <code>hello</code> 函数的调用改为对 <code>lib.Hello</code> 函数的调用。其中的 <code>lib.</code> 叫做限定符，旨在指明右边的程序实体所在的代码包。不过这里与代码包导入路径的完整写法不同，只包含了路径中的最后一级 <code>lib</code>，这与代码包声明语句中的规则一致。</p>
+<p>执行 <code>go run main.go</code> 错误提示如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">5</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span> <span class="nx">imported</span> <span class="nx">and</span> <span class="nx">not</span> <span class="nx">used</span><span class="p">:</span> <span class="s">&#34;libsource/lib&#34;</span> <span class="nx">as</span> <span class="nx">lib5</span>
+<span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span> <span class="nx">undefined</span><span class="p">:</span> <span class="nx">lib</span>
+</code></pre></div><p>第一行是说我们导入了 <code>libsource/lib</code> 但没有使用，<code>Go</code> 语言是不允许的，会报编译错误。</p>
+<p>第二行是说没找到 <code>lib</code> 包。另外注意第一行的 <code>as lib5</code> 这是说我们虽然导入的是 <code>libsource/lib</code> 但是使用的应该是 <code>lib5</code>。</p>
+<p>这里要记住源码文件所在的目录是相对于 <code>src</code> 目录的相对路径就是他的导入路径，而实际使用的是源码文件声明的所属包名。</p>
+<p>为了不产生困惑，我们应该尽量保持包名与父目录名称一致。</p>
+<h2 id="什么样的程序才能够被外部代码引用">什么样的程序才能够被外部代码引用</h2>
+<p>名称的首字母为大写的程序实体才可以被当前包外的代码引用，否则它就只能被当前包内的其他代码引用。</p>
+<p>通过名称，<code>Go</code> 语言自然地把程序实体的访问权限划分为了包级私有的和公开的。对于包级私有的程序实体，即使你导入了它所在的代码包也无法引用到它。</p>
+<p>这也是我们上面代码中把 <code>hello</code> 改为 <code>lib5.Hello</code> 的原因。</p>
+<h2 id="其他的访问权限规则">其他的访问权限规则</h2>
+<p>在 <code>Go 1.5</code> 及后续版本中，我们可以通过创建 <code>internal</code> 代码包让一些程序实体仅仅能被当前模块中的其他代码引用。这被称为 <code>Go</code> 程序实体的第三种访问权限：模块级私有。</p>
+<p>具体规则是，<code>internal</code> 代码包中声明的公开程序实体仅能被该代码包的直接父包及其子包中的代码引用。当然，引用前需要先导入这个  <code>internal</code> 包。对于其他代码包，导入该 <code>internal</code> 包都是非法的，无法通过编译。</p>
+<p>当前结构：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span>
+<span class="err">├──</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span>
+<span class="err">├──</span> <span class="nx">lib</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="nx">internal</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">└──</span> <span class="nx">internal</span><span class="p">.</span><span class="k">go</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">└──</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span>
+</code></pre></div><p>我们把 <code>lib/libSource.go</code> 中的 <code>Hello</code> 函数拆分到 <code>lib/internal/internal.go</code> 实现：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">internal</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>lib/libSource.go</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">lib5</span>
+
+<span class="kn">import</span> <span class="s">&#34;libsource/lib/internal&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">//fmt.Printf(&#34;Hello %s!\n&#34;, name)
+</span><span class="c1"></span>	<span class="nx">internal</span><span class="p">.</span><span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>main.go</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;libsource/lib&#34;</span>
+	<span class="s">&#34;libsource/lib/internal&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="c1">//hello(name)
+</span><span class="c1"></span>	<span class="nx">lib5</span><span class="p">.</span><span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>我们在 <code>main.go</code> 引入了  <code>internal</code> 包，执行 <code>go run main.go</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">command</span><span class="o">-</span><span class="nx">line</span><span class="o">-</span><span class="nx">arguments</span>
+        <span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">6</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span> <span class="nx">use</span> <span class="nx">of</span> <span class="nx">internal</span> <span class="kn">package</span> <span class="nx">libsource</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">internal</span> <span class="nx">not</span> <span class="nx">allowed</span>
+</code></pre></div><p>可见是不被允许的，把 <code>libsource/lib/internal</code> 注释掉在执行：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Hello</span> <span class="nx">Joseph</span><span class="p">!</span>
+</code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>命令源码文件和 flag 库</title>

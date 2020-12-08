@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Mon, 07 Dec 2020 14:05:35 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 08 Dec 2020 13:12:08 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>库源码文件和代码拆分</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/lib_source/</link>
+      <pubDate>Tue, 08 Dec 2020 13:12:08 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/lib_source/</guid>
+      <description>什么是库源码文件 库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如： package lib5 import &amp;#34;fmt&amp;#34; func Hello(name string) { fmt.Printf(&amp;#34;Hello %s!\n&amp;#34;, name) } 把上面代码保存到 libSource.go 执行 go run</description>
+    </item>
+    
     <item>
       <title>命令源码文件和 flag 库</title>
       <link>https://zhangxuesong.github.io/posts/gocore/command_source/</link>
