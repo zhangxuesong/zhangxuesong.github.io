@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Wed, 09 Dec 2020 09:23:22 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Dec 2020 15:43:38 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go 语言中的作用域那些事儿</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_scope/</link>
+      <pubDate>Wed, 09 Dec 2020 15:43:38 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_scope/</guid>
+      <description>作用域是什么 一个程序实体被写出来，就是为了让其他程序引用。哪里的代码可以引用它呢，这就涉及到了它的作用域。 Go 语言的访问权限有三种：包级私有的</description>
+    </item>
+    
     <item>
       <title>Go 语言中的变量那些事儿</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_var/</link>
