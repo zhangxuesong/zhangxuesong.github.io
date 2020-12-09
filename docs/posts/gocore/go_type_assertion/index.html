@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Go 语言中的类型断言">
+<meta itemprop="description" content="怎样判断一个变量的类型 先来看一段代码： package main import &#34;fmt&#34; var container = []string{&#34;0&#34;, &#34;1&#34;, &#34;2&#34;} func main() { container := map[int]string{0: &#34;0&#34;, 1: &#34;1&#34;, 2: &#34;2&#34;} fmt.Printf(&#34;the element is %q.\n&#34;, container[1]) } 怎样在打印期中元素之前判断 container 的类型呢，当然是用类">
+<meta itemprop="datePublished" content="2020-12-09T16:34:11+08:00" />
+<meta itemprop="dateModified" content="2020-12-09T16:34:11+08:00" />
+<meta itemprop="wordCount" content="1286">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="Go 语言中的类型断言" />
+<meta property="og:description" content="怎样判断一个变量的类型 先来看一段代码： package main import &#34;fmt&#34; var container = []string{&#34;0&#34;, &#34;1&#34;, &#34;2&#34;} func main() { container := map[int]string{0: &#34;0&#34;, 1: &#34;1&#34;, 2: &#34;2&#34;} fmt.Printf(&#34;the element is %q.\n&#34;, container[1]) } 怎样在打印期中元素之前判断 container 的类型呢，当然是用类" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_type_assertion/" />
+<meta property="article:published_time" content="2020-12-09T16:34:11+08:00" />
+<meta property="article:modified_time" content="2020-12-09T16:34:11+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 语言中的类型断言"/>
+<meta name="twitter:description" content="怎样判断一个变量的类型 先来看一段代码： package main import &#34;fmt&#34; var container = []string{&#34;0&#34;, &#34;1&#34;, &#34;2&#34;} func main() { container := map[int]string{0: &#34;0&#34;, 1: &#34;1&#34;, 2: &#34;2&#34;} fmt.Printf(&#34;the element is %q.\n&#34;, container[1]) } 怎样在打印期中元素之前判断 container 的类型呢，当然是用类"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Go 语言中的类型断言</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-09</span></div>
+				<h1>Go 语言中的类型断言</h1>
+			</header>
+			<div class="content">
+				<h2 id="怎样判断一个变量的类型">怎样判断一个变量的类型<a href="#怎样判断一个变量的类型" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>先来看一段代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">var</span> <span class="nx">container</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="s">&#34;1&#34;</span><span class="p">,</span> <span class="s">&#34;2&#34;</span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">container</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s">&#34;1&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;2&#34;</span><span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element is %q.\n&#34;</span><span class="p">,</span> <span class="nx">container</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div><p>怎样在打印期中元素之前判断 <code>container</code> 的类型呢，当然是用类型断言：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="kd">interface</span><span class="p">{}(</span><span class="nx">container</span><span class="p">).([]</span><span class="kt">string</span><span class="p">)</span>
+</code></pre></div><p>这是一条赋值语句，赋值符号右边是类型断言表达式。它包括了用来把 <code>container</code> 变量转换为空接口值的 <code>interface{}(container)</code>，以及用于判断前者类型是否是切片类型 <code>[]string</code> 的 <code>.([]string)</code>。</p>
+<p>表达式的结果被赋给两个变量，<code>ok</code> 代表类型判断的结果，<code>true</code> 或 <code>false</code>。</p>
+<p>如果是 <code>true</code>，被判断的值将会自动转换成 <code>[]string</code> 的值赋给 <code>value</code> 否则会赋给 <code>nil</code>。</p>
+<p>这里的 <code>ok</code> 也可以没有，当判断为否时会引发异常。</p>
+<p>类型断言的语法表达形式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">x</span><span class="p">.(</span><span class="nx">T</span><span class="p">)</span>
+</code></pre></div><p><code>x</code> 代表要被判断的值，这个值必须是接口类型。</p>
+<p>所以前面 <code>container</code> 不是接口类型，要先转化一下。如果是接口类型那面可以这样表示：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">container</span><span class="p">.([]</span><span class="kt">string</span><span class="p">)</span>
+</code></pre></div><p><p class="md__image">
+  <img src=".././image/b5f16bf3ad8f416fb151aed8df47a515.png"
+    alt=""  />
+</p>
+</p>
+<h3 id="类型转换规则中的坑">类型转换规则中的坑<a href="#类型转换规则中的坑" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>首先，对于整数类型值、整数常量之间的类型转化，原则上只要源值在目标类型的可表示范围内就是合法的。</p>
+<p>比如，之所以 <code>uint8(255)</code> 可以把无类型的常量 255 转换为 <code>uint8</code> 类型的值，是因为 255 在 [0, 255] 的范围内。</p>
+<p>再比如，<code>int16(-255)</code> 转为 <code>int8</code> 类型会变成 1。</p>
+<p>因为整数在 <code>Go</code> 语言中是以补码形式存储的，主要是为了简化计算机对整数的运算过程。负数补码就是源码各位求反再加一。</p>
+<p><code>int16</code> 类型的值 -255 的补码是 1111111100000001。如果我们把该值转换为 <code>int8</code> 类型的值，那么 <code>Go</code> 语言会把在较高位置（或者说最左边位置）上的 8 位二进制数直接截掉，从而得到 00000001。又由于其最左边一位是 0，表示它是个正整数，以及正整数的补码就等于其原码，所以最后的值就是 1。</p>
+<p>注意，当整数值的类型范围由宽变窄时，只需要在补码形式下截掉以定长度的高位二进制。</p>
+<p>第二，整数值转字符串时，被转换的整数值应该可以代表一个有效的 <code>Unicode</code> 代码点，否则结果会是 �。</p>
+<p>字符 � 的 <code>Unicode</code> 代码点是 <code>U+FFFD</code>，它是 <code>Unicode</code> 标准中定义的 <code>Replacement Character</code>， 专门用来替换未知的、不被认可的一级无法展示的字符。</p>
+<p>如 <code>string(-1)</code>，-1 肯定无法代表一个有效的 <code>Unicode</code> 代码点，所以得到的总是 �。</p>
+<p>第三，字符串类型与各种切片类型之间的互转。</p>
+<p>一个值从 <code>string</code> 类型向 <code>[]byte</code> 类型转换时代表着以 <code>UTF-8</code> 编码的字符串会被拆分成零散、独立的字节。</p>
+<p>一个值从 <code>string</code> 类型向 <code>[]rune</code> 类型转换时代表着字符串会被拆分成一个个 <code>Unicode</code> 字符。</p>
+<h2 id="什么是类型别名什么是潜在类型">什么是类型别名，什么是潜在类型<a href="#什么是类型别名什么是潜在类型" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><code>Go</code> 语言中可以使用 <code>type</code> 关键字声明自定义的各种类型。其中有一种 别名类型 的类型。我们可以这样声明：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyString</span> <span class="p">=</span> <span class="kt">string</span>
+</code></pre></div><p>这表明 <code>MyString</code> 是 <code>string</code> 类型的别名类型。别名类型和源类型只是名称不同，其他完全相同。</p>
+<p><code>Go</code> 语言内建的基本类型中就存在两个别名类型。<code>byte</code> 是 <code>uint8</code> 的别名类型，而 <code>rune</code> 是 <code>int32</code> 的别名类型。</p>
+<p>注意，如果像这样声明：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyString</span> <span class="kt">string</span>
+</code></pre></div><p><code>MyString</code> 和 <code>string</code> 就是两个不同的类型了，这里的 <code>MyString</code> 是不同于任何类型的新类型。</p>
+<p>这种方式也叫做类型的在定义，即：把 <code>string</code> 类型在定义为 <code>MyString</code> 类型。</p>
+<p><p class="md__image">
+  <img src=".././image/4f113b74b564ad3b4b4877abca7b6bf2.png"
+    alt=""  />
+</p>
+</p>
+<p>对应类型再定义来说，<code>string</code> 可以被称为 <code>MyString</code> 的潜在类型，潜在类型的含义就是某个类型的本质上是什么类型。</p>
+<p>潜在类型相同的不同类型的值之间是可以进行类型转换的。所以 <code>MyString</code> 类型的值与 <code>string</code> 类型的值可以使用类型转换表达式互转。</p>
+<p>但由于类型再定义后属于不同的类型，不同类型直接不可以做判等或者比较，也不能直接赋值。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_scope/">Go 语言中的作用域那些事儿</a></li>
+	
+	<li><a href="/posts/gocore/go_var/">Go 语言中的变量那些事儿</a></li>
+	
+	<li><a href="/posts/gocore/lib_source/">库源码文件和代码拆分</a></li>
+	
+	<li><a href="/posts/gocore/command_source/">命令源码文件和 flag 库</a></li>
+	
+	<li><a href="/posts/gocore/go_build_get/">go build和go get</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1286 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-09 16:34 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#怎样判断一个变量的类型">怎样判断一个变量的类型</a>
+      <ul>
+        <li><a href="#类型转换规则中的坑">类型转换规则中的坑</a></li>
+      </ul>
+    </li>
+    <li><a href="#什么是类型别名什么是潜在类型">什么是类型别名，什么是潜在类型</a></li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_scope/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Go 语言中的作用域那些事儿</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>

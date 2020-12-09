@@ -6,8 +6,76 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Wed, 09 Dec 2020 15:43:38 +0800</lastBuildDate>
+		<lastBuildDate>Wed, 09 Dec 2020 16:34:11 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Go 语言中的类型断言</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</link>
+			<pubDate>Wed, 09 Dec 2020 16:34:11 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</guid>
+			<description>怎样判断一个变量的类型 先来看一段代码： package main import &amp;#34;fmt&amp;#34; var container = []string{&amp;#34;0&amp;#34;, &amp;#34;1&amp;#34;, &amp;#34;2&amp;#34;} func main() { container := map[int]string{0: &amp;#34;0&amp;#34;, 1: &amp;#34;1&amp;#34;, 2: &amp;#34;2&amp;#34;} fmt.Printf(&amp;#34;the element is %q.\n&amp;#34;, container[1]) } 怎样在打印期中元素之前判断 container 的类型呢，当然是用类</description>
+			<content type="html"><![CDATA[<h2 id="怎样判断一个变量的类型">怎样判断一个变量的类型</h2>
+<p>先来看一段代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">var</span> <span class="nx">container</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="s">&#34;1&#34;</span><span class="p">,</span> <span class="s">&#34;2&#34;</span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">container</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s">&#34;1&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;2&#34;</span><span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element is %q.\n&#34;</span><span class="p">,</span> <span class="nx">container</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div><p>怎样在打印期中元素之前判断 <code>container</code> 的类型呢，当然是用类型断言：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="kd">interface</span><span class="p">{}(</span><span class="nx">container</span><span class="p">).([]</span><span class="kt">string</span><span class="p">)</span>
+</code></pre></div><p>这是一条赋值语句，赋值符号右边是类型断言表达式。它包括了用来把 <code>container</code> 变量转换为空接口值的 <code>interface{}(container)</code>，以及用于判断前者类型是否是切片类型 <code>[]string</code> 的 <code>.([]string)</code>。</p>
+<p>表达式的结果被赋给两个变量，<code>ok</code> 代表类型判断的结果，<code>true</code> 或 <code>false</code>。</p>
+<p>如果是 <code>true</code>，被判断的值将会自动转换成 <code>[]string</code> 的值赋给 <code>value</code> 否则会赋给 <code>nil</code>。</p>
+<p>这里的 <code>ok</code> 也可以没有，当判断为否时会引发异常。</p>
+<p>类型断言的语法表达形式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">x</span><span class="p">.(</span><span class="nx">T</span><span class="p">)</span>
+</code></pre></div><p><code>x</code> 代表要被判断的值，这个值必须是接口类型。</p>
+<p>所以前面 <code>container</code> 不是接口类型，要先转化一下。如果是接口类型那面可以这样表示：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">container</span><span class="p">.([]</span><span class="kt">string</span><span class="p">)</span>
+</code></pre></div><p><p class="md__image">
+  <img src=".././image/b5f16bf3ad8f416fb151aed8df47a515.png"
+    alt=""  />
+</p>
+</p>
+<h3 id="类型转换规则中的坑">类型转换规则中的坑</h3>
+<p>首先，对于整数类型值、整数常量之间的类型转化，原则上只要源值在目标类型的可表示范围内就是合法的。</p>
+<p>比如，之所以 <code>uint8(255)</code> 可以把无类型的常量 255 转换为 <code>uint8</code> 类型的值，是因为 255 在 [0, 255] 的范围内。</p>
+<p>再比如，<code>int16(-255)</code> 转为 <code>int8</code> 类型会变成 1。</p>
+<p>因为整数在 <code>Go</code> 语言中是以补码形式存储的，主要是为了简化计算机对整数的运算过程。负数补码就是源码各位求反再加一。</p>
+<p><code>int16</code> 类型的值 -255 的补码是 1111111100000001。如果我们把该值转换为 <code>int8</code> 类型的值，那么 <code>Go</code> 语言会把在较高位置（或者说最左边位置）上的 8 位二进制数直接截掉，从而得到 00000001。又由于其最左边一位是 0，表示它是个正整数，以及正整数的补码就等于其原码，所以最后的值就是 1。</p>
+<p>注意，当整数值的类型范围由宽变窄时，只需要在补码形式下截掉以定长度的高位二进制。</p>
+<p>第二，整数值转字符串时，被转换的整数值应该可以代表一个有效的 <code>Unicode</code> 代码点，否则结果会是 �。</p>
+<p>字符 � 的 <code>Unicode</code> 代码点是 <code>U+FFFD</code>，它是 <code>Unicode</code> 标准中定义的 <code>Replacement Character</code>， 专门用来替换未知的、不被认可的一级无法展示的字符。</p>
+<p>如 <code>string(-1)</code>，-1 肯定无法代表一个有效的 <code>Unicode</code> 代码点，所以得到的总是 �。</p>
+<p>第三，字符串类型与各种切片类型之间的互转。</p>
+<p>一个值从 <code>string</code> 类型向 <code>[]byte</code> 类型转换时代表着以 <code>UTF-8</code> 编码的字符串会被拆分成零散、独立的字节。</p>
+<p>一个值从 <code>string</code> 类型向 <code>[]rune</code> 类型转换时代表着字符串会被拆分成一个个 <code>Unicode</code> 字符。</p>
+<h2 id="什么是类型别名什么是潜在类型">什么是类型别名，什么是潜在类型</h2>
+<p><code>Go</code> 语言中可以使用 <code>type</code> 关键字声明自定义的各种类型。其中有一种 别名类型 的类型。我们可以这样声明：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyString</span> <span class="p">=</span> <span class="kt">string</span>
+</code></pre></div><p>这表明 <code>MyString</code> 是 <code>string</code> 类型的别名类型。别名类型和源类型只是名称不同，其他完全相同。</p>
+<p><code>Go</code> 语言内建的基本类型中就存在两个别名类型。<code>byte</code> 是 <code>uint8</code> 的别名类型，而 <code>rune</code> 是 <code>int32</code> 的别名类型。</p>
+<p>注意，如果像这样声明：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyString</span> <span class="kt">string</span>
+</code></pre></div><p><code>MyString</code> 和 <code>string</code> 就是两个不同的类型了，这里的 <code>MyString</code> 是不同于任何类型的新类型。</p>
+<p>这种方式也叫做类型的在定义，即：把 <code>string</code> 类型在定义为 <code>MyString</code> 类型。</p>
+<p><p class="md__image">
+  <img src=".././image/4f113b74b564ad3b4b4877abca7b6bf2.png"
+    alt=""  />
+</p>
+</p>
+<p>对应类型再定义来说，<code>string</code> 可以被称为 <code>MyString</code> 的潜在类型，潜在类型的含义就是某个类型的本质上是什么类型。</p>
+<p>潜在类型相同的不同类型的值之间是可以进行类型转换的。所以 <code>MyString</code> 类型的值与 <code>string</code> 类型的值可以使用类型转换表达式互转。</p>
+<p>但由于类型再定义后属于不同的类型，不同类型直接不可以做判等或者比较，也不能直接赋值。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Go 语言中的作用域那些事儿</title>
