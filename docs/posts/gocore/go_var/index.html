@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Go 语言中的变量那些事儿">
+<meta itemprop="description" content="变量声明 除了 var name string 这种声明方式以外还有两种基于类型推断的声明方式。 注意短变量声明只能在函数体内部使用。 类型推断 类型推断是编程语言在编译器自动">
+<meta itemprop="datePublished" content="2020-12-09T09:23:22+08:00" />
+<meta itemprop="dateModified" content="2020-12-09T09:23:22+08:00" />
+<meta itemprop="wordCount" content="651">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="Go 语言中的变量那些事儿" />
+<meta property="og:description" content="变量声明 除了 var name string 这种声明方式以外还有两种基于类型推断的声明方式。 注意短变量声明只能在函数体内部使用。 类型推断 类型推断是编程语言在编译器自动" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_var/" />
+<meta property="article:published_time" content="2020-12-09T09:23:22+08:00" />
+<meta property="article:modified_time" content="2020-12-09T09:23:22+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 语言中的变量那些事儿"/>
+<meta name="twitter:description" content="变量声明 除了 var name string 这种声明方式以外还有两种基于类型推断的声明方式。 注意短变量声明只能在函数体内部使用。 类型推断 类型推断是编程语言在编译器自动"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Go 语言中的变量那些事儿</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-09</span></div>
+				<h1>Go 语言中的变量那些事儿</h1>
+			</header>
+			<div class="content">
+				<h2 id="变量声明">变量声明<a href="#变量声明" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><p class="md__image">
+  <img src=".././image/b7d73fdce13a3a5f2d56d0b95f2c8cbc.png"
+    alt=""  />
+</p>
+</p>
+<p>除了 <code>var name string</code> 这种声明方式以外还有两种基于类型推断的声明方式。</p>
+<p>注意短变量声明只能在函数体内部使用。</p>
+<h2 id="类型推断">类型推断<a href="#类型推断" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>类型推断是编程语言在编译器自动解释表达式类型的能力。即：对表达式进行求值后的结果的类型推断。</p>
+<h3 id="类型推断的好处">类型推断的好处<a href="#类型推断的好处" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>类型推断可以明显提升程序的灵活性，使得代码重构变的更容易，同时又不会给代码的维护增加额外的负担（实际上，它恰恰可以避免散弹式的代码修改）更不会损失程序的运行效率。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">name</span> <span class="p">=</span> <span class="nf">getFlag</span><span class="p">()</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %v!\n&#34;</span><span class="p">,</span> <span class="o">*</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">getFlag</span><span class="p">()</span> <span class="o">*</span><span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">flag</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;This greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>我们给变量 <code>name</code> 赋值时使用了函数封装，对 <code>flag.String</code> 函数的调用，并把其结果直接作为 <code>getFlag</code> 函数的结果，结果的类型是<code>*string</code>。这样变量赋值就变为针对 <code>getFlag</code> 函数的返回值了。这实际上是对声明并赋值 <code>name</code> 变量的那行代码的重构。</p>
+<blockquote>
+<p>我们通常把不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。</p>
+</blockquote>
+<p>接下来，我想要改变 <code>getFlag</code> 里面的代码对 <code>main</code> 函数不会有任何影响。</p>
+<h3 id="变量的重声明">变量的重声明<a href="#变量的重声明" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>通过使用短变量声明，我们可以在同一个代码块中对变量进行重声明。即：对已经存在的变量再次声明。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+<span class="nx">name</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">io</span><span class="p">.</span><span class="nf">WriteString</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="s">&#34;Hello, everyone!\n&#34;</span><span class="p">)</span>
+</code></pre></div><p>使用短变量声明对新变量 <code>name</code> 和旧变量 <code>err</code> 进行了“声明并赋值”，这时也是对后者的重声明。</p>
+<p>使用变量的重声明有几个前提条件：</p>
+<ul>
+<li>变量的类型初始化时已经确定了，所以重声明时变量类型必须和之前保持一致。</li>
+<li>变量的初始和重声明必须发生在同一个代码块中。</li>
+<li>变量的重声明只有在使用短变量声明是才会发生。</li>
+<li>重声明时的变量必须是多个且至少有一个是新变量。</li>
+</ul>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/lib_source/">库源码文件和代码拆分</a></li>
+	
+	<li><a href="/posts/gocore/command_source/">命令源码文件和 flag 库</a></li>
+	
+	<li><a href="/posts/gocore/go_build_get/">go build和go get</a></li>
+	
+	<li><a href="/posts/gocore/gopath/">Gopath和工作区</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>651 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-09 09:23 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#变量声明">变量声明</a></li>
+    <li><a href="#类型推断">类型推断</a>
+      <ul>
+        <li><a href="#类型推断的好处">类型推断的好处</a></li>
+        <li><a href="#变量的重声明">变量的重声明</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/lib_source/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>库源码文件和代码拆分</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
