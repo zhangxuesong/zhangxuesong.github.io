@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Wed, 09 Dec 2020 16:34:11 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 10 Dec 2020 14:50:38 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>数组和切片</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_array_slice/</link>
+      <pubDate>Thu, 10 Dec 2020 14:50:38 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_array_slice/</guid>
+      <description>Go 语言的数组（array）类型和切片（slice）类型 它们的共同点是都属于集合类的类型，都可以用来存储一种类型的值。 不同的是数组的长度是固定</description>
+    </item>
+    
     <item>
       <title>Go 语言中的类型断言那些事儿</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</link>
@@ -89,16 +98,6 @@
       <description>你好，我是 Joseph，拥有多年后端开发经验，涉猎语言有PHP、Java、Go等。
 保持学习，不断进取。
 联系方式  Github：https://github.com/zhangxuesong 公众号：码农Joseph 邮箱：joseph2018@aliyun.com  </description>
-    </item>
-    
-    <item>
-      <title>《polarisxu Go 系列教程》</title>
-      <link>https://zhangxuesong.github.io/go-categories/</link>
-      <pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/go-categories/</guid>
-      <description>这里汇集 polarisxu 的原创和翻译文章。如果你有哪些想学的 Go 技术可以留言，我抽空写写。
- Echo 系列  基础篇1：搭建 Echo 开发环境  基础篇2：Echo 核心亮点介绍  基础篇3：通过一个例子串联各特性  定制篇0：让 Echo 更强大、好用  定制篇1：自定义 Binder，处理 Request 数据绑定  定制篇2：自定义 Validator，进行输入校验  定制篇3：自定义 Logger，用你喜欢的日志库  定制篇4：自定义 Renderer，增强或替换模板引擎  定制篇5：自定义 HTTP Error Handler，让 HTTP 错误处理更友好  定制篇6：自定义 Server 相关，替换或扩展默认的 Server  实战篇0：使用 Echo 开发一个博客系统     </description>
     </item>
     
   </channel>
