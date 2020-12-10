@@ -60,7 +60,7 @@
 <span class="nx">the</span> <span class="nx">length</span> <span class="nx">of</span> <span class="nx">s2</span><span class="p">:</span> <span class="mi">5</span>
 <span class="nx">the</span> <span class="nx">capacity</span> <span class="nx">of</span> <span class="nx">s2</span><span class="p">:</span> <span class="mi">8</span>
 <span class="nx">the</span> <span class="nx">value</span> <span class="nx">of</span> <span class="nx">s2</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
-</code></pre></div><p>我们看到，如果不指定切片的容量，那面它就合切片的长度一致。如果指定了切片容量，那面就是指定的大小。</p>
+</code></pre></div><p>我们看到，如果不指定切片的容量，那么它就和切片的长度一致。如果指定了切片容量，那么就是指定的大小。</p>
 <p>我们前面说过，切片是对底层数组的封装。切片的底层数据结构是数组，而切片也是对数组一段连续片段的引用。</p>
 <p>想象一下，有一个窗口，我们可以通过这个窗口看到一个数组，但是不一定能看到所有元素 ，有时候只能看到连续的一部分。</p>
 <p>所以这里 <code>s2</code> 的容量代表底层数组的长度是 8。而 <code>s2</code> 本身的长度是 5，那面 <code>s2</code> 的值就是底层数组中的第 1 个元素到第 5 个元素，对应的底层数组索引范围就是 [0，4]。</p>
@@ -86,7 +86,7 @@
 </p>
 <p>再来看容量，一个切片的容量可以被看作是透过这个窗口最多可以看到底层数组中元素的个数。</p>
 <p>由于 <code>s4</code> 是在 <code>s3</code> 的基础上得来的，所以 <code>s3</code> 可以看作 <code>s4</code> 的底层数组。</p>
-<p>由因为，在底层数组不变的情况下，切片代表的窗口可以向右扩展，直到底层数组的末尾。</p>
+<p>又因为，在底层数组不变的情况下，切片代表的窗口可以向右扩展，直到底层数组的末尾。</p>
 <p>所以，<code>s4</code> 的容量就是底层数组的长度 8，减去起始索引 3，即 5。</p>
 <p>注意，切片是无法向左扩展的，就是说我们永远无法通过 <code>s4</code> 看到 <code>s3</code> 中最左侧的 3 个元素。</p>
 <h3 id="怎样估算切片容量的增长">怎样估算切片容量的增长</h3>
