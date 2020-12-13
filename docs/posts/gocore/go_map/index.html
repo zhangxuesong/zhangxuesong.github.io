@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="字典的操作和约束">
+<meta itemprop="description" content="Go 语言的字典（map）类型 字典存储的不再是单一值，而是键值对的集合。 字典的键类型会受到约束 Go 语言的字典类型其实是一个哈希表（hash tabl">
+<meta itemprop="datePublished" content="2020-12-12T11:33:51+08:00" />
+<meta itemprop="dateModified" content="2020-12-12T11:33:51+08:00" />
+<meta itemprop="wordCount" content="1969">
+
+
+
+<meta itemprop="keywords" content="Go,map," />
+<meta property="og:title" content="字典的操作和约束" />
+<meta property="og:description" content="Go 语言的字典（map）类型 字典存储的不再是单一值，而是键值对的集合。 字典的键类型会受到约束 Go 语言的字典类型其实是一个哈希表（hash tabl" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_map/" />
+<meta property="article:published_time" content="2020-12-12T11:33:51+08:00" />
+<meta property="article:modified_time" content="2020-12-12T11:33:51+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="字典的操作和约束"/>
+<meta name="twitter:description" content="Go 语言的字典（map）类型 字典存储的不再是单一值，而是键值对的集合。 字典的键类型会受到约束 Go 语言的字典类型其实是一个哈希表（hash tabl"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>字典的操作和约束</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-12</span></div>
+				<h1>字典的操作和约束</h1>
+			</header>
+			<div class="content">
+				<h2 id="go-语言的字典map类型"><code>Go</code> 语言的字典（<code>map</code>）类型<a href="#go-语言的字典map类型" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>字典存储的不再是单一值，而是键值对的集合。</p>
+<h3 id="字典的键类型会受到约束">字典的键类型会受到约束<a href="#字典的键类型会受到约束" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><code>Go</code> 语言的字典类型其实是一个哈希表（hash table）的特定实现，其中键和元素最大的不同在于，键的类型是受限的，元素可以是任意类型。</p>
+<p>要探究原因，就需要了解哈希表中最重要的过程：映射。</p>
+<p>可以把键看成元素的索引，我们可以在哈希表中通过索引找到与它成对的那个元素。</p>
+<p>键和元素的这种关系在数学里就被称为“映射”，也是 <code>map</code> 这个词的本意，哈希表的映射过程就存在于对键-元素对的增、删、改、查的操作之中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">aMap</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+		<span class="s">&#34;one&#34;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+		<span class="s">&#34;two&#34;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
+		<span class="s">&#34;three&#34;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">k</span> <span class="o">:=</span> <span class="s">&#34;two&#34;</span>
+	<span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">aMap</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span>
+	<span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element of key %q: %d.\n&#34;</span><span class="p">,</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;not found!&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>我们要在哈希表中查找与某个键值对应的元素值，就要先把键值作为参数传给哈希表。</p>
+<p>哈希表会用哈希函数（hash function）把键值转换为哈希值。哈希值通常是一个无符号整数。一个哈希表会持有一定量的桶（bucket），也叫哈希桶，这些哈希桶会均匀的存储其所属哈希表收纳的键-元素对。</p>
+<p>哈希表会先用这个键的哈希值的低几位去定位一个哈希桶，然后再去这个哈希桶中查找这个键。</p>
+<p>因为键-元素对总是被捆绑在一起存储的，所以找到了键，就一定能找到对应的元素值。然后哈希表把对应的元素值作为结果返回。</p>
+<p>只要键-元素对存在哈希表中就一定能找到，因为哈希表的增、删、改时的映射过程，都与前文一致。</p>
+<p>所以映射过程的第一步就是：把键值转换为哈希值。</p>
+<p><code>Go</code> 语言的字典中，每一个键值都是由它的哈希值代表的。字典不会独立存储任何键的值，但会独立存储它们的哈希值。</p>
+<h3 id="字典的键类型不能是哪些类型">字典的键类型不能是哪些类型<a href="#字典的键类型不能是哪些类型" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><code>Go</code> 语言字典的键类型不能是函数类型、字典类型和切片类型。</p>
+<p><code>Go</code> 语言规范规定，在键类型的值之间必须可以判等（==，!=）。由于函数类型、字典类型和切片类型的值不支持判等操作，所以这些类型不能作为字典的键。</p>
+<p>即使键值是接口类型，键值的实际类型也不能是上述三种类型。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">bMap</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}]</span><span class="kt">int</span><span class="p">{</span>
+  <span class="s">&#34;one&#34;</span><span class="p">:</span>    <span class="mi">1</span><span class="p">,</span>
+  <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">}:</span> <span class="mi">2</span><span class="p">,</span><span class="c1">//panic: runtime error: hash of unhashable type []int
+</span><span class="c1"></span>  <span class="mi">3</span><span class="p">:</span>        <span class="mi">3</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div><p>这里变量 <code>bMap</code> 的类型是键类型为 <code>interface{}</code>，值类型为 <code>int</code> 的字典类型。声明的时候进行了初始化，使它包含三个键-元素对。其中第二个键值是 <code>[]int{2}</code>，元素值是 2。这样的键值不会让 <code>Go</code> 的编译器报错，从语法上说，这样做是可以的。</p>
+<p>但是，当运行这段代码时，<code>Go</code> 语言的运行时（runtime）系统就会发现这里的问题，它会抛出一个 <code>panic</code> 并把根源指向字面量中定义相应的行。</p>
+<p>如果键的类型是数组类型，那么该类型的元素类型就不能是函数类型、字典类型和切片类型。</p>
+<p>比如，由于类型 <code>[1][]string</code> 的元素类型是 <code>[]string</code>，所以它就不能作为字典类型的键类型。另外，如果键的类型是结构体类型，那么还要保证其中字段的类型的合法性。无论不合法的类型被埋藏得有多深，比如 <code>map[[1][2][3][]string]int</code>，<code>Go</code> 语言编译器都会把它揪出来。</p>
+<h3 id="为什么键值需要支持判等操作">为什么键值需要支持判等操作<a href="#为什么键值需要支持判等操作" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><code>Go</code> 语言一旦定位到了某个哈希桶，就会试图在桶中查找键值。</p>
+<p>首先，每个哈希桶会把自己包含的所有键的哈希值存起来。<code>Go</code> 语言会用被查找键的哈希值与这些哈希值逐个比较，看看是否有相等的。如果一个相等的也没有，说明这个桶中没有要查找的键值，<code>Go</code> 语言就会立刻返回结果。</p>
+<p>如果有相等的，那就在用键值本身去对比一次。因为不同键值的哈希值可能是相同的，这就是“哈希碰撞”。</p>
+<p>所以，即使哈希值一样，键值也可能不一样。如果键类型的值无法判断，那映射的过程就没办法继续了。只有键的哈希值和键值都相等，才说明找到了匹配的键-元素对。</p>
+<h3 id="应该优先考虑哪些类型作为字典的键类型">应该优先考虑哪些类型作为字典的键类型<a href="#应该优先考虑哪些类型作为字典的键类型" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>从性能角度来看，把键值转换为哈希值以及把要查找的键值与哈希桶中的键值对比，明显是比较重要且耗时的两个操作。所以，求哈希和判等操作的速度越快，对应的类型就越适合作为键类型。</p>
+<p>对于所有基本类型、指针类型，以及数组类型、结构体类型和接口类型，<code>Go</code> 语言都有一套算法与之对应。这套算法就包含了哈希和判等。以求哈希的操作为例，宽度越小的类型速度通常越快。对于布尔类型、整数类型、浮点类型、复数类型和指针类型来说都是如此。对于字符串类型来说，由于它的宽度不固定，所以要看具体长度，长度越短哈希越快。</p>
+<p>类型的宽度是指它单个值需要占用的字节数。如：<code>bool</code>、<code>int8</code> 等类型的字节数是 1，那面它们的宽度就是 1。</p>
+<p>类似的，结构体类型的哈希实际就是对它所有字段值求哈希并进行合并，所以关键在于它的各个字段类型以及字段的数量。而接口类型的哈希算法则由值的实际类型决定。</p>
+<p>另外这些高级数据类型的值是可变的，那面变化前后的哈希值就会不同，就会代表两个不同的键值。</p>
+<h3 id="在值为-nil-的字典上执行读写操作">在值为 <code>nil</code> 的字典上执行读写操作<a href="#在值为-nil-的字典上执行读写操作" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>由于字典是引用类型，当仅声明而不初始化一个字典的时候，它的值是 <code>nil</code>。</p>
+<p>除了添加键-元素对，我们在一个值为 <code>nil</code> 的字典上做任何操作都不会引起错误。只有当试图在一个值为 <code>nil</code> 的字典中添加一个键-元素对的时候，<code>Go</code> 语言的运行时系统会立即抛出一个 <code>panic</code>。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_container/">container包中的那些容器</a></li>
+	
+	<li><a href="/posts/gocore/go_array_slice/">数组和切片</a></li>
+	
+	<li><a href="/posts/gocore/go_type_assertion/">Go 语言中的类型断言那些事儿</a></li>
+	
+	<li><a href="/posts/gocore/go_scope/">Go 语言中的作用域那些事儿</a></li>
+	
+	<li><a href="/posts/gocore/go_var/">Go 语言中的变量那些事儿</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span><span class="tag"><a href="https://zhangxuesong.github.io/tags/map">map</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1969 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-12 11:33 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#go-语言的字典map类型"><code>Go</code> 语言的字典（<code>map</code>）类型</a>
+      <ul>
+        <li><a href="#字典的键类型会受到约束">字典的键类型会受到约束</a></li>
+        <li><a href="#字典的键类型不能是哪些类型">字典的键类型不能是哪些类型</a></li>
+        <li><a href="#为什么键值需要支持判等操作">为什么键值需要支持判等操作</a></li>
+        <li><a href="#应该优先考虑哪些类型作为字典的键类型">应该优先考虑哪些类型作为字典的键类型</a></li>
+        <li><a href="#在值为-nil-的字典上执行读写操作">在值为 <code>nil</code> 的字典上执行读写操作</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_container/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>container包中的那些容器</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
