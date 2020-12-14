@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Sat, 12 Dec 2020 11:33:51 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 14 Dec 2020 15:14:51 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>通道的高级玩法</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_channel2/</link>
+      <pubDate>Mon, 14 Dec 2020 15:14:51 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_channel2/</guid>
+      <description>单向通道 我们通常说通道都是指双向通道，即：即可以发也可以收的通道。 所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向</description>
+    </item>
+    
+    <item>
+      <title>通道的基本操作</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_channel/</link>
+      <pubDate>Sun, 13 Dec 2020 15:17:24 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_channel/</guid>
+      <description>作为 Go 语言最具特色的数据类型，通道（channel）完全可以与 goroutine （协程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 Don’t communicate by</description>
+    </item>
+    
     <item>
       <title>字典的操作和约束</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_map/</link>
@@ -78,24 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/command_source/</guid>
       <description>前言 写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如： 命令源码文件 库源码文件 测试源码文件 他们也有不同的用途和规则。 命令源码文件</description>
-    </item>
-    
-    <item>
-      <title>go build和go get</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_build_get/</link>
-      <pubDate>Sun, 06 Dec 2020 16:42:20 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_build_get/</guid>
-      <description>go build go build运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。 使用命令g</description>
-    </item>
-    
-    <item>
-      <title>Gopath和工作区</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/gopath/</link>
-      <pubDate>Sat, 05 Dec 2020 11:10:05 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/gopath/</guid>
-      <description>前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G</description>
     </item>
     
   </channel>

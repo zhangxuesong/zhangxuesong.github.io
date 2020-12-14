@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>channel on 码农Joseph</title>
+    <link>https://zhangxuesong.github.io/tags/channel/</link>
+    <description>Recent content in channel on 码农Joseph</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
+    <lastBuildDate>Mon, 14 Dec 2020 15:14:51 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/channel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>通道的高级玩法</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_channel2/</link>
+      <pubDate>Mon, 14 Dec 2020 15:14:51 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_channel2/</guid>
+      <description>单向通道 我们通常说通道都是指双向通道，即：即可以发也可以收的通道。 所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向</description>
+    </item>
+    
+    <item>
+      <title>通道的基本操作</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_channel/</link>
+      <pubDate>Sun, 13 Dec 2020 15:17:24 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_channel/</guid>
+      <description>作为 Go 语言最具特色的数据类型，通道（channel）完全可以与 goroutine （协程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 Don’t communicate by</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -6,8 +6,187 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Sat, 12 Dec 2020 11:33:51 +0800</lastBuildDate>
+		<lastBuildDate>Mon, 14 Dec 2020 15:14:51 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>通道的高级玩法</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_channel2/</link>
+			<pubDate>Mon, 14 Dec 2020 15:14:51 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_channel2/</guid>
+			<description>单向通道 我们通常说通道都是指双向通道，即：即可以发也可以收的通道。 所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向</description>
+			<content type="html"><![CDATA[<h2 id="单向通道">单向通道</h2>
+<p>我们通常说通道都是指双向通道，即：即可以发也可以收的通道。</p>
+<p>所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向的由它的字面量体现。</p>
+<p>接收操作符 <code>&lt;-</code> 如果用在通道的类型字面量中，它代表的就不再是接收或者发送的动作了，而是通道的方向。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nb">make</span><span class="p">(</span><span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span><span class="c1">//发送通道，只能发不能收
+</span><span class="c1"></span><span class="nb">make</span><span class="p">(</span><span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span><span class="c1">//接收通道，只能收不能发
+</span></code></pre></div><h3 id="单向通道的应用价值">单向通道的应用价值</h3>
+<p>概括的说，单向通道最主要的用途就是约束其他代码的行为。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">SendInt</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+	<span class="c1">//fmt.Printf(&#34;element of channel: %v.\n&#34;, &lt;- ch)
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>上面这段代码声明了一个函数，只接受一个发送通道，那么函数中就只能像通道发送元素值而不能从通道接收元素值。这就起到了约束函数行为的作用。</p>
+<p>如果是接口类型中声明的某个函数的定义使用了单向通道，那么等于该接口类型的所有实现都受到了约束。</p>
+<p>我们在调用的这个函数的时候，只需要把一个元素类型匹配的双向通道传给它，<code>Go</code> 会自动把通道转成函数需要的单向通道。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nf">SendInt</span><span class="p">(</span><span class="nx">ch3</span><span class="p">)</span>
+<span class="nx">elmt3</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch3</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;elemt3 is %v. channel stats is %v.\n&#34;</span><span class="p">,</span> <span class="nx">elmt3</span><span class="p">,</span> <span class="nx">ok</span><span class="p">)</span>
+
+<span class="c1">//elemt3 is 81. channel stats is true.
+</span></code></pre></div><p>我们还可以在函数声明的结果列表中使用单向通道，如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">getIntChan</span><span class="p">()</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="nx">num</span> <span class="o">:=</span> <span class="mi">5</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">num</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+	<span class="p">}</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">ch</span>
+<span class="p">}</span>
+</code></pre></div><p>函数返回一个接收通道，这以为这得到该通道的程序只能从通道中读取数据。这实际上也是对函数调用方的一种约束。</p>
+<p><code>Go</code> 语言中还可以声明函数类型，如果在函数类型中使用了单向通道，那么等于约束了所有实现了这个函数类型的函数。</p>
+<p>看下函数调用结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch4</span> <span class="o">:=</span> <span class="nf">getIntChan</span><span class="p">()</span>
+<span class="k">for</span> <span class="nx">elemt</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ch4</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element in ch4: %v.\n&#34;</span><span class="p">,</span> <span class="nx">elemt</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>for</code> 语句会不断的尝试从通道 <code>ch4</code> 中读取元素值。即使通道被关闭了，它也会取出所有剩余元素值后再结束运行。</p>
+<p>通常通道里没有元素值时，<code>for</code> 语句会阻塞在这里直到有新的元素值可取。但这里因为函数里把通道关闭了，所以取出通道内的所有元素值后会结束运行。</p>
+<p>如果通道的值为 <code>nil</code>，那么 <code>for</code> 语句就永远阻塞在这里。</p>
+<h2 id="select-和通道是怎样连用"><code>select</code> 和通道是怎样连用</h2>
+<p><code>select</code> 和 <code>switch</code> 用法差不多，但是只能和通道联用，每个 <code>case</code> 都只能包含通道表达式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 准备好几个通道。
+</span><span class="c1"></span><span class="nx">intChannels</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">{</span>
+    <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+<span class="c1">// 随机选择一个通道，并向它发送元素值。
+</span><span class="c1"></span><span class="nx">index</span> <span class="o">:=</span> <span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The index: %d\n&#34;</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span>
+<span class="nx">intChannels</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="nx">index</span>
+<span class="c1">// 哪一个通道中有可取的元素值，哪个对应的分支就会被执行。
+</span><span class="c1"></span><span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="nx">intChannels</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The first candidate case is selected.&#34;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="nx">intChannels</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The second candidate case is selected.&#34;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nx">elem</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">intChannels</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The third candidate case is selected, the element is %d.\n&#34;</span><span class="p">,</span> <span class="nx">elem</span><span class="p">)</span>
+    <span class="k">default</span><span class="p">:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;No candidate case is selected!&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>首先声明了一个 3 个元素的通道数组，每个元素都是 <code>int</code> 类型，容量为 1 的双向通道。然后随机生成一个范围在 0,2 的整数，把它作为索引从上面的数组中选择一个通道并像其中发送一个元素值。最后用 <code>select</code> 分别尝试从数组中的 3 个通道中接收元素值，哪一个通道有值，则执行对应的分支。如果都没有的话则执行默认分支。</p>
+<p>使用 <code>select</code> 时，应注意以下几点：</p>
+<ul>
+<li>如果使用了默认分支，那么无论涉及通道的操作是否阻塞，<code>select</code> 语句都不会阻塞。因为如果没有满足求职条件的话，就会执行默认分支。</li>
+<li>如果没有使用默认分支，那么当所有 <code>case</code> 分支都不满足求职条件的话，<code>select</code> 语句就会被阻塞，直到有一个 <code>case</code> 表达式满足条件。</li>
+<li>我们需要通过第二个结果值来判断通道是否已经关闭，如果关闭了，就应该及时屏蔽掉对应分支或者采取其他措施。这对于程序逻辑和程序性能是有好处的。</li>
+<li><code>select</code> 语句只能对其中的每一个 <code>case</code> 表达式各求值一次，如果想连续或定时操作其中的通道的话，通常需要通过 <code>for</code> 语句中嵌套 <code>select</code> 的方式实现。这时需要注意，在 <code>select</code> 中使用 <code>break</code> 只能结束当前的 <code>select</code> 语句执行，并不会对外层的 <code>for</code> 产生作用。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">intChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">// 一秒后关闭通道。
+</span><span class="c1"></span><span class="nx">time</span><span class="p">.</span><span class="nf">AfterFunc</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nb">close</span><span class="p">(</span><span class="nx">intChan</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="k">select</span> <span class="p">{</span>
+<span class="k">case</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">intChan</span><span class="p">:</span>
+  <span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The candidate case is closed.&#34;</span><span class="p">)</span>
+    <span class="k">break</span>
+  <span class="p">}</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The candidate case is selected.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="select-语句的分支选择规则"><code>select</code> 语句的分支选择规则</h2>
+<ul>
+<li>对于每一个 <code>case</code> 表达式，都至少会包含一个代表发送或者接受的表达式。同时也可能包含其他表达式。</li>
+<li><code>select</code> 语句包含的候选分支中的 <code>case</code> 表达式都会在该语句执行开始时先被求值。并且求值顺序是从上到下的。</li>
+<li>对每一个 <code>case</code> 表达式求值时，如果相应的操作正处于阻塞状态，那么这个 <code>case</code> 表达式所在的候选分支是不满足条件的。</li>
+<li>一个候选分支中的所有 <code>case</code> 表达式都被求值完毕后，才会继续下一个候选分支。当所有候选分支都不满足条件时，会执行默认分支。如果没有默认分支，<code>select</code> 会阻塞，直到有满足条件的候选分支。</li>
+<li>如果有多个候选分支满足条件，<code>select</code> 会用一种伪随机的算法在其中选择一个执行。</li>
+<li>一条 <code>select</code> 语句只能有一个默认分支，并且默认分支只能在无候选分支可选时才会被执行。</li>
+<li><code>select</code> 语句的每次执行，包括 <code>case</code> 表达式求值和分支选择，都是独立的。至于它们执行是否是并发安全的，需要看其中是否有包含并发不安全的代码。</li>
+</ul>
+]]></content>
+		</item>
+		
+		<item>
+			<title>通道的基本操作</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_channel/</link>
+			<pubDate>Sun, 13 Dec 2020 15:17:24 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_channel/</guid>
+			<description>作为 Go 语言最具特色的数据类型，通道（channel）完全可以与 goroutine （协程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 Don’t communicate by</description>
+			<content type="html"><![CDATA[<p>作为 <code>Go</code> 语言最具特色的数据类型，通道（channel）完全可以与 <code>goroutine</code> （协程）并驾齐驱，共同代表 <code>Go</code> 语言独有的并发编程模式和编程哲学。</p>
+<blockquote>
+<p>Don’t communicate by sharing memory; share memory by communicating. （不要通过共享内存来通信，而应该通过通信来共享内存。）</p>
+</blockquote>
+<p>这是作为 <code>Go</code> 语言的主要创造者之一的 <code>Rob Pike</code> 的至理名言，这也充分体现了 <code>Go</code> 语言最重要的编程理念。而通道类型恰恰是后半句话的完美实现，我们可以利用通道在多个 <code>goroutine</code> 之间传递数据。</p>
+<h2 id="通道的基础知识">通道的基础知识</h2>
+<p>通道类型的值本身就是并发安全的，这也是 <code>Go</code> 语言自带的、唯一一个可以满足并发安全性的类型。</p>
+<p>声明一个通道时，需要用到内建函数 <code>make</code>。就像用 <code>make</code>  初始化切片那样，传给这个函数的第一个参数应该是代表了通道的具体类型的类型字面量。第二个参数确定该通道的元素类型，这决定了我们可以通过这个通道传递什么类型的数据。</p>
+<p>比如，类型字面量 <code>chan int</code>，其中 <code>chan</code> 是表示通道的关键字，<code>int</code> 则说明该通道的元素类型。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+</code></pre></div><p>声明通道时还可以传一个 <code>int</code> 类型的参数表示通道的容量。该参数是可选的，表示通道可以缓存多少个元素值，因此该参数不能小于 0。</p>
+<p>当容量为 0 时，是非缓冲通道。容量大于 0 时，是缓冲通道。</p>
+<p>一个通道相当于一个先进先出（FIFO）的队列。也就是说，通道中的元素值都是严格的按照发送的顺序排列的，先被发送通道的元素值一定先被接收。元素值的发送和接收都需要用到操作符 <code>&lt;-</code>。也可以叫它接送操作符。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">3</span>
+	<span class="nx">elmt</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the first element is: %v.\n&#34;</span><span class="p">,</span> <span class="nx">elmt</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>上面这段代码中，我们声明并初始化了一个 <code>int</code> 类型，容量是 3 的通道 <code>ch</code>，并且往通道里发送了 3 个值 2、1、3。</p>
+<p>由于该通道的容量是 3，所以在通道里面不包含任何元素的时候，可以连续的像该通道发送 3 个值，此时这三个值都将被缓存到通道中。</p>
+<p>然后我们使用短声明方式声明了变量 <code>elmt</code> 接收通道里的第一个元素值，并把它打印出来。</p>
+<h2 id="对通道的发送和接收操作有哪些特性">对通道的发送和接收操作有哪些特性</h2>
+<p>基本特性如下：</p>
+<ul>
+<li>对于同一个通道，发送操作之间是互斥的，接收操作之间也是互斥的。</li>
+<li>发送操作和接收操作中对元素值得处理都是不可分割的。</li>
+<li>发送操作在完全完成之前会被阻塞。接收操作也是如此。</li>
+</ul>
+<h3 id="第一个基本特性">第一个基本特性</h3>
+<p>在同一个时刻，<code>Go</code> 语言的运行时系统只会执行同一个通道的任意个发送操作中的某一个。直到这个元素值被完全复制进通道之后，其他针对该通道的发送操作才可能被执行。</p>
+<p>类似的，同一时刻运行时系统也只会执行同一个通道的任意个接收操作中的某一个。知道这个元素值被完全移出通道之后，其他针对该通道的接收操作才可能被执行。即使这些操作是并发执行的也是如此。</p>
+<p>这里所谓的并发执行，可以认为是多个代码块分别在不同的 <code>goroutine</code> 之中，并有机会在同一个时间段被执行。</p>
+<p>另外，对于通道中的同一个元素值来说，发送操作和接收操作也是互斥的。如，正在被复制进通道但还未完成的元素值，绝对不会被想接收它的一方看到和取走。</p>
+<p>元素值从外界进入通道时会被复制。更具体的说，进入通道的并不是在接收操作符右面的那个元素值，而是它的副本。</p>
+<p>另一方面，元素值从通道进入外界时会被移动，第一步是生成元素值的副本准备给接收方，第二步是删除通道中的这个元素值。</p>
+<h3 id="第二个基本特征">第二个基本特征</h3>
+<p>通道的发送和接收都是原子性的，绝不会被打断。如，发送操作要么还没复制元素值，要么已经复制完毕，绝不会出现值复制了一部分的情况。又如，接收操作在准备好元素副本后，一定会删除通道中的元素值，绝不会出现通道中还有残留的情况。</p>
+<p>这既是为了保证通道中元素值的完整性，也是为了保证通道操作的唯一性。通道中的同一元素值只可能是一个发送操作放入的，也只可能是被一个接收操作取出。</p>
+<h3 id="第三个基本特征">第三个基本特征</h3>
+<p>一般情况下发送操作包含复制元素副本和把副本放到通道这两个步骤。在这两步完全完成之前，发起发送操作的程序会阻塞直到阻塞解除。</p>
+<p>更细致的说，在通道完成发送操作之后，运行时系统会通知这段程序所在的 <code>goroutine</code> 继续执行后面的代码。</p>
+<p>接收操作通常包含复制元素副本，把副本交给接收方和删除元素值三个步骤，在这三部完全完成之前，发起该操作的程序也会阻塞直到该程序所在的 <code>goroutine</code> 收到运行时系统的通知重新获得运行机会。</p>
+<p>所以，阻塞程序就是为了实现操作的互斥和元素值的完整。</p>
+<h3 id="发送操作和接收操作什么时候可能被长时间阻塞">发送操作和接收操作什么时候可能被长时间阻塞</h3>
+<p>对缓冲通道来说，如果通道已满，那么它的发送操作会被阻塞，直到通道中有元素值被取走。然后通道会优先通知最早因此等待发送的 <code>goroutine</code> 继续执行操作。发送操作被阻塞后，后续操作会顺序进入通道内部的发送等待队列，所以通知的顺序总是公平的。</p>
+<p>相对的，如果通道已空，那么它的接收操作会被阻塞，直到通道中有新的元素值出现。这时通道会优先通知最早等待的那个 <code>goroutine</code> 继续执行操作。接收操作阻塞后，后续操作会顺序进入通道内部的接收等待队列。</p>
+<p>对非缓冲通道来说，无论是发送还是接收，一开始执行就会被阻塞，知道配对的操作也开始执行，才会继续传递。由此可见，非缓冲通道是在用同步的方式传递数据。也就是说，只有收发双方对接上了，数据才会被传递。</p>
+<p>并且，数据是直接从发送方复制到接收方的，中间并不会用非缓冲通道做中转。相比之下，缓冲通道则在用异步的方式传递数据。</p>
+<p>大多数情况下，缓冲通道会作为收发双方的中间件。但是，当发送操作执行的时候发现空的通道中正好有等待的接收操作，那么它会直接把元素值复制给接收方。</p>
+<p>对于值为 <code>nil</code> 的通道，不论它的具体类型是什么，对它的发送和接收都会永久的处于阻塞状态。通道是引用类型，它的零值就是 <code>nil</code>，所以声明通道时一定要初始化。</p>
+<h3 id="发送操作和接收操作什么时候会引发-panic">发送操作和接收操作什么时候会引发 <code>panic</code></h3>
+<p>对一个已经关闭了的通道执行收发操作就会引发 <code>panic</code>。</p>
+<p>试图关闭一个已经关闭了的通道也会引发 <code>panic</code>。</p>
+<p>具体的说，当我们把接收表达式的结果同时赋个两个变量，第二个变量就是 <code>bool</code> 类型。它为 <code>false</code> 的时候表示通道已经关闭，并且再没有元素可取了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">elmt</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span>
+</code></pre></div><p>如果通道关闭时里面还有元素未取出，那么接收表达式的结果仍然会取出元素值并且第二个结果是 <code>true</code>。所以，要通过第二个结果来判断通道是否已关闭可能是有延时的。</p>
+<p>通道所有权问题，简单来说，谁创建，谁关闭。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>字典的操作和约束</title>
