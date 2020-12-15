@@ -1,102 +1,1298 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>文章列表 on 码农Joseph</title>
-    <link>https://zhangxuesong.github.io/posts/</link>
-    <description>Recent content in 文章列表 on 码农Joseph</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Tue, 15 Dec 2020 10:08:40 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>函数的正确使用姿势</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_func/</link>
-      <pubDate>Tue, 15 Dec 2020 10:08:40 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_func/</guid>
-      <description>函数是一等公民 在 Go 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。 简单来说，这意味着函数不但可以用于封装代</description>
-    </item>
-    
-    <item>
-      <title>通道的高级玩法</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_channel2/</link>
-      <pubDate>Mon, 14 Dec 2020 15:14:51 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_channel2/</guid>
-      <description>单向通道 我们通常说通道都是指双向通道，即：即可以发也可以收的通道。 所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向</description>
-    </item>
-    
-    <item>
-      <title>通道的基本操作</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_channel/</link>
-      <pubDate>Sun, 13 Dec 2020 15:17:24 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_channel/</guid>
-      <description>作为 Go 语言最具特色的数据类型，通道（channel）完全可以与 goroutine （协程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 Don’t communicate by</description>
-    </item>
-    
-    <item>
-      <title>字典的操作和约束</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_map/</link>
-      <pubDate>Sat, 12 Dec 2020 11:33:51 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_map/</guid>
-      <description>Go 语言的字典（map）类型 字典存储的不再是单一值，而是键值对的集合。 字典的键类型会受到约束 Go 语言的字典类型其实是一个哈希表（hash tabl</description>
-    </item>
-    
-    <item>
-      <title>container包中的那些容器</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_container/</link>
-      <pubDate>Fri, 11 Dec 2020 12:23:21 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_container/</guid>
-      <description>container/list Go 语言的链表实现在标准库的 container/list 代码包中。该包有两个公开的程序实体：List 和 Element，List 实现了一个双向链表，Element 代表了</description>
-    </item>
-    
-    <item>
-      <title>数组和切片</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_array_slice/</link>
-      <pubDate>Thu, 10 Dec 2020 14:50:38 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_array_slice/</guid>
-      <description>Go 语言的数组（array）类型和切片（slice）类型 它们的共同点是都属于集合类的类型，都可以用来存储一种类型的值。 不同的是数组的长度是固定</description>
-    </item>
-    
-    <item>
-      <title>Go 语言中的类型断言那些事儿</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</link>
-      <pubDate>Wed, 09 Dec 2020 16:34:11 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</guid>
-      <description>怎样判断一个变量的类型 先来看一段代码： package main import &amp;#34;fmt&amp;#34; var container = []string{&amp;#34;0&amp;#34;, &amp;#34;1&amp;#34;, &amp;#34;2&amp;#34;} func main() { container := map[int]string{0: &amp;#34;0&amp;#34;, 1: &amp;#34;1&amp;#34;, 2: &amp;#34;2&amp;#34;} fmt.Printf(&amp;#34;the element is %q.\n&amp;#34;, container[1]) } 怎样在打印期中元素之前判断 container 的类型呢，当然是用类</description>
-    </item>
-    
-    <item>
-      <title>Go 语言中的作用域那些事儿</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_scope/</link>
-      <pubDate>Wed, 09 Dec 2020 15:43:38 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_scope/</guid>
-      <description>作用域是什么 一个程序实体被写出来，就是为了让其他程序引用。哪里的代码可以引用它呢，这就涉及到了它的作用域。 Go 语言的访问权限有三种：包级私有的</description>
-    </item>
-    
-    <item>
-      <title>Go 语言中的变量那些事儿</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_var/</link>
-      <pubDate>Wed, 09 Dec 2020 09:23:22 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_var/</guid>
-      <description>变量声明 除了 var name string 这种声明方式以外还有两种基于类型推断的声明方式。 注意短变量声明只能在函数体内部使用。 类型推断 类型推断是编程语言在编译器自动</description>
-    </item>
-    
-    <item>
-      <title>库源码文件和代码拆分</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/lib_source/</link>
-      <pubDate>Tue, 08 Dec 2020 13:12:08 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/lib_source/</guid>
-      <description>什么是库源码文件 库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如： package lib5 import &amp;#34;fmt&amp;#34; func Hello(name string) { fmt.Printf(&amp;#34;Hello %s!\n&amp;#34;, name) } 把上面代码保存到 libSource.go 执行 go run</description>
-    </item>
-    
-  </channel>
+	<channel>
+		<title>文章列表 on 码农Joseph</title>
+		<link>https://zhangxuesong.github.io/posts/</link>
+		<description>Recent content in 文章列表 on 码农Joseph</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en</language>
+		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
+		<lastBuildDate>Tue, 15 Dec 2020 10:08:40 +0800</lastBuildDate>
+		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>函数的正确使用姿势</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_func/</link>
+			<pubDate>Tue, 15 Dec 2020 10:08:40 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_func/</guid>
+			<description>函数是一等公民 在 Go 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。 简单来说，这意味着函数不但可以用于封装代</description>
+			<content type="html"><![CDATA[<h2 id="函数是一等公民">函数是一等公民</h2>
+<p>在 <code>Go</code> 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。</p>
+<p>简单来说，这意味着函数不但可以用于封装代码、分割功能、解耦逻辑，还可以化身为普通的值，在其他函数间传递、赋予变量、做类型判断和转换等等，就像切片和字典的值那样。</p>
+<p>更深层次来说，函数值可以由此成为能够被随意传播的独立逻辑组件（或者说功能模块）。</p>
+<p>对于函数类型来说，它是一种对一组输入、输出进行模板化的重要工具，它比接口类型更加轻巧、灵活，它的值也借此变成了可被热替换的逻辑组件。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">type</span> <span class="nx">Printer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">contents</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">printToStd</span><span class="p">(</span><span class="nx">contents</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">bytesNum</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">contents</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">p</span> <span class="nx">Printer</span>
+	<span class="nx">p</span> <span class="p">=</span> <span class="nx">printToStd</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;something&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>这里我们声明了一个函数类型 <code>Printer</code>，在类型声明的名称右边的是 <code>func</code> 关键字，由此可知是一个函数类型声明。</p>
+<p><code>func</code> 右边是函数类型的参数列表和结果列表。其中，参数列表必须用圆括号包裹，而只要结果列表中只有一个结果声明，并且没有为它命名，那么可以省略外面的圆括号。</p>
+<p>函数签名的方式与函数声明是一致的。只是紧挨在参数列表左边的不是函数名称，而是关键字 <code>func</code>。这里函数名称和 <code>func</code> 互换了位置。</p>
+<blockquote>
+<p>函数签名其实就是函数的参数列表和结果列表的统称，它定义了可用来鉴别不同函数的那些特征，同时也定义了我们与函数交互的方式。</p>
+</blockquote>
+<p>注意，各个参数和结果的名称不能算作函数签名的一部分，甚至对结果声明来说，没有名称都可以。</p>
+<p>只要两个函数的参数列表和结果列表中的元素顺序及其类型是一致的，我们就可以说它们是一样的函数，或者说是实现了同一个函数类型的函数。</p>
+<p>严格来说，函数的名称也不能算作函数签名的一部分，它只是我们在调用函数时需要给定的标识符而已。</p>
+<p>我们下面声明的 <code>printToStd</code> 的签名和 <code>Printer</code> 是一致的，因此前者是后者的一个实现，即使他们的名称以及有的结果名称是不一样的。</p>
+<p>通过 <code>main</code> 函数中的代码，我们就可以证实这两者之间的关系了，我们顺利的把 <code>printToStd</code> 赋给了 <code>Printer</code> 类型的变量 <code>p</code>，并且成功调用了它。</p>
+<p>总之，函数是一等公民是函数式编程（functional programming）的重要特征。<code>Go</code> 语言在语言层面支持了函数式编程。</p>
+<h2 id="怎样编写高阶函数">怎样编写高阶函数</h2>
+<p>简单的说，高阶函数可以满足下面两个条件：</p>
+<ul>
+<li>接收其他函数作为参数传入。</li>
+<li>把其他函数作为结果返回。</li>
+</ul>
+<p>只要满足其中任意一个特点，我们就可以说这个函数是一个高阶函数。高阶函数也是函数式编程中重要概念和特征。</p>
+<p>例如，有需求需要编写 <code>calculate</code> 函数来实现两个整数间的加减乘除计算，但是希望两个整数和具体的操作都由调用方给出。我们来实现它：</p>
+<p>首先，声明一个名叫 <code>operate</code> 的函数类型，它有两个参数和一个结果，都是 <code>int</code> 类型的。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">operate</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
+</code></pre></div><p>然后，我们编写 <code>calculate</code> 函数的签名部分。这个函数除了需要两个 <code>int</code> 参数，还需要一个 <code>operate</code> 类型的参数。</p>
+<p>该函数的结果应该有两个，一个 <code>int</code> 类型，代表真正的操作结果，另一个 <code>error</code> 类型的，表示如果 <code>operate</code> 类型的参数为 <code>nil</code>，那么就返回一个错误。</p>
+<blockquote>
+<p>函数类型属于引用类型，它的值可以为 <code>nil</code>，并且它的零值就是 <code>nil</code>。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">calculate</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">op</span> <span class="nx">operate</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">op</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;无效操作&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nf">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></div><p><code>calculate</code> 函数的实现比较简单，先用卫述语句检查一下参数，如果 <code>operate</code> 类型的参数 <code>op</code> 为 <code>nil</code>，就直接返回 0 和一个错误。</p>
+<blockquote>
+<p>卫述语句是指被用来检查关键的先决条件的合法性，并在检查未通过的情况下立即终止当前代码块的执行。<code>Go</code> 语言中，<code>if</code> 通常被作为卫述语句。</p>
+</blockquote>
+<p>如果检查无误，那么调用 <code>op</code> 并把那两个操作数传给它，最后返回 <code>op</code> 的结果和表示没有错误发生的 <code>nil</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">op</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+	<span class="p">}</span>
+	<span class="nx">s</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">calculate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">op</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">())</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>上面这个例子展示了：把函数作为一个普通的值赋给一个变量；让函数在其他函数间传递。</p>
+<p>那么 <code>calculate</code> 函数就是一个高阶函数，该函数接受其他函数作为参数传入。</p>
+<p>第二个特点：把其他函数作为返回结果。可见以下代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;errors&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">operates</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
+
+<span class="kd">type</span> <span class="nx">calculator</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">genCalculator</span><span class="p">(</span><span class="nx">op</span> <span class="nx">operates</span><span class="p">)</span> <span class="nx">calculator</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">op</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;无效操作&#34;</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nf">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">op</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+	<span class="p">}</span>
+
+	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">78</span>
+	<span class="nx">add</span> <span class="o">:=</span> <span class="nf">genCalculator</span><span class="p">(</span><span class="nx">op</span><span class="p">)</span>
+	<span class="nx">result</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The result: %d (error: %v)\n&#34;</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="如何实现闭包">如何实现闭包</h2>
+<p>什么是闭包，在一个函数中存在对外来标识符的引用，这个外来标识符既不代表当前函数的任何参数或结果，也不是函数内部声明的，它是从外部直接拿过来的。</p>
+<p>还有专门的术语称呼它，自由变量，可见它代表的肯定是个变量。实际上，如果它是个常量，那也就形成不了闭包了，因为常量是不可变的程序实体，而闭包体现的却是由不确定变为确定的一个过程。</p>
+<p>闭包函数就是因为引用了自由变量，而呈现出一种不确定的状态，也叫开放状态。也就是说，它的内部逻辑是不完整的，有一部分逻辑需要自由变量参与完成，而自由变量到底代表了什么在闭包函数被定义的时候是不确定的。</p>
+<p>即使对于像 <code>Go</code> 语言这种静态语言，在定义闭包函数时也只能知道自由变量的类型。</p>
+<p>上面那个例子中提到的 <code>genCalculator</code> 函数内部就实现了闭包函数，该函数也是高阶函数。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">genCalculator</span><span class="p">(</span><span class="nx">op</span> <span class="nx">operates</span><span class="p">)</span> <span class="nx">calculator</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">op</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;无效操作&#34;</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nf">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p><code>genCalculator</code> 函数只做了一件事，定义了一个匿名的、<code>calculator</code> 类型的函数并把它返回。</p>
+<p>这个匿名函数就是一个闭包函数。它里面使用的 <code>op</code> 既不代表它的任何参数或结果也不是它自己声明的，而是外层函数的参数，对它来说是自由变量。</p>
+<p>这个自由变量代表了什么，定义闭包函数时是不确定的，定义外层函数时才能确定。</p>
+<p><p class="md__image">
+  <img src=".././image/61f3689a0023e83407ccae081cdd8108.png"
+    alt=""  />
+</p>
+</p>
+<p>表面上看，我们只是延迟实现了一部分程序逻辑或功能，但实际上我们是在动态的生成那部分程序逻辑。我们可以借此在程序运行的过程中，根据需要生成功能不同的函数，继而影响后续的程序行为。</p>
+<h2 id="传入函数中的那些参数值后来怎样了">传入函数中的那些参数值后来怎样了</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">array1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The array: %v\n&#34;</span><span class="p">,</span> <span class="nx">array1</span><span class="p">)</span>
+  <span class="nx">array2</span> <span class="o">:=</span> <span class="nf">modifyArray</span><span class="p">(</span><span class="nx">array1</span><span class="p">)</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The modified array: %v\n&#34;</span><span class="p">,</span> <span class="nx">array2</span><span class="p">)</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The original array: %v\n&#34;</span><span class="p">,</span> <span class="nx">array1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">modifyArray</span><span class="p">(</span><span class="nx">a</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span>
+  <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;x&#34;</span>
+  <span class="k">return</span> <span class="nx">a</span>
+<span class="p">}</span>
+</code></pre></div><p>所有传给函数的参数值都会被复制，函数在其内部使用的并不是参数值的原值，而是它们的副本。</p>
+<p>数组是值类型，每一次复制都会拷贝它以及所有的元素值。而对于切片、字典、通道等引用类型，只会复制它们本身，并不会复制它们的底层数据，也就是浅复制。</p>
+<p>以切片值为例，复制的时候只是拷贝了它指向底层数组中某一个元素的指针，以及它的容量和长度，它底层的数组不会被拷贝。</p>
+<p>需要注意得是，当传入函数的是一个值类型的参数值，但这个参数值中的某个元素是引用类型的，仍然符合上面的规则。如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">][]</span><span class="kt">string</span><span class="p">{</span>
+    <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;d&#34;</span><span class="p">,</span> <span class="s">&#34;e&#34;</span><span class="p">,</span> <span class="s">&#34;f&#34;</span><span class="p">},</span>
+    <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;g&#34;</span><span class="p">,</span> <span class="s">&#34;h&#34;</span><span class="p">,</span> <span class="s">&#34;i&#34;</span><span class="p">},</span>
+    <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;j&#34;</span><span class="p">,</span> <span class="s">&#34;k&#34;</span><span class="p">,</span> <span class="s">&#34;l&#34;</span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">modifyArray</span><span class="p">(</span><span class="nx">a</span> <span class="p">[</span><span class="mi">3</span><span class="p">][]</span><span class="kt">string</span><span class="p">)</span> <span class="p">[</span><span class="mi">3</span><span class="p">][]</span><span class="kt">string</span> <span class="p">{</span>
+	<span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;z&#34;</span>
+	<span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}</span>
+	<span class="k">return</span> <span class="nx">a</span>
+<span class="p">}</span>
+</code></pre></div><p>上面例子中，对 <code>a[1]</code> 的整个元素替换是不会影响原来的数组的，但是对 <code>a[0][1]</code> 的替换是会影响到原始数据的。</p>
+<p>相关原则：既不要把你的程序细节暴露给外界，也尽量不要让外界的变动影响到你的程序。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>通道的高级玩法</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_channel2/</link>
+			<pubDate>Mon, 14 Dec 2020 15:14:51 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_channel2/</guid>
+			<description>单向通道 我们通常说通道都是指双向通道，即：即可以发也可以收的通道。 所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向</description>
+			<content type="html"><![CDATA[<h2 id="单向通道">单向通道</h2>
+<p>我们通常说通道都是指双向通道，即：即可以发也可以收的通道。</p>
+<p>所谓单向通道就是 只能发不能收 或者 只能收不能发 的通道。一个通道是单向还是双向的由它的字面量体现。</p>
+<p>接收操作符 <code>&lt;-</code> 如果用在通道的类型字面量中，它代表的就不再是接收或者发送的动作了，而是通道的方向。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nb">make</span><span class="p">(</span><span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span><span class="c1">//发送通道，只能发不能收
+</span><span class="c1"></span><span class="nb">make</span><span class="p">(</span><span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span><span class="c1">//接收通道，只能收不能发
+</span></code></pre></div><h3 id="单向通道的应用价值">单向通道的应用价值</h3>
+<p>概括的说，单向通道最主要的用途就是约束其他代码的行为。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">SendInt</span><span class="p">(</span><span class="nx">ch</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+	<span class="c1">//fmt.Printf(&#34;element of channel: %v.\n&#34;, &lt;- ch)
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>上面这段代码声明了一个函数，只接受一个发送通道，那么函数中就只能像通道发送元素值而不能从通道接收元素值。这就起到了约束函数行为的作用。</p>
+<p>如果是接口类型中声明的某个函数的定义使用了单向通道，那么等于该接口类型的所有实现都受到了约束。</p>
+<p>我们在调用的这个函数的时候，只需要把一个元素类型匹配的双向通道传给它，<code>Go</code> 会自动把通道转成函数需要的单向通道。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nf">SendInt</span><span class="p">(</span><span class="nx">ch3</span><span class="p">)</span>
+<span class="nx">elmt3</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch3</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;elemt3 is %v. channel stats is %v.\n&#34;</span><span class="p">,</span> <span class="nx">elmt3</span><span class="p">,</span> <span class="nx">ok</span><span class="p">)</span>
+
+<span class="c1">//elemt3 is 81. channel stats is true.
+</span></code></pre></div><p>我们还可以在函数声明的结果列表中使用单向通道，如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">getIntChan</span><span class="p">()</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="nx">num</span> <span class="o">:=</span> <span class="mi">5</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">num</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+	<span class="p">}</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">ch</span>
+<span class="p">}</span>
+</code></pre></div><p>函数返回一个接收通道，这以为这得到该通道的程序只能从通道中读取数据。这实际上也是对函数调用方的一种约束。</p>
+<p><code>Go</code> 语言中还可以声明函数类型，如果在函数类型中使用了单向通道，那么等于约束了所有实现了这个函数类型的函数。</p>
+<p>看下函数调用结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch4</span> <span class="o">:=</span> <span class="nf">getIntChan</span><span class="p">()</span>
+<span class="k">for</span> <span class="nx">elemt</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ch4</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element in ch4: %v.\n&#34;</span><span class="p">,</span> <span class="nx">elemt</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>for</code> 语句会不断的尝试从通道 <code>ch4</code> 中读取元素值。即使通道被关闭了，它也会取出所有剩余元素值后再结束运行。</p>
+<p>通常通道里没有元素值时，<code>for</code> 语句会阻塞在这里直到有新的元素值可取。但这里因为函数里把通道关闭了，所以取出通道内的所有元素值后会结束运行。</p>
+<p>如果通道的值为 <code>nil</code>，那么 <code>for</code> 语句就永远阻塞在这里。</p>
+<h2 id="select-和通道是怎样连用"><code>select</code> 和通道是怎样连用</h2>
+<p><code>select</code> 和 <code>switch</code> 用法差不多，但是只能和通道联用，每个 <code>case</code> 都只能包含通道表达式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 准备好几个通道。
+</span><span class="c1"></span><span class="nx">intChannels</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">{</span>
+    <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="p">}</span>
+<span class="c1">// 随机选择一个通道，并向它发送元素值。
+</span><span class="c1"></span><span class="nx">index</span> <span class="o">:=</span> <span class="nx">rand</span><span class="p">.</span><span class="nf">Intn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The index: %d\n&#34;</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span>
+<span class="nx">intChannels</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="nx">index</span>
+<span class="c1">// 哪一个通道中有可取的元素值，哪个对应的分支就会被执行。
+</span><span class="c1"></span><span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="nx">intChannels</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The first candidate case is selected.&#34;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="nx">intChannels</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The second candidate case is selected.&#34;</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nx">elem</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">intChannels</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The third candidate case is selected, the element is %d.\n&#34;</span><span class="p">,</span> <span class="nx">elem</span><span class="p">)</span>
+    <span class="k">default</span><span class="p">:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;No candidate case is selected!&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>首先声明了一个 3 个元素的通道数组，每个元素都是 <code>int</code> 类型，容量为 1 的双向通道。然后随机生成一个范围在 0,2 的整数，把它作为索引从上面的数组中选择一个通道并像其中发送一个元素值。最后用 <code>select</code> 分别尝试从数组中的 3 个通道中接收元素值，哪一个通道有值，则执行对应的分支。如果都没有的话则执行默认分支。</p>
+<p>使用 <code>select</code> 时，应注意以下几点：</p>
+<ul>
+<li>如果使用了默认分支，那么无论涉及通道的操作是否阻塞，<code>select</code> 语句都不会阻塞。因为如果没有满足求职条件的话，就会执行默认分支。</li>
+<li>如果没有使用默认分支，那么当所有 <code>case</code> 分支都不满足求职条件的话，<code>select</code> 语句就会被阻塞，直到有一个 <code>case</code> 表达式满足条件。</li>
+<li>我们需要通过第二个结果值来判断通道是否已经关闭，如果关闭了，就应该及时屏蔽掉对应分支或者采取其他措施。这对于程序逻辑和程序性能是有好处的。</li>
+<li><code>select</code> 语句只能对其中的每一个 <code>case</code> 表达式各求值一次，如果想连续或定时操作其中的通道的话，通常需要通过 <code>for</code> 语句中嵌套 <code>select</code> 的方式实现。这时需要注意，在 <code>select</code> 中使用 <code>break</code> 只能结束当前的 <code>select</code> 语句执行，并不会对外层的 <code>for</code> 产生作用。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">intChan</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">// 一秒后关闭通道。
+</span><span class="c1"></span><span class="nx">time</span><span class="p">.</span><span class="nf">AfterFunc</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">,</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nb">close</span><span class="p">(</span><span class="nx">intChan</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="k">select</span> <span class="p">{</span>
+<span class="k">case</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">intChan</span><span class="p">:</span>
+  <span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The candidate case is closed.&#34;</span><span class="p">)</span>
+    <span class="k">break</span>
+  <span class="p">}</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The candidate case is selected.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="select-语句的分支选择规则"><code>select</code> 语句的分支选择规则</h2>
+<ul>
+<li>对于每一个 <code>case</code> 表达式，都至少会包含一个代表发送或者接受的表达式。同时也可能包含其他表达式。</li>
+<li><code>select</code> 语句包含的候选分支中的 <code>case</code> 表达式都会在该语句执行开始时先被求值。并且求值顺序是从上到下的。</li>
+<li>对每一个 <code>case</code> 表达式求值时，如果相应的操作正处于阻塞状态，那么这个 <code>case</code> 表达式所在的候选分支是不满足条件的。</li>
+<li>一个候选分支中的所有 <code>case</code> 表达式都被求值完毕后，才会继续下一个候选分支。当所有候选分支都不满足条件时，会执行默认分支。如果没有默认分支，<code>select</code> 会阻塞，直到有满足条件的候选分支。</li>
+<li>如果有多个候选分支满足条件，<code>select</code> 会用一种伪随机的算法在其中选择一个执行。</li>
+<li>一条 <code>select</code> 语句只能有一个默认分支，并且默认分支只能在无候选分支可选时才会被执行。</li>
+<li><code>select</code> 语句的每次执行，包括 <code>case</code> 表达式求值和分支选择，都是独立的。至于它们执行是否是并发安全的，需要看其中是否有包含并发不安全的代码。</li>
+</ul>
+]]></content>
+		</item>
+		
+		<item>
+			<title>通道的基本操作</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_channel/</link>
+			<pubDate>Sun, 13 Dec 2020 15:17:24 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_channel/</guid>
+			<description>作为 Go 语言最具特色的数据类型，通道（channel）完全可以与 goroutine （协程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 Don’t communicate by</description>
+			<content type="html"><![CDATA[<p>作为 <code>Go</code> 语言最具特色的数据类型，通道（channel）完全可以与 <code>goroutine</code> （协程）并驾齐驱，共同代表 <code>Go</code> 语言独有的并发编程模式和编程哲学。</p>
+<blockquote>
+<p>Don’t communicate by sharing memory; share memory by communicating. （不要通过共享内存来通信，而应该通过通信来共享内存。）</p>
+</blockquote>
+<p>这是作为 <code>Go</code> 语言的主要创造者之一的 <code>Rob Pike</code> 的至理名言，这也充分体现了 <code>Go</code> 语言最重要的编程理念。而通道类型恰恰是后半句话的完美实现，我们可以利用通道在多个 <code>goroutine</code> 之间传递数据。</p>
+<h2 id="通道的基础知识">通道的基础知识</h2>
+<p>通道类型的值本身就是并发安全的，这也是 <code>Go</code> 语言自带的、唯一一个可以满足并发安全性的类型。</p>
+<p>声明一个通道时，需要用到内建函数 <code>make</code>。就像用 <code>make</code>  初始化切片那样，传给这个函数的第一个参数应该是代表了通道的具体类型的类型字面量。第二个参数确定该通道的元素类型，这决定了我们可以通过这个通道传递什么类型的数据。</p>
+<p>比如，类型字面量 <code>chan int</code>，其中 <code>chan</code> 是表示通道的关键字，<code>int</code> 则说明该通道的元素类型。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+</code></pre></div><p>声明通道时还可以传一个 <code>int</code> 类型的参数表示通道的容量。该参数是可选的，表示通道可以缓存多少个元素值，因此该参数不能小于 0。</p>
+<p>当容量为 0 时，是非缓冲通道。容量大于 0 时，是缓冲通道。</p>
+<p>一个通道相当于一个先进先出（FIFO）的队列。也就是说，通道中的元素值都是严格的按照发送的顺序排列的，先被发送通道的元素值一定先被接收。元素值的发送和接收都需要用到操作符 <code>&lt;-</code>。也可以叫它接送操作符。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+	<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">3</span>
+	<span class="nx">elmt</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the first element is: %v.\n&#34;</span><span class="p">,</span> <span class="nx">elmt</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>上面这段代码中，我们声明并初始化了一个 <code>int</code> 类型，容量是 3 的通道 <code>ch</code>，并且往通道里发送了 3 个值 2、1、3。</p>
+<p>由于该通道的容量是 3，所以在通道里面不包含任何元素的时候，可以连续的像该通道发送 3 个值，此时这三个值都将被缓存到通道中。</p>
+<p>然后我们使用短声明方式声明了变量 <code>elmt</code> 接收通道里的第一个元素值，并把它打印出来。</p>
+<h2 id="对通道的发送和接收操作有哪些特性">对通道的发送和接收操作有哪些特性</h2>
+<p>基本特性如下：</p>
+<ul>
+<li>对于同一个通道，发送操作之间是互斥的，接收操作之间也是互斥的。</li>
+<li>发送操作和接收操作中对元素值的处理都是不可分割的。</li>
+<li>发送操作在完全完成之前会被阻塞。接收操作也是如此。</li>
+</ul>
+<h3 id="第一个基本特性">第一个基本特性</h3>
+<p>在同一个时刻，<code>Go</code> 语言的运行时系统只会执行同一个通道的任意个发送操作中的某一个。直到这个元素值被完全复制进通道之后，其他针对该通道的发送操作才可能被执行。</p>
+<p>类似的，同一时刻运行时系统也只会执行同一个通道的任意个接收操作中的某一个。知道这个元素值被完全移出通道之后，其他针对该通道的接收操作才可能被执行。即使这些操作是并发执行的也是如此。</p>
+<p>这里所谓的并发执行，可以认为是多个代码块分别在不同的 <code>goroutine</code> 之中，并有机会在同一个时间段被执行。</p>
+<p>另外，对于通道中的同一个元素值来说，发送操作和接收操作也是互斥的。如，正在被复制进通道但还未完成的元素值，绝对不会被想接收它的一方看到和取走。</p>
+<p>元素值从外界进入通道时会被复制。更具体的说，进入通道的并不是在接收操作符右面的那个元素值，而是它的副本。</p>
+<p>另一方面，元素值从通道进入外界时会被移动，第一步是生成元素值的副本准备给接收方，第二步是删除通道中的这个元素值。</p>
+<h3 id="第二个基本特征">第二个基本特征</h3>
+<p>通道的发送和接收都是原子性的，绝不会被打断。如，发送操作要么还没复制元素值，要么已经复制完毕，绝不会出现值复制了一部分的情况。又如，接收操作在准备好元素副本后，一定会删除通道中的元素值，绝不会出现通道中还有残留的情况。</p>
+<p>这既是为了保证通道中元素值的完整性，也是为了保证通道操作的唯一性。通道中的同一元素值只可能是一个发送操作放入的，也只可能是被一个接收操作取出。</p>
+<h3 id="第三个基本特征">第三个基本特征</h3>
+<p>一般情况下发送操作包含复制元素副本和把副本放到通道这两个步骤。在这两步完全完成之前，发起发送操作的程序会阻塞直到阻塞解除。</p>
+<p>更细致的说，在通道完成发送操作之后，运行时系统会通知这段程序所在的 <code>goroutine</code> 继续执行后面的代码。</p>
+<p>接收操作通常包含复制元素副本，把副本交给接收方和删除元素值三个步骤，在这三步完全完成之前，发起该操作的程序也会阻塞直到该程序所在的 <code>goroutine</code> 收到运行时系统的通知重新获得运行机会。</p>
+<p>所以，阻塞程序就是为了实现操作的互斥和元素值的完整。</p>
+<h3 id="发送操作和接收操作什么时候可能被长时间阻塞">发送操作和接收操作什么时候可能被长时间阻塞</h3>
+<p>对缓冲通道来说，如果通道已满，那么它的发送操作会被阻塞，直到通道中有元素值被取走。然后通道会优先通知最早因此等待发送的 <code>goroutine</code> 继续执行操作。发送操作被阻塞后，后续操作会顺序进入通道内部的发送等待队列，所以通知的顺序总是公平的。</p>
+<p>相对的，如果通道已空，那么它的接收操作会被阻塞，直到通道中有新的元素值出现。这时通道会优先通知最早等待的那个 <code>goroutine</code> 继续执行操作。接收操作阻塞后，后续操作会顺序进入通道内部的接收等待队列。</p>
+<p>对非缓冲通道来说，无论是发送还是接收，一开始执行就会被阻塞，知道配对的操作也开始执行，才会继续传递。由此可见，非缓冲通道是在用同步的方式传递数据。也就是说，只有收发双方对接上了，数据才会被传递。</p>
+<p>并且，数据是直接从发送方复制到接收方的，中间并不会用非缓冲通道做中转。相比之下，缓冲通道则在用异步的方式传递数据。</p>
+<p>大多数情况下，缓冲通道会作为收发双方的中间件。但是，当发送操作执行的时候发现空的通道中正好有等待的接收操作，那么它会直接把元素值复制给接收方。</p>
+<p>对于值为 <code>nil</code> 的通道，不论它的具体类型是什么，对它的发送和接收都会永久的处于阻塞状态。通道是引用类型，它的零值就是 <code>nil</code>，所以声明通道时一定要初始化。</p>
+<h3 id="发送操作和接收操作什么时候会引发-panic">发送操作和接收操作什么时候会引发 <code>panic</code></h3>
+<p>对一个已经关闭了的通道执行收发操作就会引发 <code>panic</code>。</p>
+<p>试图关闭一个已经关闭了的通道也会引发 <code>panic</code>。</p>
+<p>具体的说，当我们把接收表达式的结果同时赋个两个变量，第二个变量就是 <code>bool</code> 类型。它为 <code>false</code> 的时候表示通道已经关闭，并且再没有元素可取了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">elmt</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">ch</span>
+</code></pre></div><p>如果通道关闭时里面还有元素未取出，那么接收表达式的结果仍然会取出元素值并且第二个结果是 <code>true</code>。所以，要通过第二个结果来判断通道是否已关闭可能是有延时的。</p>
+<p>通道所有权问题，简单来说，谁创建，谁关闭。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>字典的操作和约束</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_map/</link>
+			<pubDate>Sat, 12 Dec 2020 11:33:51 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_map/</guid>
+			<description>Go 语言的字典（map）类型 字典存储的不再是单一值，而是键值对的集合。 字典的键类型会受到约束 Go 语言的字典类型其实是一个哈希表（hash tabl</description>
+			<content type="html"><![CDATA[<h2 id="go-语言的字典map类型"><code>Go</code> 语言的字典（<code>map</code>）类型</h2>
+<p>字典存储的不再是单一值，而是键值对的集合。</p>
+<h3 id="字典的键类型会受到约束">字典的键类型会受到约束</h3>
+<p><code>Go</code> 语言的字典类型其实是一个哈希表（hash table）的特定实现，其中键和元素最大的不同在于，键的类型是受限的，元素可以是任意类型。</p>
+<p>要探究原因，就需要了解哈希表中最重要的过程：映射。</p>
+<p>可以把键看成元素的索引，我们可以在哈希表中通过索引找到与它成对的那个元素。</p>
+<p>键和元素的这种关系在数学里就被称为“映射”，也是 <code>map</code> 这个词的本意，哈希表的映射过程就存在于对键-元素对的增、删、改、查的操作之中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">aMap</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span>
+		<span class="s">&#34;one&#34;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
+		<span class="s">&#34;two&#34;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
+		<span class="s">&#34;three&#34;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="nx">k</span> <span class="o">:=</span> <span class="s">&#34;two&#34;</span>
+	<span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">aMap</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span>
+	<span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element of key %q: %d.\n&#34;</span><span class="p">,</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+	<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;not found!&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>我们要在哈希表中查找与某个键值对应的元素值，就要先把键值作为参数传给哈希表。</p>
+<p>哈希表会用哈希函数（hash function）把键值转换为哈希值。哈希值通常是一个无符号整数。一个哈希表会持有一定量的桶（bucket），也叫哈希桶，这些哈希桶会均匀的存储其所属哈希表收纳的键-元素对。</p>
+<p>哈希表会先用这个键的哈希值的低几位去定位一个哈希桶，然后再去这个哈希桶中查找这个键。</p>
+<p>因为键-元素对总是被捆绑在一起存储的，所以找到了键，就一定能找到对应的元素值。然后哈希表把对应的元素值作为结果返回。</p>
+<p>只要键-元素对存在哈希表中就一定能找到，因为哈希表的增、删、改时的映射过程，都与前文一致。</p>
+<p>所以映射过程的第一步就是：把键值转换为哈希值。</p>
+<p><code>Go</code> 语言的字典中，每一个键值都是由它的哈希值代表的。字典不会独立存储任何键的值，但会独立存储它们的哈希值。</p>
+<h3 id="字典的键类型不能是哪些类型">字典的键类型不能是哪些类型</h3>
+<p><code>Go</code> 语言字典的键类型不能是函数类型、字典类型和切片类型。</p>
+<p><code>Go</code> 语言规范规定，在键类型的值之间必须可以判等（==，!=）。由于函数类型、字典类型和切片类型的值不支持判等操作，所以这些类型不能作为字典的键。</p>
+<p>即使键值是接口类型，键值的实际类型也不能是上述三种类型。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">bMap</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kd">interface</span><span class="p">{}]</span><span class="kt">int</span><span class="p">{</span>
+  <span class="s">&#34;one&#34;</span><span class="p">:</span>    <span class="mi">1</span><span class="p">,</span>
+  <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">}:</span> <span class="mi">2</span><span class="p">,</span><span class="c1">//panic: runtime error: hash of unhashable type []int
+</span><span class="c1"></span>  <span class="mi">3</span><span class="p">:</span>        <span class="mi">3</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div><p>这里变量 <code>bMap</code> 的类型是键类型为 <code>interface{}</code>，值类型为 <code>int</code> 的字典类型。声明的时候进行了初始化，使它包含三个键-元素对。其中第二个键值是 <code>[]int{2}</code>，元素值是 2。这样的键值不会让 <code>Go</code> 的编译器报错，从语法上说，这样做是可以的。</p>
+<p>但是，当运行这段代码时，<code>Go</code> 语言的运行时（runtime）系统就会发现这里的问题，它会抛出一个 <code>panic</code> 并把根源指向字面量中定义相应的行。</p>
+<p>如果键的类型是数组类型，那么该类型的元素类型就不能是函数类型、字典类型和切片类型。</p>
+<p>比如，由于类型 <code>[1][]string</code> 的元素类型是 <code>[]string</code>，所以它就不能作为字典类型的键类型。另外，如果键的类型是结构体类型，那么还要保证其中字段的类型的合法性。无论不合法的类型被埋藏得有多深，比如 <code>map[[1][2][3][]string]int</code>，<code>Go</code> 语言编译器都会把它揪出来。</p>
+<h3 id="为什么键值需要支持判等操作">为什么键值需要支持判等操作</h3>
+<p><code>Go</code> 语言一旦定位到了某个哈希桶，就会试图在桶中查找键值。</p>
+<p>首先，每个哈希桶会把自己包含的所有键的哈希值存起来。<code>Go</code> 语言会用被查找键的哈希值与这些哈希值逐个比较，看看是否有相等的。如果一个相等的也没有，说明这个桶中没有要查找的键值，<code>Go</code> 语言就会立刻返回结果。</p>
+<p>如果有相等的，那就在用键值本身去对比一次。因为不同键值的哈希值可能是相同的，这就是“哈希碰撞”。</p>
+<p>所以，即使哈希值一样，键值也可能不一样。如果键类型的值无法判断，那映射的过程就没办法继续了。只有键的哈希值和键值都相等，才说明找到了匹配的键-元素对。</p>
+<h3 id="应该优先考虑哪些类型作为字典的键类型">应该优先考虑哪些类型作为字典的键类型</h3>
+<p>从性能角度来看，把键值转换为哈希值以及把要查找的键值与哈希桶中的键值对比，明显是比较重要且耗时的两个操作。所以，求哈希和判等操作的速度越快，对应的类型就越适合作为键类型。</p>
+<p>对于所有基本类型、指针类型，以及数组类型、结构体类型和接口类型，<code>Go</code> 语言都有一套算法与之对应。这套算法就包含了哈希和判等。以求哈希的操作为例，宽度越小的类型速度通常越快。对于布尔类型、整数类型、浮点类型、复数类型和指针类型来说都是如此。对于字符串类型来说，由于它的宽度不固定，所以要看具体长度，长度越短哈希越快。</p>
+<p>类型的宽度是指它单个值需要占用的字节数。如：<code>bool</code>、<code>int8</code> 等类型的字节数是 1，那面它们的宽度就是 1。</p>
+<p>类似的，结构体类型的哈希实际就是对它所有字段值求哈希并进行合并，所以关键在于它的各个字段类型以及字段的数量。而接口类型的哈希算法则由值的实际类型决定。</p>
+<p>另外这些高级数据类型的值是可变的，那面变化前后的哈希值就会不同，就会代表两个不同的键值。</p>
+<h3 id="在值为-nil-的字典上执行读写操作">在值为 <code>nil</code> 的字典上执行读写操作</h3>
+<p>由于字典是引用类型，当仅声明而不初始化一个字典的时候，它的值是 <code>nil</code>。</p>
+<p>除了添加键-元素对，我们在一个值为 <code>nil</code> 的字典上做任何操作都不会引起错误。只有当试图在一个值为 <code>nil</code> 的字典中添加一个键-元素对的时候，<code>Go</code> 语言的运行时系统会立即抛出一个 <code>panic</code>。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>container包中的那些容器</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_container/</link>
+			<pubDate>Fri, 11 Dec 2020 12:23:21 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_container/</guid>
+			<description>container/list Go 语言的链表实现在标准库的 container/list 代码包中。该包有两个公开的程序实体：List 和 Element，List 实现了一个双向链表，Element 代表了</description>
+			<content type="html"><![CDATA[<h2 id="containerlist">container/list</h2>
+<p><code>Go</code> 语言的链表实现在标准库的 <code>container/list</code> 代码包中。该包有两个公开的程序实体：<code>List</code> 和 <code>Element</code>，<code>List</code> 实现了一个双向链表，<code>Element</code> 代表了链表中的元素。</p>
+<h3 id="可以把自己生成的-element-类型值传给链表吗">可以把自己生成的 <code>Element</code> 类型值传给链表吗？</h3>
+<p>我们在这里用到了 <code>List</code> 的四种方法。</p>
+<p><code>MoveBefore</code> 方法和 <code>MoveAfter</code> 方法，它们分别用于把给定的元素移动到另一个元素的前面和后面。</p>
+<p><code>MoveToFront</code> 方法和 <code>MoveToBack</code> 方法，分别用于把给定的元素移动到链表的最前端和最后端。</p>
+<p>在这些方法中，“给定的元素”都是 <code>Element</code> 类型的，<code>*Element</code> 类型是 <code>Element</code> 类型的指针类型，<code>*Element</code> 的值就是元素的指针。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveBefore</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveAfter</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveToFront</span><span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">MoveToBack</span><span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span>
+</code></pre></div><p>如果我们自己生成这样的值，然后把它作为“给定的元素”传给链表的方法，链表是不会接受的。</p>
+<p>这些方法将不会对链表做出任何改动。因为我们自己生成的 <code>Element</code> 值并不在链表中，所以也就谈不上“在链表中移动元素”。</p>
+<p>更何况链表不允许我们把自己生成的 <code>Element</code> 值插入其中。</p>
+<p>在 <code>List</code> 包含的方法中，用于插入新元素的那些方法都只接受 <code>interface{}</code> 类型的值。这些方法在内部会使用 <code>Element</code> 值，包装接收到的新元素。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// insertValue is a convenience wrapper for insert(&amp;Element{Value: v}, at).
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">insertValue</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">at</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">l</span><span class="p">.</span><span class="nf">insert</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">Element</span><span class="p">{</span><span class="nx">Value</span><span class="p">:</span> <span class="nx">v</span><span class="p">},</span> <span class="nx">at</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>这样做正是为了避免直接使用我们自己生成的元素，主要原因是避免链表的内部关联，遭到外界破坏，这对于链表本身以及我们这些使用者来说都是有益的。</p>
+<p><code>Front</code> 和 <code>Back</code> 方法分别用于获取链表中最前端和最后端的元素。</p>
+<p><code>InsertBefore</code> 和 <code>InsertAfter</code> 方法分别用于在指定的元素之前和之后插入新元素。</p>
+<p><code>PushFront</code> 和 <code>PushBack</code> 方法则分别用于在链表的最前端和最后端插入新元素。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">Front</span><span class="p">()</span> <span class="o">*</span><span class="nx">Element</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">Back</span><span class="p">()</span> <span class="o">*</span><span class="nx">Element</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">InsertBefore</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">InsertAfter</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">mark</span> <span class="o">*</span><span class="nx">Element</span><span class="p">)</span> <span class="o">*</span><span class="nx">Element</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">PushFront</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="o">*</span><span class="nx">Element</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">l</span> <span class="o">*</span><span class="nx">List</span><span class="p">)</span> <span class="nf">PushBack</span><span class="p">(</span><span class="nx">v</span> <span class="kd">interface</span><span class="p">{})</span> <span class="o">*</span><span class="nx">Element</span>
+</code></pre></div><p>这些方法都会把一个 <code>Element</code> 值的指针作为结果返回，它们就是链表留给我们的安全“接口”。拿到这些内部元素的指针，我们就可以去调用前面提到的用于移动元素的方法了。</p>
+<h3 id="为什么链表可以做到开箱即用">为什么链表可以做到开箱即用</h3>
+<p><code>List</code> 和 <code>Element</code> 都是结构体类型。结构体类型有一个特点，那就是它们的零值都会是拥有特定结构，但是没有任何定制化内容的值，相当于一个空壳。值中的字段也都会被分别赋予各自类型的零值。</p>
+<blockquote>
+<p>广义来讲，所谓的零值就是只做了声明，但还未做初始化的变量被给予的缺省值。每个类型的零值都会依据该类型的特性而被设定。</p>
+</blockquote>
+<p>那么经过语句 <code>var l list.List</code> 声明的变量 <code>l</code> 的值将会是什么呢？这个零值将会是一个长度为 0 的链表。这个链表持有的根元素也将会是一个空壳，其中只会包含缺省的内容。</p>
+<p>这样的链表我们可以直接拿来用。这被称为“开箱即用”。<code>Go</code> 语言标准库中很多结构体类型的程序实体都做到了开箱即用。这也是在编写可供别人使用的代码包（或者说程序库）时，我们推荐遵循的最佳实践之一。</p>
+<p>关键在于它的“延迟初始化”机制。所谓的延迟初始化，你可以理解为把初始化操作延后，仅在实际需要的时候才进行。延迟初始化的优点在于“延后”，它可以分散初始化操作带来的计算量和存储空间消耗。</p>
+<p>例如，如果我们需要集中声明非常多的大容量切片的话，那么那时的 <code>CPU</code> 和内存空间的使用量肯定都会一个激增，并且只有设法让其中的切片及其底层数组被回收，内存使用量才会有所降低。</p>
+<p>如果数组是可以被延迟初始化的，那么计算量和存储空间的压力就可以被分散到实际使用它们的时候。这些数组被实际使用的时间越分散，延迟初始化带来的优势就会越明显。</p>
+<blockquote>
+<p>延迟初始化的缺点恰恰也在于“延后”。你可以想象一下，如果我在调用链表的每个方法的时候，它们都需要先去判断链表是否已经被初始化，那这也会是一个计算量上的浪费。在这些方法被非常频繁地调用的情况下，这种浪费的影响就开始显现了，程序的性能将会降低。</p>
+</blockquote>
+<p>在这里的链表实现中，一些方法是无需对是否初始化做判断的。比如 <code>Front</code> 方法和 <code>Back</code> 方法，一旦发现链表的长度为 0, 直接返回 <code>nil</code> 就好了。</p>
+<p>又比如，在用于删除元素、移动元素，以及一些用于插入元素的方法中，只要判断一下传入的元素中指向所属链表的指针，是否与当前链表的指针相等就可以了。</p>
+<p>如果不相等，就一定说明传入的元素不是这个链表中的，后续的操作就不用做了。反之，就一定说明这个链表已经被初始化了。</p>
+<p>原因在于，链表的 <code>PushFront</code> 方法、<code>PushBack</code> 方法、<code>PushBackList</code> 方法以及 <code>PushFrontList</code> 方法总会先判断链表的状态，并在必要时进行初始化，这就是延迟初始化。</p>
+<p>而且，我们在向一个空的链表中添加新元素的时候，肯定会调用这四个方法中的一个，这时新元素中指向所属链表的指针，一定会被设定为当前链表的指针。所以，指针相等是链表已经初始化的充分必要条件。</p>
+<p><code>List</code> 利用了自身以及 <code>Element</code> 在结构上的特点，巧妙地平衡了延迟初始化的优缺点，使得链表可以开箱即用，并且在性能上可以达到最优。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">l</span> <span class="o">:=</span> <span class="nx">list</span><span class="p">.</span><span class="nx">List</span><span class="p">{}</span>
+<span class="nx">l</span><span class="p">.</span><span class="nf">PushBack</span><span class="p">(</span><span class="s">&#34;hello&#34;</span><span class="p">)</span>
+<span class="nx">l</span><span class="p">.</span><span class="nf">PushBack</span><span class="p">(</span><span class="s">&#34;world&#34;</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the list is: %v.\n&#34;</span><span class="p">,</span> <span class="nx">l</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">l</span><span class="p">.</span><span class="nf">Front</span><span class="p">();</span> <span class="nx">e</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">;</span> <span class="nx">e</span> <span class="p">=</span> <span class="nx">e</span><span class="p">.</span><span class="nf">Next</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element is: %v.\n&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//the list is: {{0xc0000621b0 0xc0000621e0 &lt;nil&gt; &lt;nil&gt;} 2}.
+</span><span class="c1">//the element is: &amp;{0xc0000621e0 0xc000062180 0xc000062180 hello}.
+</span><span class="c1">//the element is: &amp;{0xc000062180 0xc0000621b0 0xc000062180 world}.
+</span></code></pre></div><h2 id="containerring">container/ring</h2>
+<p><code>container/ring</code> 包中的 <code>Ring</code> 类型实现的是一个循环链表，也就是我们俗称的环。其实 <code>List</code> 在内部就是一个循环链表。它的根元素永远不会持有任何实际的元素值，而该元素的存在就是为了连接这个循环链表的首尾两端。</p>
+<p>所以也可以说，<code>List</code> 的零值是一个只包含了根元素，但不包含任何实际元素值的空链表。</p>
+<h3 id="ring与list的区别">Ring与List的区别</h3>
+<p>最主要的不同有下面几种：</p>
+<ul>
+<li><code>Ring</code> 类型的数据结构仅由它自身即可代表，而 <code>List</code> 类型则需要由它以及 <code>Element</code> 类型联合表示。这是表示方式上的不同，也是结构复杂度上的不同。</li>
+<li>一个 <code>Ring</code> 类型的值严格来讲，只代表了其所属的循环链表中的一个元素，而一个 <code>List</code> 类型的值则代表了一个完整的链表。这是表示维度上的不同。</li>
+<li>在创建并初始化一个 <code>Ring</code> 值的时候，我们可以指定它包含的元素的数量，但是对于一个 <code>List</code> 值来说却不能这样做（也没有必要这样做）。循环链表一旦被创建，其长度是不可变的。这是两个代码包中的 <code>New</code> 函数在功能上的不同，也是两个类型在初始化值方面的第一个不同。</li>
+<li>仅通过 <code>var r ring.Ring</code> 语句声明的 <code>r</code> 将会是一个长度为 1 的循环链表，而 <code>List</code> 类型的零值则是一个长度为 0 的链表。别忘了 <code>List</code> 中的根元素不会持有实际元素值，因此计算长度时不会包含它。这是两个类型在初始化值方面的第二个不同。</li>
+<li><code>Ring</code> 值的 <code>Len</code> 方法的算法复杂度是 O(N) 的，而 <code>List</code> 值的 <code>Len</code> 方法的算法复杂度则是 O(1) 的。这是两者在性能方面最显而易见的差别。</li>
+</ul>
+<p>其他的不同基本上都是方法方面的了。比如，循环链表也有用于插入、移动或删除元素的方法，不过用起来都显得更抽象一些，等等。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>数组和切片</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_array_slice/</link>
+			<pubDate>Thu, 10 Dec 2020 14:50:38 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_array_slice/</guid>
+			<description>Go 语言的数组（array）类型和切片（slice）类型 它们的共同点是都属于集合类的类型，都可以用来存储一种类型的值。 不同的是数组的长度是固定</description>
+			<content type="html"><![CDATA[<h2 id="go-语言的数组array类型和切片slice类型"><code>Go</code> 语言的数组（array）类型和切片（slice）类型</h2>
+<p>它们的共同点是都属于集合类的类型，都可以用来存储一种类型的值。</p>
+<p>不同的是数组的长度是固定的，切片是可变长的。</p>
+<p>数组的长度是数组类型的一部分，在声明的时候就必须给定，并且之后不能改变。</p>
+<p>切片的字面量中只有元素的类型，没有长度。切片的长度可以自动随着元素的数量增长，但不会减少。</p>
+<p><p class="md__image">
+  <img src=".././image/edb5acaf595673e083cdcf1ea7bb966c.png"
+    alt=""  />
+</p>
+</p>
+<p>切片其实是对数组的简单封装，每个切片的底层数据结构中都会有一个数组。数组是切片的底层数组，切片是数组的某个联系片段的引用。</p>
+<blockquote>
+<p>因此，<code>Go</code> 语言的切片属于引用类型，同属引用类型的还有字典、通道、函数等；<code>Go</code> 语言的数组属于值类型，同属值类型的还有基础数据类型和结构体类型。</p>
+<p><code>Go</code> 语言中不存在 传值或传引用的问题，判断传值还是传引用只要看被传递的值的类型就好。传递的值是引用类型，那么就是传引用。传递的值是值类型，那么就是传值。从传递成本上来讲，引用类型的值通常比值类型低很多。</p>
+<p>数组和切片都可以使用索引表达式，得到某个元素的值。也可以使用切片表达式，得到一个新的切片。</p>
+</blockquote>
+<p>通过内建函数 <code>len</code> 可以得到数组和切片的长度，通过内建函数 <code>cap</code> 可以得到他们的容量。</p>
+<p>数组的长度永远等于容量，都是不可变的。切片的容量是会变的，并且有规律可循。</p>
+<h3 id="怎样估算切片的长度和容量">怎样估算切片的长度和容量</h3>
+<p>先来看一段代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">s1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the length of s1: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s1</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the capacity of s1: %d\n&#34;</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s1</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the value of s1: %d\n&#34;</span><span class="p">,</span> <span class="nx">s1</span><span class="p">)</span>
+
+	<span class="nx">s2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the length of s2: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s2</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the capacity of s2: %d\n&#34;</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s2</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the value of s2: %d\n&#34;</span><span class="p">,</span> <span class="nx">s2</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>使用内建函数 <code>make</code> 声明了一个 <code>[]int</code> 类型的切片 <code>s1</code> ，传给 <code>make</code> 的第二个参数 5 指明了切片的长度。</p>
+<p>同样的方式声明了切片 <code>s2</code>，只不过多传了参数 8 指明了切片的容量。</p>
+<p>执行 <code>go run main.go</code> 查看结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">the</span> <span class="nx">length</span> <span class="nx">of</span> <span class="nx">s1</span><span class="p">:</span> <span class="mi">5</span>
+<span class="nx">the</span> <span class="nx">capacity</span> <span class="nx">of</span> <span class="nx">s1</span><span class="p">:</span> <span class="mi">5</span>
+<span class="nx">the</span> <span class="nx">value</span> <span class="nx">of</span> <span class="nx">s1</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+<span class="nx">the</span> <span class="nx">length</span> <span class="nx">of</span> <span class="nx">s2</span><span class="p">:</span> <span class="mi">5</span>
+<span class="nx">the</span> <span class="nx">capacity</span> <span class="nx">of</span> <span class="nx">s2</span><span class="p">:</span> <span class="mi">8</span>
+<span class="nx">the</span> <span class="nx">value</span> <span class="nx">of</span> <span class="nx">s2</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span>
+</code></pre></div><p>我们看到，如果不指定切片的容量，那么它就和切片的长度一致。如果指定了切片容量，那么就是指定的大小。</p>
+<p>我们前面说过，切片是对底层数组的封装。切片的底层数据结构是数组，而切片也是对数组一段连续片段的引用。</p>
+<p>想象一下，有一个窗口，我们可以通过这个窗口看到一个数组，但是不一定能看到所有元素 ，有时候只能看到连续的一部分。</p>
+<p>所以这里 <code>s2</code> 的容量代表底层数组的长度是 8。而 <code>s2</code> 本身的长度是 5，那面 <code>s2</code> 的值就是底层数组中的第 1 个元素到第 5 个元素，对应的底层数组索引范围就是 [0，4]。</p>
+<p>切片代表的窗口也会被划分为一个个的小格子，每个小格子都对应底层数组的一个元素。</p>
+<p>当我们使用 <code>make</code> 函数或切片字面量（如：<code>[]int{1, 2, 3}</code>）初始化一个切片时，切片的第一个元素总是对应底层数组的第一个元素。</p>
+<p>当我们通过切片表达式基于某个数组或者切片生成新的切片时，则不一定：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s3</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">}</span>
+<span class="nx">s4</span> <span class="o">:=</span> <span class="nx">s3</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the length of s4: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s4</span><span class="p">))</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the capacity of s4: %d\n&#34;</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s4</span><span class="p">))</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the value of s4: %d\n&#34;</span><span class="p">,</span> <span class="nx">s4</span><span class="p">)</span>
+</code></pre></div><p><code>s3</code> 有 8 个元素，长度和容量都是 8。然后我们用切片表达式 <code>s3[3:6]</code> 初始化了切片 <code>s4</code>。</p>
+<p>看下结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">the</span> <span class="nx">length</span> <span class="nx">of</span> <span class="nx">s4</span><span class="p">:</span> <span class="mi">3</span>
+<span class="nx">the</span> <span class="nx">capacity</span> <span class="nx">of</span> <span class="nx">s4</span><span class="p">:</span> <span class="mi">5</span>
+<span class="nx">the</span> <span class="nx">value</span> <span class="nx">of</span> <span class="nx">s4</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">]</span>
+</code></pre></div><p>可见，表达式 <code>s3[3:6]</code> 表示从 <code>s3</code> 中可见索引范围为 3 到 5，并不包括 6。</p>
+<p>这里的 3 是起始索引，6 是结束索引。所以 <code>s4</code> 的长度就是 6 减去 3，即 3。</p>
+<p><p class="md__image">
+  <img src=".././image/96e2c7129793ee5e73a574ef8f3ad755.png"
+    alt=""  />
+</p>
+</p>
+<p>再来看容量，一个切片的容量可以被看作是透过这个窗口最多可以看到底层数组中元素的个数。</p>
+<p>由于 <code>s4</code> 是在 <code>s3</code> 的基础上得来的，所以 <code>s3</code> 可以看作 <code>s4</code> 的底层数组。</p>
+<p>又因为，在底层数组不变的情况下，切片代表的窗口可以向右扩展，直到底层数组的末尾。</p>
+<p>所以，<code>s4</code> 的容量就是底层数组的长度 8，减去起始索引 3，即 5。</p>
+<p>注意，切片是无法向左扩展的，就是说我们永远无法通过 <code>s4</code> 看到 <code>s3</code> 中最左侧的 3 个元素。</p>
+<h3 id="怎样估算切片容量的增长">怎样估算切片容量的增长</h3>
+<p>当切片无法容纳更多元素时，<code>Go</code> 语言就会想办法扩容。这并不会改变原来的切片，而是生成一个容量更大的切片，然后把原有的元素和新元素一并拷到新切片中。一般情况下，新切片的容量会是原有切片容量的 2 倍。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s6</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The capacity of s6: %d\n&#34;</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s6</span><span class="p">))</span>
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+  <span class="nx">s6</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s6</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s6(%d): len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s6</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s6</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="c1">//The capacity of s6: 0
+</span><span class="c1">//s6(1): len: 1, cap: 1
+</span><span class="c1">//s6(2): len: 2, cap: 2
+</span><span class="c1">//s6(3): len: 3, cap: 4
+</span><span class="c1">//s6(4): len: 4, cap: 4
+</span><span class="c1">//s6(5): len: 5, cap: 8
+</span></code></pre></div><p>当原有切片的长度大于或等于 1024 时，<code>Go</code> 语言将会以原容量的 1.25 倍作为新容量的基准。新容量基准会被调整（不断的与 1.25 相乘），直到结果不小于原有长度和要追加的元素数量之和。最终，新容量往往会比新长度大一些，也可能相等。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s7</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The capacity of s7: %d\n&#34;</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s7</span><span class="p">))</span>
+<span class="nx">s7e1</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s7</span><span class="p">,</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s7e1: len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s7e1</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s7e1</span><span class="p">))</span>
+<span class="nx">s7e2</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s7</span><span class="p">,</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s7e2: len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s7e2</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s7e2</span><span class="p">))</span>
+<span class="nx">s7e3</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s7</span><span class="p">,</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s7e3: len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s7e3</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s7e3</span><span class="p">))</span>
+
+<span class="c1">//The capacity of s7: 1024
+</span><span class="c1">//s7e1: len: 1224, cap: 1280
+</span><span class="c1">//s7e2: len: 1424, cap: 1696
+</span><span class="c1">//s7e3: len: 1624, cap: 2048
+</span></code></pre></div><p>如果一次追加元素过多，导致新长度超过原容量的 2 倍，那么新容量就会以新长度为基准。当然，新容量很多时候会比新容量基准大一些。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s8</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The capacity of s8: %d\n&#34;</span><span class="p">,</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s8</span><span class="p">))</span>
+<span class="nx">s8a</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s8</span><span class="p">,</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s8a: len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s8a</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s8a</span><span class="p">))</span>
+<span class="nx">s8b</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s8a</span><span class="p">,</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">23</span><span class="p">)</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s8b: len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s8b</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s8b</span><span class="p">))</span>
+<span class="nx">s8c</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s8b</span><span class="p">,</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s8c: len: %d, cap: %d\n&#34;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s8c</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s8c</span><span class="p">))</span>
+
+<span class="c1">//The capacity of s8: 10
+</span><span class="c1">//s8a: len: 21, cap: 22
+</span><span class="c1">//s8b: len: 44, cap: 44
+</span><span class="c1">//s8c: len: 89, cap: 96
+</span></code></pre></div><h3 id="切片的底层数组什么时候被替换">切片的底层数组什么时候被替换</h3>
+<p>确切的说，切片的底层数组永远不会被替换。因为扩容的时候会生成新的底层数组，同时也生成了新的切片。</p>
+<p>它只是把新的切片作为了新的底层数组的窗口，并没有对原切片和原底层数组做任何改动。</p>
+<p>无需扩容时，<code>append</code> 函数返回的是指向原底层数组的原切片，需要扩容时，<code>append</code> 函数返回的是指向新底层数组的新切片。</p>
+<p>只要新长度不超过切片的原容量，就不会引起扩容。只会使底层数组中对应的元素被替换掉。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;a1: %v (len: %d, cap: %d)\n&#34;</span><span class="p">,</span>
+           <span class="nx">a1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a1</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">a1</span><span class="p">))</span>
+<span class="nx">s9</span> <span class="o">:=</span> <span class="nx">a1</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="c1">//s9[0] = 1
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s9: %v (len: %d, cap: %d)\n&#34;</span><span class="p">,</span>
+           <span class="nx">s9</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s9</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s9</span><span class="p">))</span>
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+  <span class="nx">s9</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s9</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;s9(%d): %v (len: %d, cap: %d)\n&#34;</span><span class="p">,</span>
+             <span class="nx">i</span><span class="p">,</span> <span class="nx">s9</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s9</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">s9</span><span class="p">))</span>
+<span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;a1: %v (len: %d, cap: %d)\n&#34;</span><span class="p">,</span>
+           <span class="nx">a1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">a1</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="nx">a1</span><span class="p">))</span>
+
+<span class="c1">//a1: [1 2 3 4 5 6 7] (len: 7, cap: 7)
+</span><span class="c1">//s9: [2 3 4] (len: 3, cap: 6)
+</span><span class="c1">//s9(1): [2 3 4 1] (len: 4, cap: 6)
+</span><span class="c1">//s9(2): [2 3 4 1 2] (len: 5, cap: 6)
+</span><span class="c1">//s9(3): [2 3 4 1 2 3] (len: 6, cap: 6)
+</span><span class="c1">//s9(4): [2 3 4 1 2 3 4] (len: 7, cap: 12)
+</span><span class="c1">//s9(5): [2 3 4 1 2 3 4 5] (len: 8, cap: 12)
+</span><span class="c1">//a1: [1 2 3 4 1 2 3] (len: 7, cap: 7)
+</span></code></pre></div>]]></content>
+		</item>
+		
+		<item>
+			<title>Go 语言中的类型断言那些事儿</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</link>
+			<pubDate>Wed, 09 Dec 2020 16:34:11 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_type_assertion/</guid>
+			<description>怎样判断一个变量的类型 先来看一段代码： package main import &amp;#34;fmt&amp;#34; var container = []string{&amp;#34;0&amp;#34;, &amp;#34;1&amp;#34;, &amp;#34;2&amp;#34;} func main() { container := map[int]string{0: &amp;#34;0&amp;#34;, 1: &amp;#34;1&amp;#34;, 2: &amp;#34;2&amp;#34;} fmt.Printf(&amp;#34;the element is %q.\n&amp;#34;, container[1]) } 怎样在打印期中元素之前判断 container 的类型呢，当然是用类</description>
+			<content type="html"><![CDATA[<h2 id="怎样判断一个变量的类型">怎样判断一个变量的类型</h2>
+<p>先来看一段代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">var</span> <span class="nx">container</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="s">&#34;1&#34;</span><span class="p">,</span> <span class="s">&#34;2&#34;</span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">container</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s">&#34;1&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;2&#34;</span><span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;the element is %q.\n&#34;</span><span class="p">,</span> <span class="nx">container</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div><p>怎样在打印期中元素之前判断 <code>container</code> 的类型呢，当然是用类型断言：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="kd">interface</span><span class="p">{}(</span><span class="nx">container</span><span class="p">).([]</span><span class="kt">string</span><span class="p">)</span>
+</code></pre></div><p>这是一条赋值语句，赋值符号右边是类型断言表达式。它包括了用来把 <code>container</code> 变量转换为空接口值的 <code>interface{}(container)</code>，以及用于判断前者类型是否是切片类型 <code>[]string</code> 的 <code>.([]string)</code>。</p>
+<p>表达式的结果被赋给两个变量，<code>ok</code> 代表类型判断的结果，<code>true</code> 或 <code>false</code>。</p>
+<p>如果是 <code>true</code>，被判断的值将会自动转换成 <code>[]string</code> 的值赋给 <code>value</code> 否则会赋给 <code>nil</code>。</p>
+<p>这里的 <code>ok</code> 也可以没有，当判断为否时会引发异常。</p>
+<p>类型断言的语法表达形式：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">x</span><span class="p">.(</span><span class="nx">T</span><span class="p">)</span>
+</code></pre></div><p><code>x</code> 代表要被判断的值，这个值必须是接口类型。</p>
+<p>所以前面 <code>container</code> 不是接口类型，要先转化一下。如果是接口类型那面可以这样表示：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">container</span><span class="p">.([]</span><span class="kt">string</span><span class="p">)</span>
+</code></pre></div><p><p class="md__image">
+  <img src=".././image/b5f16bf3ad8f416fb151aed8df47a515.png"
+    alt=""  />
+</p>
+</p>
+<h3 id="类型转换规则中的坑">类型转换规则中的坑</h3>
+<p>首先，对于整数类型值、整数常量之间的类型转化，原则上只要源值在目标类型的可表示范围内就是合法的。</p>
+<p>比如，之所以 <code>uint8(255)</code> 可以把无类型的常量 255 转换为 <code>uint8</code> 类型的值，是因为 255 在 [0, 255] 的范围内。</p>
+<p>再比如，<code>int16(-255)</code> 转为 <code>int8</code> 类型会变成 1。</p>
+<p>因为整数在 <code>Go</code> 语言中是以补码形式存储的，主要是为了简化计算机对整数的运算过程。负数补码就是源码各位求反再加一。</p>
+<p><code>int16</code> 类型的值 -255 的补码是 1111111100000001。如果我们把该值转换为 <code>int8</code> 类型的值，那么 <code>Go</code> 语言会把在较高位置（或者说最左边位置）上的 8 位二进制数直接截掉，从而得到 00000001。又由于其最左边一位是 0，表示它是个正整数，以及正整数的补码就等于其原码，所以最后的值就是 1。</p>
+<p>注意，当整数值的类型范围由宽变窄时，只需要在补码形式下截掉以定长度的高位二进制。</p>
+<p>第二，整数值转字符串时，被转换的整数值应该可以代表一个有效的 <code>Unicode</code> 代码点，否则结果会是 �。</p>
+<p>字符 � 的 <code>Unicode</code> 代码点是 <code>U+FFFD</code>，它是 <code>Unicode</code> 标准中定义的 <code>Replacement Character</code>， 专门用来替换未知的、不被认可的一级无法展示的字符。</p>
+<p>如 <code>string(-1)</code>，-1 肯定无法代表一个有效的 <code>Unicode</code> 代码点，所以得到的总是 �。</p>
+<p>第三，字符串类型与各种切片类型之间的互转。</p>
+<p>一个值从 <code>string</code> 类型向 <code>[]byte</code> 类型转换时代表着以 <code>UTF-8</code> 编码的字符串会被拆分成零散、独立的字节。</p>
+<p>一个值从 <code>string</code> 类型向 <code>[]rune</code> 类型转换时代表着字符串会被拆分成一个个 <code>Unicode</code> 字符。</p>
+<h2 id="什么是类型别名什么是潜在类型">什么是类型别名，什么是潜在类型</h2>
+<p><code>Go</code> 语言中可以使用 <code>type</code> 关键字声明自定义的各种类型。其中有一种 别名类型 的类型。我们可以这样声明：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyString</span> <span class="p">=</span> <span class="kt">string</span>
+</code></pre></div><p>这表明 <code>MyString</code> 是 <code>string</code> 类型的别名类型。别名类型和源类型只是名称不同，其他完全相同。</p>
+<p><code>Go</code> 语言内建的基本类型中就存在两个别名类型。<code>byte</code> 是 <code>uint8</code> 的别名类型，而 <code>rune</code> 是 <code>int32</code> 的别名类型。</p>
+<p>注意，如果像这样声明：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyString</span> <span class="kt">string</span>
+</code></pre></div><p><code>MyString</code> 和 <code>string</code> 就是两个不同的类型了，这里的 <code>MyString</code> 是不同于任何类型的新类型。</p>
+<p>这种方式也叫做类型的在定义，即：把 <code>string</code> 类型在定义为 <code>MyString</code> 类型。</p>
+<p><p class="md__image">
+  <img src=".././image/4f113b74b564ad3b4b4877abca7b6bf2.png"
+    alt=""  />
+</p>
+</p>
+<p>对应类型再定义来说，<code>string</code> 可以被称为 <code>MyString</code> 的潜在类型，潜在类型的含义就是某个类型的本质上是什么类型。</p>
+<p>潜在类型相同的不同类型的值之间是可以进行类型转换的。所以 <code>MyString</code> 类型的值与 <code>string</code> 类型的值可以使用类型转换表达式互转。</p>
+<p>但由于类型再定义后属于不同的类型，不同类型直接不可以做判等或者比较，也不能直接赋值。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>Go 语言中的作用域那些事儿</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_scope/</link>
+			<pubDate>Wed, 09 Dec 2020 15:43:38 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_scope/</guid>
+			<description>作用域是什么 一个程序实体被写出来，就是为了让其他程序引用。哪里的代码可以引用它呢，这就涉及到了它的作用域。 Go 语言的访问权限有三种：包级私有的</description>
+			<content type="html"><![CDATA[<h2 id="作用域是什么">作用域是什么</h2>
+<p>一个程序实体被写出来，就是为了让其他程序引用。哪里的代码可以引用它呢，这就涉及到了它的作用域。</p>
+<p><code>Go</code> 语言的访问权限有三种：包级私有的、模块级私有的和公开的。这其实就是 <code>Go</code> 语言在语言层面依据代码块对程序实体作用域进行的定义。</p>
+<p>我在函数里面声明了一个变量，一般情况下这个变量无法被函数外部使用。变量的作用域就被限定在函数体里面。</p>
+<p>所以，一个程序实体的作用域总是会被限制在某个代码块中，而这个作用域最大的用处，就是对程序实体的访问权限的控制。</p>
+<h3 id="一个变量与其外层代码块中的变量重名会怎样">一个变量与其外层代码块中的变量重名会怎样</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">var</span> <span class="nx">block</span> <span class="p">=</span> <span class="s">&#34;package&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">block</span> <span class="o">:=</span> <span class="s">&#34;function&#34;</span>
+	<span class="p">{</span>
+		<span class="nx">block</span> <span class="o">:=</span> <span class="s">&#34;inner&#34;</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;this block is %s!\n&#34;</span><span class="p">,</span> <span class="nx">block</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;this block is %s!\n&#34;</span><span class="p">,</span> <span class="nx">block</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>这段代码里面有四个代码块：全局代码块、<code>main</code> 包代码块、<code>main</code> 函数代码块和函数内部一对花括号代码块。</p>
+<p>执行 <code>go run main.go</code> ：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">this</span> <span class="nx">block</span> <span class="nx">is</span> <span class="nx">inner</span><span class="p">!</span>
+<span class="nx">this</span> <span class="nx">block</span> <span class="nx">is</span> <span class="nx">function</span><span class="p">!</span>
+</code></pre></div><p>我们发现当前代码块里面的变量会把外层代码块的变量覆盖掉。这是因为 <code>Go</code> 语言中的变量查找过程：</p>
+<ul>
+<li>首先，代码引用变量时优先查找当前代码块中的变量。</li>
+<li>其次，如果当前代码块中没有声明该变量，那么会沿着嵌套关系一层一层往上找。</li>
+<li>一般会查到当前代码块所在的代码包，如果仍然查不到，就会报编译错误。</li>
+</ul>
+<blockquote>
+<p>有个特殊情况，如果使用 <code>import . &quot;XXX&quot;</code> 的形式引入代码包，那么该包会被视为当前代码包中的程序实体。</p>
+</blockquote>
+<h3 id="不同代码块的重名变量可重名变量和变量重声明中的变量区别">不同代码块的重名变量（可重名变量）和变量重声明中的变量区别</h3>
+<ul>
+<li>变量重声明的变量是在同一个代码块内的，而可重名变量是在不同代码块之间由相同标识符代表的变量。</li>
+<li>变量重声明是对同一个变量多次声明，是针对一个变量，而可重名变量是多个变量。</li>
+<li>变量重声明不论声明多少次，变量的类型是首次声明就确定了的，而可重名变量的类型不受限制。</li>
+<li>可重命名变量所在的代码块之间是存在直接或间接的嵌套关系的，他们之间一定会存在”屏蔽“的现象。</li>
+</ul>
+<p><p class="md__image">
+  <img src=".././image/5e68210d5639f9e42738f21bd9eb1e89.png"
+    alt=""  />
+</p>
+</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>Go 语言中的变量那些事儿</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_var/</link>
+			<pubDate>Wed, 09 Dec 2020 09:23:22 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_var/</guid>
+			<description>变量声明 除了 var name string 这种声明方式以外还有两种基于类型推断的声明方式。 注意短变量声明只能在函数体内部使用。 类型推断 类型推断是编程语言在编译器自动</description>
+			<content type="html"><![CDATA[<h2 id="变量声明">变量声明</h2>
+<p><p class="md__image">
+  <img src=".././image/b7d73fdce13a3a5f2d56d0b95f2c8cbc.png"
+    alt=""  />
+</p>
+</p>
+<p>除了 <code>var name string</code> 这种声明方式以外还有两种基于类型推断的声明方式。</p>
+<p>注意短变量声明只能在函数体内部使用。</p>
+<h2 id="类型推断">类型推断</h2>
+<p>类型推断是编程语言在编译器自动解释表达式类型的能力。即：对表达式进行求值后的结果的类型推断。</p>
+<h3 id="类型推断的好处">类型推断的好处</h3>
+<p>类型推断可以明显提升程序的灵活性，使得代码重构变的更容易，同时又不会给代码的维护增加额外的负担（实际上，它恰恰可以避免散弹式的代码修改）更不会损失程序的运行效率。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">name</span> <span class="p">=</span> <span class="nf">getFlag</span><span class="p">()</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %v!\n&#34;</span><span class="p">,</span> <span class="o">*</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">getFlag</span><span class="p">()</span> <span class="o">*</span><span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">flag</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;This greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>我们给变量 <code>name</code> 赋值时使用了函数封装，对 <code>flag.String</code> 函数的调用，并把其结果直接作为 <code>getFlag</code> 函数的结果，结果的类型是<code>*string</code>。这样变量赋值就变为针对 <code>getFlag</code> 函数的返回值了。这实际上是对声明并赋值 <code>name</code> 变量的那行代码的重构。</p>
+<blockquote>
+<p>我们通常把不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。</p>
+</blockquote>
+<p>接下来，我想要改变 <code>getFlag</code> 里面的代码对 <code>main</code> 函数不会有任何影响。</p>
+<h3 id="变量的重声明">变量的重声明</h3>
+<p>通过使用短变量声明，我们可以在同一个代码块中对变量进行重声明。即：对已经存在的变量再次声明。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+<span class="nx">name</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">io</span><span class="p">.</span><span class="nf">WriteString</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">,</span> <span class="s">&#34;Hello, everyone!\n&#34;</span><span class="p">)</span>
+</code></pre></div><p>使用短变量声明对新变量 <code>name</code> 和旧变量 <code>err</code> 进行了“声明并赋值”，这时也是对后者的重声明。</p>
+<p>使用变量的重声明有几个前提条件：</p>
+<ul>
+<li>变量的类型初始化时已经确定了，所以重声明时变量类型必须和之前保持一致。</li>
+<li>变量的初始和重声明必须发生在同一个代码块中。</li>
+<li>变量的重声明只有在使用短变量声明是才会发生。</li>
+<li>重声明时的变量必须是多个且至少有一个是新变量。</li>
+</ul>
+]]></content>
+		</item>
+		
+		<item>
+			<title>库源码文件和代码拆分</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/lib_source/</link>
+			<pubDate>Tue, 08 Dec 2020 13:12:08 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/lib_source/</guid>
+			<description>什么是库源码文件 库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如： package lib5 import &amp;#34;fmt&amp;#34; func Hello(name string) { fmt.Printf(&amp;#34;Hello %s!\n&amp;#34;, name) } 把上面代码保存到 libSource.go 执行 go run</description>
+			<content type="html"><![CDATA[<h2 id="什么是库源码文件">什么是库源码文件</h2>
+<p>库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">lib5</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>把上面代码保存到 <code>libSource.go</code> 执行 <code>go run libSource.go</code> 得到：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">run</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">run</span> <span class="nx">non</span><span class="o">-</span><span class="nx">main</span> <span class="kn">package</span>
+</code></pre></div><h2 id="怎样把命令源码文件中的代码拆分到其他库源码文件">怎样把命令源码文件中的代码拆分到其他库源码文件？</h2>
+<p>首先来看代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nf">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>这里 <code>main</code> 没有直接输出，而是调用了 <code>hello()</code> 函数，函数声明在另一个源码文件中，我们把他命名为 <code>libSource.go</code> 并且把他放在和 <code>main.go</code> 相同的目录下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>执行命令 <code>go run main.go libSource.go</code>，得到结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Hello</span> <span class="nx">Joseph</span><span class="p">!</span>
+</code></pre></div><p>注意，<code>main.go</code> 和 <code>libSource.go</code> 都声明自己属于 <code>main</code> 包，这是因为同一个目录下的源码文件必须要被声明为同一代码包，否则会报错：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">found</span> <span class="nx">packages</span> <span class="nf">main</span> <span class="p">(</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">)</span> <span class="nx">and</span> <span class="nf">main1</span> <span class="p">(</span><span class="nx">libSource</span><span class="p">.</span><span class="k">go</span><span class="p">)</span> <span class="nx">in</span> <span class="cm">/***/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">libSource</span>
+</code></pre></div><p>这句话是说在目录下找到了两个包。</p>
+<p>另外也要注意源码文件声明的包名和所在的目录可以不相同，只要这些文件声明的包名一致就可以。</p>
+<h2 id="怎么把命令源码文件拆分到其他代码包">怎么把命令源码文件拆分到其他代码包</h2>
+<p>在 <code>main.go</code> 目录下新建目录 <code>lib</code> 并且创建文件 <code>libSource.go</code> 代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">lib5</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>目前结构如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span>
+<span class="err">├──</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span>
+<span class="err">├──</span> <span class="nx">lib</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">└──</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span>
+</code></pre></div><p>这里和外面的 <code>libSource.go</code> 对比改了两个地方，一个是包名改了，并且和目录名不同，一个是 <code>Hello</code> 函数首字母改成了大写。</p>
+<h2 id="代码包的导入路径和其所在的目录的相对路径是否一致">代码包的导入路径和其所在的目录的相对路径是否一致</h2>
+<p>库文件源码 <code>libSource.go</code> 所在目录的相对目录是 <code>lib</code> 但它却声明自己属于 <code>lib5</code> 包，那么该包的导入路径是 <code>libsource/lib</code> 呢还是 <code>libsource/lib5</code> 呢？<code>libsource</code> 是我的 <code>main.go</code> 所在目录。</p>
+<p>我们来安装下库源码文件，执行命令 <code>go install lib/libSource.go</code> 然后看 <code>main.go</code> 做了哪些改动：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;libsource/lib&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="c1">//hello(name)
+</span><span class="c1"></span>	<span class="nx">lib5</span><span class="p">.</span><span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>首先在以 <code>import</code> 为前导的代码包导入语句中加入 <code>libsource/lib</code> 试图导入代码包。</p>
+<p>然后把对 <code>hello</code> 函数的调用改为对 <code>lib.Hello</code> 函数的调用。其中的 <code>lib.</code> 叫做限定符，旨在指明右边的程序实体所在的代码包。不过这里与代码包导入路径的完整写法不同，只包含了路径中的最后一级 <code>lib</code>，这与代码包声明语句中的规则一致。</p>
+<p>执行 <code>go run main.go</code> 错误提示如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">5</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span> <span class="nx">imported</span> <span class="nx">and</span> <span class="nx">not</span> <span class="nx">used</span><span class="p">:</span> <span class="s">&#34;libsource/lib&#34;</span> <span class="nx">as</span> <span class="nx">lib5</span>
+<span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span> <span class="nx">undefined</span><span class="p">:</span> <span class="nx">lib</span>
+</code></pre></div><p>第一行是说我们导入了 <code>libsource/lib</code> 但没有使用，<code>Go</code> 语言是不允许的，会报编译错误。</p>
+<p>第二行是说没找到 <code>lib</code> 包。另外注意第一行的 <code>as lib5</code> 这是说我们虽然导入的是 <code>libsource/lib</code> 但是使用的应该是 <code>lib5</code>。</p>
+<p>这里要记住源码文件所在的目录是相对于 <code>src</code> 目录的相对路径就是他的导入路径，而实际使用的是源码文件声明的所属包名。</p>
+<p>为了不产生困惑，我们应该尽量保持包名与父目录名称一致。</p>
+<h2 id="什么样的程序才能够被外部代码引用">什么样的程序才能够被外部代码引用</h2>
+<p>名称的首字母为大写的程序实体才可以被当前包外的代码引用，否则它就只能被当前包内的其他代码引用。</p>
+<p>通过名称，<code>Go</code> 语言自然地把程序实体的访问权限划分为了包级私有的和公开的。对于包级私有的程序实体，即使你导入了它所在的代码包也无法引用到它。</p>
+<p>这也是我们上面代码中把 <code>hello</code> 改为 <code>lib5.Hello</code> 的原因。</p>
+<h2 id="其他的访问权限规则">其他的访问权限规则</h2>
+<p>在 <code>Go 1.5</code> 及后续版本中，我们可以通过创建 <code>internal</code> 代码包让一些程序实体仅仅能被当前模块中的其他代码引用。这被称为 <code>Go</code> 程序实体的第三种访问权限：模块级私有。</p>
+<p>具体规则是，<code>internal</code> 代码包中声明的公开程序实体仅能被该代码包的直接父包及其子包中的代码引用。当然，引用前需要先导入这个  <code>internal</code> 包。对于其他代码包，导入该 <code>internal</code> 包都是非法的，无法通过编译。</p>
+<p>当前结构：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span>
+<span class="err">├──</span> <span class="k">go</span><span class="p">.</span><span class="nx">mod</span>
+<span class="err">├──</span> <span class="nx">lib</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="nx">internal</span>
+<span class="err">│</span>   <span class="err">│</span>   <span class="err">└──</span> <span class="nx">internal</span><span class="p">.</span><span class="k">go</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">├──</span> <span class="nx">libSource</span><span class="p">.</span><span class="k">go</span>
+<span class="err">└──</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span>
+</code></pre></div><p>我们把 <code>lib/libSource.go</code> 中的 <code>Hello</code> 函数拆分到 <code>lib/internal/internal.go</code> 实现：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">internal</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span>  <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>lib/libSource.go</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">lib5</span>
+
+<span class="kn">import</span> <span class="s">&#34;libsource/lib/internal&#34;</span>
+
+<span class="kd">func</span> <span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">//fmt.Printf(&#34;Hello %s!\n&#34;, name)
+</span><span class="c1"></span>	<span class="nx">internal</span><span class="p">.</span><span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>main.go</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;libsource/lib&#34;</span>
+	<span class="s">&#34;libsource/lib/internal&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="c1">//hello(name)
+</span><span class="c1"></span>	<span class="nx">lib5</span><span class="p">.</span><span class="nf">Hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>我们在 <code>main.go</code> 引入了  <code>internal</code> 包，执行 <code>go run main.go</code>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">command</span><span class="o">-</span><span class="nx">line</span><span class="o">-</span><span class="nx">arguments</span>
+        <span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">6</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span> <span class="nx">use</span> <span class="nx">of</span> <span class="nx">internal</span> <span class="kn">package</span> <span class="nx">libsource</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">internal</span> <span class="nx">not</span> <span class="nx">allowed</span>
+</code></pre></div><p>可见是不被允许的，把 <code>libsource/lib/internal</code> 注释掉在执行：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Hello</span> <span class="nx">Joseph</span><span class="p">!</span>
+</code></pre></div>]]></content>
+		</item>
+		
+		<item>
+			<title>命令源码文件和 flag 库</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/command_source/</link>
+			<pubDate>Mon, 07 Dec 2020 14:05:35 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/command_source/</guid>
+			<description>前言 写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如： 命令源码文件 库源码文件 测试源码文件 他们也有不同的用途和规则。 命令源码文件</description>
+			<content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>写了N年代码，只知道源码文件，原来细分的话源码文件也有区分，如：</p>
+<ul>
+<li>命令源码文件</li>
+<li>库源码文件</li>
+<li>测试源码文件</li>
+</ul>
+<p>他们也有不同的用途和规则。</p>
+<h2 id="命令源码文件">命令源码文件</h2>
+<p>命令源码文件是程序的运行入口，是每个可独立运行的程序必须拥有的。通过执行构建和安装，生成其对应的可执行文件，可执行文件一般与命令源码文件的父级目录同名。</p>
+<p>如果一个源码文件声明属于<code>main</code>包，并且包含一个无参数声明并且无结果声明的<code>main</code>函数，那面它就是命令源码文件，如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span>  <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello go!!&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>把这段代码保存到 <code>main.go</code> 文件，执行 <code>go run main.go</code> 就会输出 <code>hello go!!</code></p>
+<blockquote>
+<p>通常模块化编程时，我们会把代码拆分到多个文件，甚至拆分到不同的代码包中。但不管怎样，对于一个独立的程序来说，命令源码文件永远也只会有一个。如果有与命令源码文件同包的源码文件，那么它们也应该声明属于main包。</p>
+</blockquote>
+<p>通过构建或安装命令源码文件可以生成可执行文件，这里的可执行文件就可以视为“命令”，既然是命令，那面就应该具备接受参数的能力。</p>
+<h3 id="命令源码文件怎样接收参数">命令源码文件怎样接收参数</h3>
+<p>接收参数我们需要用到 <code>flag</code> 包 ，它是 <code>Go</code> 语言标准库提供的专门解析命令行参数的代码包。具体怎么使用呢，我们来看代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span>  <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>上面代码中，我们用 <code>flag.StringVar()</code> 函数，该函数接收 4 个参数：</p>
+<ul>
+<li>第一个参数是用于存储命令参数值的地址，我们这里就是前面声明的 <code>name</code> 变量的地址了，这里用 <code>&amp;name</code> 表示。</li>
+<li>第二个参数是指定该命令接收的参数名称，这里是 <code>name</code> 。</li>
+<li>第三个参数是指定了未输入该命令参数时的默认值，这里是 <code>Joseph</code>。</li>
+<li>第四个参数是该命令参数的简短说明，<code>--help</code> 时会用到。</li>
+</ul>
+<p>另外这里还有个相似的函数 <code>flag.String()</code> 区别是前者把接收到的命令参数值绑定到了指定的变量，后者直接返回了命令参数值的指针。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">flag</span><span class="p">.</span><span class="nf">String</span><span class="p">(</span><span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+</code></pre></div><p>参数列表少了第一个。</p>
+<p>函数  <code>flag.Parse()</code> 用于真正解析命令参数，并把它们赋值给相应变量。对该函数的调用必须在所有命令参数存储载体声明（变量 <code>name</code> 声明）和设置（对 <code>flag.StringVal()</code> 调用）之后，并且在读取任何命令参数值之前进行。所以，我们最好把它放在 <code>main</code> 函数体的第一行。</p>
+<h3 id="怎样在运行命令源码文件的时候传入参数怎样查看参数说明">怎样在运行命令源码文件的时候传入参数，怎样查看参数说明</h3>
+<p>把上面代码保存到 <code>main.go</code> 文件，运行下面命令就可以为参数 <code>name</code> 传值：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">run</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span> <span class="o">-</span><span class="nx">name</span><span class="p">=</span><span class="s">&#34;golang&#34;</span>
+</code></pre></div><p>运行后，输出结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">hello</span> <span class="nx">golang</span><span class="p">!</span>
+</code></pre></div><p>查看参数说明可以执行下面命令：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">run</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span> <span class="o">--</span><span class="nx">help</span>
+</code></pre></div><p>运行后结果类似：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Usage</span> <span class="nx">of</span> <span class="o">/</span><span class="kd">var</span><span class="o">/</span><span class="nx">folders</span><span class="o">/</span><span class="nx">nt</span><span class="o">/</span><span class="nx">vczl6v_963vb3pr63m_v12kh0000gn</span><span class="o">/</span><span class="nx">T</span><span class="o">/</span><span class="k">go</span><span class="o">-</span><span class="nx">build422118775</span><span class="o">/</span><span class="nx">b001</span><span class="o">/</span><span class="nx">exe</span><span class="o">/</span><span class="nx">main</span><span class="p">:</span>
+  <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
+        <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
+</code></pre></div><p>其中：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="o">/</span><span class="kd">var</span><span class="o">/</span><span class="nx">folders</span><span class="o">/</span><span class="nx">nt</span><span class="o">/</span><span class="nx">vczl6v_963vb3pr63m_v12kh0000gn</span><span class="o">/</span><span class="nx">T</span><span class="o">/</span><span class="k">go</span><span class="o">-</span><span class="nx">build422118775</span><span class="o">/</span><span class="nx">b001</span><span class="o">/</span><span class="nx">exe</span><span class="o">/</span><span class="nx">main</span>
+</code></pre></div><p>是 <code>go run</code> 命令构建源码文件所产生的临时可执行文件存储路径。</p>
+<p>如果先构建源码文件在执行，像这样：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">build</span> <span class="nx">main</span><span class="p">.</span><span class="k">go</span>
+<span class="p">.</span><span class="o">/</span><span class="nx">main</span> <span class="o">--</span><span class="nx">help</span>
+</code></pre></div><p>那面输出就是：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Usage</span> <span class="nx">of</span> <span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">:</span>
+  <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
+        <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
+</code></pre></div><h3 id="怎样自定义命令源码文件的参数使用说明">怎样自定义命令源码文件的参数使用说明</h3>
+<h4 id="1对变量-flagusage-重新赋值">1、对变量 <code>flag.Usage</code> 重新赋值</h4>
+<p><code>flag.Usage</code> 的类型是 <code>func()</code>，是一种无参数声明且无返回结果声明的函数类型。其在声明的时候就已经被赋值了，所以运行命令 <code>--help</code> 时才能看到结果。</p>
+<p>我们对 <code>flag.Usage</code> 进行赋值必须在 <code>flag.Parse</code> 之前，如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span>  <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nx">Usage</span> <span class="p">=</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stderr</span><span class="p">,</span> <span class="s">&#34;%s使用说明:\n&#34;</span><span class="p">,</span> <span class="s">&#34;参数&#34;</span><span class="p">)</span>
+		<span class="nx">flag</span><span class="p">.</span><span class="nf">PrintDefaults</span><span class="p">()</span>
+	<span class="p">}</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>执行 <code>--help</code> 命令得到：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">参数使用说明</span><span class="p">:</span>
+  <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
+        <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
+</code></pre></div><h4 id="2对变量-flagcommandline-重新赋值">2、对变量 <code>flag.CommandLine</code> 重新赋值</h4>
+<p>我们在调用 <code>flag</code> 包中的一些函数如：<code>StringVal</code>、<code>Parse</code> 时实际在调用 <code>flag.CommandLine</code> 变量的对应方法。</p>
+<p><code>flag.CommandLine</code> 相当于默认的命令参数容器，通过对其重新赋值，可以更深层次的定制当前命令源码文件的参数说明。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;os&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">//var name = flag.String(&#34;name&#34;, &#34;Joseph&#34;, &#34;The greeting object.&#34;)
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nx">CommandLine</span> <span class="p">=</span> <span class="nx">flag</span><span class="p">.</span><span class="nf">NewFlagSet</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">,</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">ExitOnError</span><span class="p">)</span>
+	<span class="nx">flag</span><span class="p">.</span><span class="nx">CommandLine</span><span class="p">.</span><span class="nx">Usage</span> <span class="p">=</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stderr</span><span class="p">,</span> <span class="s">&#34;%s使用说明:\n&#34;</span><span class="p">,</span> <span class="s">&#34;参数&#34;</span><span class="p">)</span>
+		<span class="nx">flag</span><span class="p">.</span><span class="nf">PrintDefaults</span><span class="p">()</span>
+	<span class="p">}</span>
+
+	<span class="nx">flag</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span>  <span class="p">{</span>
+	<span class="c1">//flag.Usage = func() {
+</span><span class="c1"></span>	<span class="c1">//	fmt.Fprintf(os.Stderr, &#34;%s使用说明:\n&#34;, &#34;参数&#34;)
+</span><span class="c1"></span>	<span class="c1">//	flag.PrintDefaults()
+</span><span class="c1"></span>	<span class="c1">//}
+</span><span class="c1"></span>	<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p><code>flag.NewFlagSet()</code> 的第二个参数可以设置使用 <code>--help</code> 时的响应状态，比如：</p>
+<ul>
+<li>设为 <code>flag.ContinueOnError</code> 时得到结果：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">参数使用说明</span><span class="p">:</span>
+  <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
+        <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
+<span class="nx">hello</span> <span class="nx">Joseph</span><span class="p">!</span>
+</code></pre></div><ul>
+<li>设为 <code>flag.ExitOnError</code> 时得到结果：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">参数使用说明</span><span class="p">:</span>
+  <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
+        <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
+</code></pre></div><ul>
+<li>设为 <code>flag.PanicOnError</code> 时得到结果：</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">参数使用说明</span><span class="p">:</span>
+  <span class="o">-</span><span class="nx">name</span> <span class="kt">string</span>
+        <span class="nx">The</span> <span class="nx">greeting</span> <span class="nx">object</span><span class="p">.</span> <span class="p">(</span><span class="k">default</span> <span class="s">&#34;Joseph&#34;</span><span class="p">)</span>
+<span class="nx">panic</span><span class="p">:</span> <span class="nx">flag</span><span class="p">:</span> <span class="nx">help</span> <span class="nx">requested</span>
+
+<span class="nx">goroutine</span> <span class="mi">1</span> <span class="p">[</span><span class="nx">running</span><span class="p">]:</span>
+<span class="nx">flag</span><span class="p">.(</span><span class="o">*</span><span class="nx">FlagSet</span><span class="p">).</span><span class="nf">Parse</span><span class="p">(</span><span class="mh">0xc0000561e0</span><span class="p">,</span> <span class="mh">0xc00000c090</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x1</span><span class="p">,</span> <span class="mh">0xc000068f78</span><span class="p">,</span> <span class="mh">0x1005a65</span><span class="p">)</span>
+        <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">Cellar</span><span class="o">/</span><span class="k">go</span><span class="o">/</span><span class="mf">1.15.5</span><span class="o">/</span><span class="nx">libexec</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">flag</span><span class="o">/</span><span class="nx">flag</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">987</span> <span class="o">+</span><span class="mh">0x145</span>
+<span class="nx">flag</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+        <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">Cellar</span><span class="o">/</span><span class="k">go</span><span class="o">/</span><span class="mf">1.15.5</span><span class="o">/</span><span class="nx">libexec</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">flag</span><span class="o">/</span><span class="nx">flag</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">1002</span>
+<span class="nx">main</span><span class="p">.</span><span class="nf">main</span><span class="p">()</span>
+        <span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">zhangxuesong</span><span class="o">/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">commandSource</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">27</span> <span class="o">+</span><span class="mh">0x85</span>
+<span class="nx">exit</span> <span class="nx">status</span> <span class="mi">2</span>
+</code></pre></div><h4 id="3创建私有命令参数容器">3、创建私有命令参数容器</h4>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;flag&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;os&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">//var name = flag.String(&#34;name&#34;, &#34;Joseph&#34;, &#34;The greeting object.&#34;)
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">name</span> <span class="kt">string</span>
+<span class="kd">var</span> <span class="nx">cmdLine</span> <span class="p">=</span> <span class="nx">flag</span><span class="p">.</span><span class="nf">NewFlagSet</span><span class="p">(</span><span class="s">&#34;参数&#34;</span><span class="p">,</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">ExitOnError</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//flag.CommandLine = flag.NewFlagSet(&#34;&#34;, flag.ExitOnError)
+</span><span class="c1"></span>	<span class="c1">//flag.CommandLine.Usage = func() {
+</span><span class="c1"></span>	<span class="c1">//	fmt.Fprintf(os.Stderr, &#34;%s使用说明:\n&#34;, &#34;参数&#34;)
+</span><span class="c1"></span>	<span class="c1">//	flag.PrintDefaults()
+</span><span class="c1"></span>	<span class="c1">//}
+</span><span class="c1"></span>
+	<span class="c1">//flag.StringVar(&amp;name, &#34;name&#34;, &#34;Joseph&#34;, &#34;The greeting object.&#34;)
+</span><span class="c1"></span>
+	<span class="nx">cmdLine</span><span class="p">.</span><span class="nf">StringVar</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">name</span><span class="p">,</span> <span class="s">&#34;name&#34;</span><span class="p">,</span> <span class="s">&#34;Joseph&#34;</span><span class="p">,</span> <span class="s">&#34;The greeting object.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span>  <span class="p">{</span>
+	<span class="c1">//flag.Usage = func() {
+</span><span class="c1"></span>	<span class="c1">//	fmt.Fprintf(os.Stderr, &#34;%s使用说明:\n&#34;, &#34;参数&#34;)
+</span><span class="c1"></span>	<span class="c1">//	flag.PrintDefaults()
+</span><span class="c1"></span>	<span class="c1">//}
+</span><span class="c1"></span>	<span class="c1">//flag.Parse()
+</span><span class="c1"></span>
+	<span class="nx">cmdLine</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;hello %s!\n&#34;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div><p>需要注意的是 <code>os.Args[1:]</code> 表示解析参数从第二个开始，第一个是文件名。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>go build和go get</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_build_get/</link>
+			<pubDate>Sun, 06 Dec 2020 16:42:20 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_build_get/</guid>
+			<description>go build go build运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。 使用命令g</description>
+			<content type="html"><![CDATA[<h2 id="go-build"><code>go build</code></h2>
+<p><code>go build</code>运行的时候默认不会编译目标代码包所依赖的那些代码包。当被依赖的代码包的归档文件不存在或者源码文件有变化才会被编译。</p>
+<p>使用命令<code>go build -a</code>可以强制编译依赖包，即使依赖的是标准库中的代码包。</p>
+<p>使用命令<code>go build -i</code>不但能强制编译依赖包，还会安装他们的归档文件。</p>
+<p>使用命令<code>go build -x</code>可以看到具体执行了哪些操作，也可以使用<code>go build -n</code>只查看而不操作。</p>
+<p>使用命令<code>go build -v</code>可以看到编译的代码包的名称。</p>
+<h2 id="go-get"><code>go get</code></h2>
+<p><code>go get</code>会自动从一些主流共用代码仓库下载代码包，并且安装到<code>GOPATH</code>指向的第一个工作区中的对应目录。如果设置了<code>GOBIN</code>,那面仅包含命令源码文件的代码包会被安装到<code>GOBIN</code>指向的目录。</p>
+<p>常用参数：</p>
+<ul>
+<li><code>-u</code>下载并安装代码包，不论工作区中是否已存在。</li>
+<li><code>-d</code>只下载不安装代码包。</li>
+<li><code>-fix</code>下载代码包后先运行一个当前<code>Go</code>版本的修正代码工具，然后安装。</li>
+<li><code>-t</code>同时下载测试所需代码包。</li>
+<li><code>-insecure</code>允许通过非安全的网络协议下载和安装代码包，比如<code>HTTP</code>协议。</li>
+</ul>
+]]></content>
+		</item>
+		
+		<item>
+			<title>Gopath和工作区</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/gopath/</link>
+			<pubDate>Sat, 05 Dec 2020 11:10:05 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/gopath/</guid>
+			<description>前言 我们都知道 Go 的环境安装需要配置三个环境变量，他们分别是： GPROOT：Go语言安装根目录的路径，也就是Go语言的安装路径。 GOBIN：G</description>
+			<content type="html"><![CDATA[<h2 id="前言">前言</h2>
+<p>我们都知道 <code>Go</code> 的环境安装需要配置三个环境变量，他们分别是：</p>
+<ul>
+<li>GPROOT：<code>Go</code>语言安装根目录的路径，也就是<code>Go</code>语言的安装路径。</li>
+<li>GOBIN：<code>Go</code>程序生成的可执行文件（executable file）的路径。</li>
+<li>GOPATH：指向工作区目录的路径，是我们自定义的工作空间，可定义多个。</li>
+</ul>
+<h2 id="设置-gopath-有什么意义">设置 <code>GOPATH</code> 有什么意义？</h2>
+<p>之前只知道<code>GOPATH</code>是<code>Go</code>语言的工作目录，他的值是一个或者多个路径（不同系统分隔符不同），每个路径代表<code>Go</code>语言的一个工作区。</p>
+<p>我们利用这些工作区去防止<code>Go</code>语言的源码文件（source file），已经安装后的归档文件（archive file）和可执行文件（executable file）。</p>
+<p>事实上，由于<code>Go</code>语言项目在其生命周期内的所有操作（编码、依赖管理、构建、测试、安装等）基本上都是围绕<code>GOPATH</code>和工作区进行的。所以它的背后还有以下几个知识点，分别是：</p>
+<h3 id="1go语言源码的组织方式">1、<code>Go</code>语言源码的组织方式</h3>
+<p><code>Go</code>语言的源码是以代码包为基本单位的。在文件系统中，这些代码包和目录是一一对应的。由于目录可以有子目录，所以代码包也可以有子包。</p>
+<p>一个代码包中可以包含任意个以<code>.go</code>为扩展名的源码文件，这些源码文件都需要被声明属于同一个代码包。</p>
+<p>代码包的名称一般会与源码文件所在的目录同名。如果不同名，那么在构建、安装的过程中会以代码包名称为准。</p>
+<p>每个代码包都有导入路径。代码包的导入路径是其他代码在使用该包中的程序实体时，需要引入的路径。在实际使用程序实体前，我们必须先导入其所在的代码包。具体方式就是<code>import</code>该包的导入路径。就像这样：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="s">&#34;github.com/labstack/echo&#34;</span>
+</code></pre></div><p>在工作区中，一个代码包的导入路径就是从<code>src</code>的子目录，到该包的实际存储位置的相对路径。</p>
+<p>所以说，<code>Go</code>语言源码的组织方式就是以环境变量<code>GOPATH</code>、工作区、<code>src</code>目录和代码包为主线的。一般情况下，<code>Go</code>语言的源码文件都需要被存放在环境变量<code>GOPATH</code>包含的某个工作区（目录）中的<code>src</code>目录下的某个代码包（目录）中。</p>
+<h3 id="2源码安装后的结果">2、源码安装后的结果</h3>
+<p>源码文件通常放在工作区下的<code>src</code>子目录下；安装后如果产生了归档文件，就会放到该工作区的<code>pkg</code>子目录；如果产生了可以执行文件，就会放进该工作区的<code>bin</code>子目录下。</p>
+<p>源码文件是以代码包的形式组织起来的，一个代码包其实就对应一个目录。安装某个代码包而产生的归档文件是与这个代码包同名的。</p>
+<p>放置他的相对目录就是该包的导入路径的直接父级。</p>
+<p>比如，一个已存在的代码包的导入路径是：<code>github.com/labstack/echo</code>那么执行命令</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">install</span> <span class="nx">github</span><span class="p">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">labstack</span><span class="o">/</span><span class="nx">echo</span>
+</code></pre></div><p>生成的归档文件就是：<code>github.com/labstack</code>，文件名为<code>echo.a</code>。</p>
+<p>上面这个代码包还有一层含义就是：该代码包的源码文件存放于<code>Github</code>上的<code>labstack</code>组的代码仓库<code>echo</code>中。</p>
+<p>归档文件的相对目录与<code>pkg</code>目录直接还有一层平台相关目录。平台相关目录的名称是由<code>build</code>（也称“构建”）的目标操作系统、下划线和目标计算架构的代号组成的。如：<code>linux_amd64</code>。</p>
+<p><p class="md__image">
+  <img src="../image/2fdfb5620e072d864907870e61ae5f3c.png"
+    alt=""  />
+</p>
+</p>
+<p>所以，我们知道某个工作区的 src 子目录下的源码文件在安装后一般会被放置到当前工作区的 pkg 子目录下对应的目录中，或者被直接放置到该工作区的 bin 子目录中。</p>
+<h3 id="3构建和安装-go-程序的过程">3、构建和安装 Go 程序的过程</h3>
+<p>构建使用命令<code>go build</code>，安装使用命令<code>go install</code>。构建和安装代码时都会执行编译、打包等操作，并且这些操作生成的任何文件都会先保存在某个临时目录中。</p>
+<p>如果构建的是库源码文件，操作产生的结果文件只会存放在临时目录中。这里的构建的主要意义在于检查和验证。</p>
+<p>如果构建的是命令源码文件，操作产生过的结果文件会被搬运到源码文件所在的目录中。</p>
+<p>安装操作会先执行构建，然后执行链接操作，并且把结果文件搬运到指定目录。</p>
+<p>进一步说，如果安装的是库源码文件，那么结果文件会被搬运到所在工作区的<code>pkg</code>目录下的某个子目录中。</p>
+<p>如果安装的是命令源码文件，那么结果过文件会被搬运到所在工作区的<code>bin</code>目录中或者环境变量<code>GOBIN</code>指向的目录中。</p>
+<h2 id="补充">补充</h2>
+<h3 id="1go语言在多个工作区中查找依赖包是以怎样的顺序进行的">1、<code>Go</code>语言在多个工作区中查找依赖包是以怎样的顺序进行的？</h3>
+<p>以<code>GOPATH</code>指定的工作区顺序查找，找到即返回，找不到则报错。</p>
+<h3 id="2多个工作区中都存在导入路径相同的代码包会产生冲突吗">2、多个工作区中都存在导入路径相同的代码包会产生冲突吗？</h3>
+<p>不会冲突，原因同上。同理，不同工作区的两个相同导入路径的代码包，编译的时候不会编译第二个工作区的代码包。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>My First Post</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/my-first-post/</link>
+			<pubDate>Fri, 04 Dec 2020 10:11:10 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/my-first-post/</guid>
+			<description>这是第一篇文章</description>
+			<content type="html"><![CDATA[<p>这是第一篇文章</p>
+]]></content>
+		</item>
+		
+	</channel>
 </rss>

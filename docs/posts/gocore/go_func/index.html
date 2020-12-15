@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="函数的正确使用姿势">
+<meta itemprop="description" content="函数是一等公民 在 Go 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。 简单来说，这意味着函数不但可以用于封装代">
+<meta itemprop="datePublished" content="2020-12-15T10:08:40+08:00" />
+<meta itemprop="dateModified" content="2020-12-15T10:08:40+08:00" />
+<meta itemprop="wordCount" content="2633">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="函数的正确使用姿势" />
+<meta property="og:description" content="函数是一等公民 在 Go 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。 简单来说，这意味着函数不但可以用于封装代" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_func/" />
+<meta property="article:published_time" content="2020-12-15T10:08:40+08:00" />
+<meta property="article:modified_time" content="2020-12-15T10:08:40+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="函数的正确使用姿势"/>
+<meta name="twitter:description" content="函数是一等公民 在 Go 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。 简单来说，这意味着函数不但可以用于封装代"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>函数的正确使用姿势</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-15</span></div>
+				<h1>函数的正确使用姿势</h1>
+			</header>
+			<div class="content">
+				<h2 id="函数是一等公民">函数是一等公民<a href="#函数是一等公民" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在 <code>Go</code> 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。</p>
+<p>简单来说，这意味着函数不但可以用于封装代码、分割功能、解耦逻辑，还可以化身为普通的值，在其他函数间传递、赋予变量、做类型判断和转换等等，就像切片和字典的值那样。</p>
+<p>更深层次来说，函数值可以由此成为能够被随意传播的独立逻辑组件（或者说功能模块）。</p>
+<p>对于函数类型来说，它是一种对一组输入、输出进行模板化的重要工具，它比接口类型更加轻巧、灵活，它的值也借此变成了可被热替换的逻辑组件。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">type</span> <span class="nx">Printer</span> <span class="kd">func</span><span class="p">(</span><span class="nx">contents</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">printToStd</span><span class="p">(</span><span class="nx">contents</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">bytesNum</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">contents</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">p</span> <span class="nx">Printer</span>
+	<span class="nx">p</span> <span class="p">=</span> <span class="nx">printToStd</span>
+	<span class="nf">p</span><span class="p">(</span><span class="s">&#34;something&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>这里我们声明了一个函数类型 <code>Printer</code>，在类型声明的名称右边的是 <code>func</code> 关键字，由此可知是一个函数类型声明。</p>
+<p><code>func</code> 右边是函数类型的参数列表和结果列表。其中，参数列表必须用圆括号包裹，而只要结果列表中只有一个结果声明，并且没有为它命名，那么可以省略外面的圆括号。</p>
+<p>函数签名的方式与函数声明是一致的。只是紧挨在参数列表左边的不是函数名称，而是关键字 <code>func</code>。这里函数名称和 <code>func</code> 互换了位置。</p>
+<blockquote>
+<p>函数签名其实就是函数的参数列表和结果列表的统称，它定义了可用来鉴别不同函数的那些特征，同时也定义了我们与函数交互的方式。</p>
+</blockquote>
+<p>注意，各个参数和结果的名称不能算作函数签名的一部分，甚至对结果声明来说，没有名称都可以。</p>
+<p>只要两个函数的参数列表和结果列表中的元素顺序及其类型是一致的，我们就可以说它们是一样的函数，或者说是实现了同一个函数类型的函数。</p>
+<p>严格来说，函数的名称也不能算作函数签名的一部分，它只是我们在调用函数时需要给定的标识符而已。</p>
+<p>我们下面声明的 <code>printToStd</code> 的签名和 <code>Printer</code> 是一致的，因此前者是后者的一个实现，即使他们的名称以及有的结果名称是不一样的。</p>
+<p>通过 <code>main</code> 函数中的代码，我们就可以证实这两者之间的关系了，我们顺利的把 <code>printToStd</code> 赋给了 <code>Printer</code> 类型的变量 <code>p</code>，并且成功调用了它。</p>
+<p>总之，函数是一等公民是函数式编程（functional programming）的重要特征。<code>Go</code> 语言在语言层面支持了函数式编程。</p>
+<h2 id="怎样编写高阶函数">怎样编写高阶函数<a href="#怎样编写高阶函数" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>简单的说，高阶函数可以满足下面两个条件：</p>
+<ul>
+<li>接收其他函数作为参数传入。</li>
+<li>把其他函数作为结果返回。</li>
+</ul>
+<p>只要满足其中任意一个特点，我们就可以说这个函数是一个高阶函数。高阶函数也是函数式编程中重要概念和特征。</p>
+<p>例如，有需求需要编写 <code>calculate</code> 函数来实现两个整数间的加减乘除计算，但是希望两个整数和具体的操作都由调用方给出。我们来实现它：</p>
+<p>首先，声明一个名叫 <code>operate</code> 的函数类型，它有两个参数和一个结果，都是 <code>int</code> 类型的。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">operate</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
+</code></pre></div><p>然后，我们编写 <code>calculate</code> 函数的签名部分。这个函数除了需要两个 <code>int</code> 参数，还需要一个 <code>operate</code> 类型的参数。</p>
+<p>该函数的结果应该有两个，一个 <code>int</code> 类型，代表真正的操作结果，另一个 <code>error</code> 类型的，表示如果 <code>operate</code> 类型的参数为 <code>nil</code>，那么就返回一个错误。</p>
+<blockquote>
+<p>函数类型属于引用类型，它的值可以为 <code>nil</code>，并且它的零值就是 <code>nil</code>。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">calculate</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">op</span> <span class="nx">operate</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">op</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;无效操作&#34;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nf">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</code></pre></div><p><code>calculate</code> 函数的实现比较简单，先用卫述语句检查一下参数，如果 <code>operate</code> 类型的参数 <code>op</code> 为 <code>nil</code>，就直接返回 0 和一个错误。</p>
+<blockquote>
+<p>卫述语句是指被用来检查关键的先决条件的合法性，并在检查未通过的情况下立即终止当前代码块的执行。<code>Go</code> 语言中，<code>if</code> 通常被作为卫述语句。</p>
+</blockquote>
+<p>如果检查无误，那么调用 <code>op</code> 并把那两个操作数传给它，最后返回 <code>op</code> 的结果和表示没有错误发生的 <code>nil</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">op</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+	<span class="p">}</span>
+	<span class="nx">s</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">calculate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">op</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">())</span>
+	<span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>上面这个例子展示了：把函数作为一个普通的值赋给一个变量；让函数在其他函数间传递。</p>
+<p>那么 <code>calculate</code> 函数就是一个高阶函数，该函数接受其他函数作为参数传入。</p>
+<p>第二个特点：把其他函数作为返回结果。可见以下代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;errors&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">operates</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
+
+<span class="kd">type</span> <span class="nx">calculator</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">genCalculator</span><span class="p">(</span><span class="nx">op</span> <span class="nx">operates</span><span class="p">)</span> <span class="nx">calculator</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">op</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;无效操作&#34;</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nf">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">op</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span>
+	<span class="p">}</span>
+
+	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">78</span>
+	<span class="nx">add</span> <span class="o">:=</span> <span class="nf">genCalculator</span><span class="p">(</span><span class="nx">op</span><span class="p">)</span>
+	<span class="nx">result</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The result: %d (error: %v)\n&#34;</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="如何实现闭包">如何实现闭包<a href="#如何实现闭包" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>什么是闭包，在一个函数中存在对外来标识符的引用，这个外来标识符既不代表当前函数的任何参数或结果，也不是函数内部声明的，它是从外部直接拿过来的。</p>
+<p>还有专门的术语称呼它，自由变量，可见它代表的肯定是个变量。实际上，如果它是个常量，那也就形成不了闭包了，因为常量是不可变的程序实体，而闭包体现的却是由不确定变为确定的一个过程。</p>
+<p>闭包函数就是因为引用了自由变量，而呈现出一种不确定的状态，也叫开放状态。也就是说，它的内部逻辑是不完整的，有一部分逻辑需要自由变量参与完成，而自由变量到底代表了什么在闭包函数被定义的时候是不确定的。</p>
+<p>即使对于像 <code>Go</code> 语言这种静态语言，在定义闭包函数时也只能知道自由变量的类型。</p>
+<p>上面那个例子中提到的 <code>genCalculator</code> 函数内部就实现了闭包函数，该函数也是高阶函数。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">genCalculator</span><span class="p">(</span><span class="nx">op</span> <span class="nx">operates</span><span class="p">)</span> <span class="nx">calculator</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">op</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;无效操作&#34;</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nf">op</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">),</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p><code>genCalculator</code> 函数只做了一件事，定义了一个匿名的、<code>calculator</code> 类型的函数并把它返回。</p>
+<p>这个匿名函数就是一个闭包函数。它里面使用的 <code>op</code> 既不代表它的任何参数或结果也不是它自己声明的，而是外层函数的参数，对它来说是自由变量。</p>
+<p>这个自由变量代表了什么，定义闭包函数时是不确定的，定义外层函数时才能确定。</p>
+<p><p class="md__image">
+  <img src=".././image/61f3689a0023e83407ccae081cdd8108.png"
+    alt=""  />
+</p>
+</p>
+<p>表面上看，我们只是延迟实现了一部分程序逻辑或功能，但实际上我们是在动态的生成那部分程序逻辑。我们可以借此在程序运行的过程中，根据需要生成功能不同的函数，继而影响后续的程序行为。</p>
+<h2 id="传入函数中的那些参数值后来怎样了">传入函数中的那些参数值后来怎样了<a href="#传入函数中的那些参数值后来怎样了" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">array1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The array: %v\n&#34;</span><span class="p">,</span> <span class="nx">array1</span><span class="p">)</span>
+  <span class="nx">array2</span> <span class="o">:=</span> <span class="nf">modifyArray</span><span class="p">(</span><span class="nx">array1</span><span class="p">)</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The modified array: %v\n&#34;</span><span class="p">,</span> <span class="nx">array2</span><span class="p">)</span>
+  <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The original array: %v\n&#34;</span><span class="p">,</span> <span class="nx">array1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">modifyArray</span><span class="p">(</span><span class="nx">a</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span>
+  <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;x&#34;</span>
+  <span class="k">return</span> <span class="nx">a</span>
+<span class="p">}</span>
+</code></pre></div><p>所有传给函数的参数值都会被复制，函数在其内部使用的并不是参数值的原值，而是它们的副本。</p>
+<p>数组是值类型，每一次复制都会拷贝它以及所有的元素值。而对于切片、字典、通道等引用类型，只会复制它们本身，并不会复制它们的底层数据，也就是浅复制。</p>
+<p>以切片值为例，复制的时候只是拷贝了它指向底层数组中某一个元素的指针，以及它的容量和长度，它底层的数组不会被拷贝。</p>
+<p>需要注意得是，当传入函数的是一个值类型的参数值，但这个参数值中的某个元素是引用类型的，仍然符合上面的规则。如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">array1</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">][]</span><span class="kt">string</span><span class="p">{</span>
+    <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;d&#34;</span><span class="p">,</span> <span class="s">&#34;e&#34;</span><span class="p">,</span> <span class="s">&#34;f&#34;</span><span class="p">},</span>
+    <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;g&#34;</span><span class="p">,</span> <span class="s">&#34;h&#34;</span><span class="p">,</span> <span class="s">&#34;i&#34;</span><span class="p">},</span>
+    <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;j&#34;</span><span class="p">,</span> <span class="s">&#34;k&#34;</span><span class="p">,</span> <span class="s">&#34;l&#34;</span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">modifyArray</span><span class="p">(</span><span class="nx">a</span> <span class="p">[</span><span class="mi">3</span><span class="p">][]</span><span class="kt">string</span><span class="p">)</span> <span class="p">[</span><span class="mi">3</span><span class="p">][]</span><span class="kt">string</span> <span class="p">{</span>
+	<span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;z&#34;</span>
+	<span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;a&#34;</span><span class="p">,</span> <span class="s">&#34;b&#34;</span><span class="p">,</span> <span class="s">&#34;c&#34;</span><span class="p">}</span>
+	<span class="k">return</span> <span class="nx">a</span>
+<span class="p">}</span>
+</code></pre></div><p>上面例子中，对 <code>a[1]</code> 的整个元素替换是不会影响原来的数组的，但是对 <code>a[0][1]</code> 的替换是会影响到原始数据的。</p>
+<p>相关原则：既不要把你的程序细节暴露给外界，也尽量不要让外界的变动影响到你的程序。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_channel2/">通道的高级玩法</a></li>
+	
+	<li><a href="/posts/gocore/go_channel/">通道的基本操作</a></li>
+	
+	<li><a href="/posts/gocore/go_map/">字典的操作和约束</a></li>
+	
+	<li><a href="/posts/gocore/go_container/">container包中的那些容器</a></li>
+	
+	<li><a href="/posts/gocore/go_array_slice/">数组和切片</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>2633 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-15 10:08 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#函数是一等公民">函数是一等公民</a></li>
+    <li><a href="#怎样编写高阶函数">怎样编写高阶函数</a></li>
+    <li><a href="#如何实现闭包">如何实现闭包</a></li>
+    <li><a href="#传入函数中的那些参数值后来怎样了">传入函数中的那些参数值后来怎样了</a></li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_channel2/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>通道的高级玩法</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
