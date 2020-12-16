@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Tue, 15 Dec 2020 10:08:40 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 16 Dec 2020 16:14:01 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>接口类型的合理运用</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_interface/</link>
+      <pubDate>Wed, 16 Dec 2020 16:14:01 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_interface/</guid>
+      <description>接口的基础知识 接口类型与其他数据类型不同，它是没办法初始化的。具体的说，我们不能通过 new 或者 make 函数创建出一个接口类型的值，也无法用字面量来表示</description>
+    </item>
+    
+    <item>
+      <title>结构体及其方法</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_struct/</link>
+      <pubDate>Wed, 16 Dec 2020 09:10:06 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_struct/</guid>
+      <description>结构体类型基础知识 结构体表示的是实实在在的数据结构。一个结构体类型可以包含若干个字段，每个字段通常都需要有确切的名字和类型。 结构体也可以不包</description>
+    </item>
+    
     <item>
       <title>函数的正确使用姿势</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_func/</link>
@@ -78,24 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/go_scope/</guid>
       <description>作用域是什么 一个程序实体被写出来，就是为了让其他程序引用。哪里的代码可以引用它呢，这就涉及到了它的作用域。 Go 语言的访问权限有三种：包级私有的</description>
-    </item>
-    
-    <item>
-      <title>Go 语言中的变量那些事儿</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_var/</link>
-      <pubDate>Wed, 09 Dec 2020 09:23:22 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_var/</guid>
-      <description>变量声明 除了 var name string 这种声明方式以外还有两种基于类型推断的声明方式。 注意短变量声明只能在函数体内部使用。 类型推断 类型推断是编程语言在编译器自动</description>
-    </item>
-    
-    <item>
-      <title>库源码文件和代码拆分</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/lib_source/</link>
-      <pubDate>Tue, 08 Dec 2020 13:12:08 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/lib_source/</guid>
-      <description>什么是库源码文件 库源码文件是不能直接运行的源码文件，它仅提供程序实体以供其他代码使用。如： package lib5 import &amp;#34;fmt&amp;#34; func Hello(name string) { fmt.Printf(&amp;#34;Hello %s!\n&amp;#34;, name) } 把上面代码保存到 libSource.go 执行 go run</description>
     </item>
     
   </channel>
