@@ -6,8 +6,237 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Wed, 16 Dec 2020 16:14:01 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 17 Dec 2020 15:32:58 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Go 语言及其执行规则</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_goroutine/</link>
+			<pubDate>Thu, 17 Dec 2020 15:32:58 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_goroutine/</guid>
+			<description>Don’t communicate by sharing memory; share memory by communicating. 从 Go 语言编程的角度解释，这句话的意思是：不要通过共享数据来通讯，要以通讯的方式来共享数据。 通道（channel）类</description>
+			<content type="html"><![CDATA[<blockquote>
+<p>Don’t communicate by sharing memory; share memory by communicating.</p>
+</blockquote>
+<p>从 <code>Go</code> 语言编程的角度解释，这句话的意思是：不要通过共享数据来通讯，要以通讯的方式来共享数据。</p>
+<p>通道（channel）类型的值，可以被用来以通讯的方式共享数据。它一般被用来在不同的 <code>goroutine</code> 之间传递数据。</p>
+<p><code>goroutine</code> 代表着并发编程模型中的用户级线程。</p>
+<h2 id="进程和线程">进程和线程</h2>
+<p>进程，描述的是程序的执行过程，是运行着的程序的代表。换句话说，一个进程就是某个程序运行时的一个产物。如果说静静躺在那里的代码就是程序的话，那么奔跑的、正在发挥着既有功能的代码就可以被称为进程。</p>
+<p>线程，总是在进程之内，它可以被视为进程中运行着的控制流（或者说代码执行的流程）。一个进程至少会包含一个线程。</p>
+<p>如果一个进程只包含了一个线程，那么它里面所有的代码只会被串行的执行。每个进程的第一个线程都会随着进程的启动而被创建，它们可以被称为其所属进程的主线程。</p>
+<p>如果一个进程包含了多个线程，那么它里面的所有代码就可以被并发的执行。除了进程的第一个线程之外，其他线程都是由进程中已存在的线程创建出来的。</p>
+<p>也就是说，主线程之外的其他线程都只能由代码显示的创建和摧毁。这需要我们在编写程序的时候进行手动控制，操作系统以及进程本身并不会帮我们下达这样的指令，它们只会忠实的执行我们的指令。</p>
+<h2 id="用户级线程-goroutine">用户级线程 <code>goroutine</code></h2>
+<p>不过，<code>Go</code> 程序当中，<code>Go</code> 语言的运行时（runtime）系统会帮我们自动创建和销毁系统级线程。这里的系统级线程就是指我们刚刚说过的操作系统提供的线程。</p>
+<p>而对应的用户级线程指的是架设在系统级线程之上的，由用户（或者说我们编写的程序）完全控制的代码执行流程。用户级线程的创建、销毁、调度、状态变更以及其中的代码和数据都需要我们的程序自己去实现和处理。</p>
+<p>优势：它们的创建和销毁不需要通过操作系统，速度会很快。不用等待操作系统的调度，容易控制并且很灵活。</p>
+<p>劣势：复杂，我们既是命令下达者又是命令执行者，我们必须全权负责与用户级线程有关的所有具体实现。</p>
+<h2 id="goroutine-调度器"><code>goroutine</code> 调度器</h2>
+<p>这个调度器是 <code>Go</code> 语言运行时系统的重要组成部分，它主要负责统筹调配 <code>Go</code> 并发编程模型中的三个主要元素，即：G（<code>goroutine</code> 的缩写）、P （<code>processor</code> 的缩写）和 M（<code>machine</code> 的缩写）。</p>
+<p>其中的 <code>M</code> 指代的就是系统级线程。而 <code>P</code> 指的是一种可以承载若干个 <code>G</code>，且能够使这些 <code>G</code> 适时的与 <code>M</code> 进行对接，并得到真正运行的中介。</p>
+<p>从宏观上说，<code>G</code> 和 <code>M</code> 由于 <code>P</code> 的存在可以呈现出多对多的关系。当一个正在与某个 <code>M</code> 对接并运行着的 <code>G</code>，需要因某个事件（比如等待 <code>I/O</code> 或者锁的解除）而暂停运行的时候，调度器总会及时的发现，并把这个 <code>G</code> 和 <code>M</code> 分离开，以释放计算资源供那些正在等待运行的 <code>G</code> 使用。</p>
+<p>而当一个 <code>G</code> 需要恢复运行的时候，调度器又会尽快的为它寻找空闲的计算资源（包括 <code>M</code>）并安排运行。另外，当 <code>M</code> 不够用时，调度器会帮我们向操作系统申请新的系统级线程，而当某个 <code>M</code> 已无用时，调度器又会负责及时的把它销毁掉。</p>
+<p>正因为调度器帮助我们做了很多事，所以我们的 <code>Go</code> 程序才总是能高效的利用操作系统和计算机资源。程序中的所有 <code>goroutine</code> 也都会被充分的调度，其中的代码也都会被并发的运行，即使这样的 <code>goroutine</code> 数以万计，也仍然可以如此。</p>
+<p><p class="md__image">
+  <img src=".././image/9ea14f68ffbcde373ddb61e186695d7d.png"
+    alt=""  />
+</p>
+</p>
+<h2 id="什么是主-goroutine它和我们启用的其他-goroutine-有什么不同">什么是主 <code>goroutine</code>，它和我们启用的其他 <code>goroutine</code> 有什么不同</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+		<span class="p">}()</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 没有任何输出
+</span></code></pre></div><p>与一个进程总会有一个主线程类似，每一个独立的 <code>Go</code> 程序在运行时也总会有一个主 <code>goroutine</code>。这个主 <code>goroutine</code> 会在 <code>Go</code> 程序的运行准备工作完成后被自动启用，不需要我们做任何手动操作。</p>
+<p>每条 <code>go</code> 语句一般都会携带一个函数调用，这个被调用的函数常常被称为 <code>go</code> 函数。而主 <code>goroutine</code> 的 <code>go</code> 函数就是那个作为程序入口的 <code>main</code> 函数。</p>
+<p>注意，<code>go</code> 函数真正被执行的时间，总会与其所属的 <code>go</code> 语句被执行的时间不同。当程序执行到一条 <code>go</code> 语句的时候，<code>Go</code> 语言运行时系统会先试图从某个存放空闲的 <code>G</code> 的队列中获取一个 <code>G</code>，只有在找不到空闲 <code>G</code> 的情况下才会去创建一个新的 <code>G</code>。已存在的 <code>goroutine</code> 总会被优先复用。</p>
+<p>创建一个 <code>G</code> 的成本也是非常低的。创建一个 <code>G</code> 并不像新建一个进程或者一个系统级线程那样需要操作系统来完成，在 <code>Go</code> 语言的运行时系统内部就可以完成，更何况一个 <code>G</code> 仅相当于为需要并发执行的代码片段服务的上下文而已。</p>
+<p>拿到一个空闲的 <code>G</code> 后，运行时系统会用这个 <code>G</code> 去包装当前的那个 <code>go</code> 函数（或者说该函数中的那些代码），然后把这个 <code>G</code> 追加到某个存放可运行的 <code>G</code> 的队列中。</p>
+<p>这类队列中的 <code>G</code> 总是会按照先进先出的顺序，很快的由运行时系统内部的调度器安排执行。虽然很快，但是准备工作不可避免，也是有耗时的。</p>
+<p>因此，<code>go</code> 函数的执行时间总是会明显滞后于它所属的 <code>go</code> 语句的执行时间。当然了，这里所说的明显是相对于计算机的 <code>CPU</code> 时钟和 <code>Go</code> 程序。我们大多数都不会有明显的感觉。</p>
+<p>只要 <code>go</code> 语句本身执行完毕，<code>Go</code> 程序完全不会等待 <code>go</code> 函数的执行，它会立刻执行后面的语句。这就是所谓的异步并发的执行。</p>
+<p>重要特性：一旦主 <code>goroutine</code> 中的代码（也就是 <code>main</code> 函数中的代码）执行完毕，当前的 <code>Go</code> 程序就会结束运行。这时候如果有 <code>goroutine</code> 还没有执行，就永远不再执行了。</p>
+<p>严谨的讲，<code>Go</code> 语言并不会保证这些 <code>goroutine</code> 的运行顺序，由于主 <code>goroutine </code> 会与我们手动启用的其他 <code>goroutine </code> 一起接受调度，又因为调度器很可能会在 <code>goroutine </code> 中的代码只执行了一部分的时候暂停，以期所有的 <code>goroutine </code> 有更公平的运行机会。</p>
+<p>所以哪个 <code>goroutine </code> 先执行完、哪个 <code>goroutine </code> 后执行完往往是不可预知的，除非我们使用了某种 <code>Go</code> 语言提供的方式进行了人为干预。</p>
+<p>由于 <code>G</code> 队列是多个的，我们的 <code>G</code> 不一定被调度到哪一个 <code>G</code> 队列里面等待执行，所以虽然队列是先进先出的，但是 <code>goroutine</code> 的执行结果还是无序的。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>指针的有限操作</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_pointer/</link>
+			<pubDate>Thu, 17 Dec 2020 09:06:50 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_pointer/</guid>
+			<description>先来看一段代码： type Dog struct { name string } func (dog *Dog) SetName(name string) { dog.name = name } 对于基本类型 Dog 来说，*Dog 就是它的指针类型。而对于一个 Dog 类型，值不为 nil 的变量 dog，取址</description>
+			<content type="html"><![CDATA[<p>先来看一段代码：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Dog</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">dog</span> <span class="o">*</span><span class="nx">Dog</span><span class="p">)</span> <span class="nf">SetName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">dog</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="nx">name</span>
+<span class="p">}</span>
+</code></pre></div><p>对于基本类型 <code>Dog</code> 来说，<code>*Dog</code> 就是它的指针类型。而对于一个 <code>Dog</code> 类型，值不为 <code>nil</code> 的变量 <code>dog</code>，取址表达式 <code>&amp;dog</code> 的结果就是该变量的值的指针值。</p>
+<p>如果一个方法的接收者是 <code>*Dog</code> 类型的，那么该方法就是基本类型 <code>Dog</code> 的指针方法。</p>
+<p>在这种情况下，这个方法的接收者实际上就是当前基本值的指针值。</p>
+<p>我们可以通过指针值无缝的访问到基本值包含的任何字段，以及调用与之关联的任何方法。这应该就是我们在编写 <code>Go</code> 程序的过程中用的最频繁的指针了。</p>
+<p>传统意义来说，指针是一个指向某个确切的内存地址的值。这个内存地址可以是任何数据或代码的起始地址，比如，某个变量、某个字段或某个函数。</p>
+<p>刚刚只是提到了一种情况，在 <code>Go</code> 语言中还有其他几样东西可以代表指针。其中最贴近传统意义的当属 <code>uintptr</code> 类型了。该类型实际上是一个数值类型，也是 <code>Go</code> 语言内建的数据类型之一。</p>
+<p>根据当前计算机架构的不同，它可以存储 32 位或 64 位的无符号整数，可以代表任何指针的位（bit）模式，也就是原始的内存地址。</p>
+<p>再来看 <code>Go</code> 语言标准库中的 <code>unsafe</code> 包。该包中有个类型叫做 <code>Pointer</code>，也代表了指针。</p>
+<p><code>unsafe.Pointer</code> 可以表示任何指向可寻址的值的指针，同时它也是前面提到的指针值和 <code>uintptr</code> 值之间的桥梁。通过它，我们可以在两种值之上进行双向转换。这里有个很关键的词&ndash;可寻址（addressable）。</p>
+<h2 id="go-语言中那些值是不可寻址的"><code>Go</code> 语言中那些值是不可寻址的</h2>
+<ul>
+<li>常量的值。</li>
+<li>基本类型值的字面量。</li>
+<li>算数操作的结果值。</li>
+<li>对各种字面量的索引表达式和切片表达式的结果值。例外，对切片字面量的索引结果值是可寻址的。</li>
+<li>对字符串变量的索引表达式和切片表达式的结果值。</li>
+<li>对字典变量的索引表达式的结果值。</li>
+<li>函数字面量和方法字面量，以及对它们的调用表达式的结果值。</li>
+<li>结构体字面量的字段值，也就是对结构体字面量的选择表达式的结果值。</li>
+<li>类型转换表达式的结果值。</li>
+<li>类型断言表达式的结果值。</li>
+<li>接收表达式的结果值。</li>
+</ul>
+<p>常量的值总是会被存储到一个确切的内存区域中，并且这种值肯定是<strong>不可变的</strong>。基本类型值的字面量也是一样，它们本就可以被视为常量，只不过没有任何标识符可以代表它们。</p>
+<h3 id="不可变的">不可变的</h3>
+<p>由于 <code>Go</code> 语言中的字符串值也是不可变的，所以对于一个字符串类型的变量来说，基于它的索引或切片的结果值也都是不可寻址的，因为即使拿到了这种值的地址也改变不了什么。</p>
+<p>算数操作的结果属于一种<strong>临时结果</strong>。在我们把这种结果值赋给任何变量或常量之前，即使拿到它的内存地址也是没有任何意义的。</p>
+<h3 id="临时结果">临时结果</h3>
+<p>我们可以把各种对值字面量施加表达式的求值结果都看作是临时结果。</p>
+<p><code>Go</code> 语言中的表达式有很多种，常用的包括以下几种：</p>
+<ul>
+<li>用于获得某个元素的索引表达式。</li>
+<li>用于获得某个切片的切片表达式。</li>
+<li>用于访问某个字段的选择表达式。</li>
+<li>用于调用某个函数或方法的调用表达式。</li>
+<li>用于转换值的类型的类型转换表达式。</li>
+<li>用于判断值的类型的类型断言表达式。</li>
+<li>向通道发送元素值或从通道那里接收元素值的接收表达式。</li>
+</ul>
+<p>以上这些表达式施加到某个字面量上一般都会得到一个临时结果，它们都是不可寻址的。</p>
+<p>注意，对切片字面量的索引结果值是可寻址的。因为切片会持有一个底层数组，而这个底层数组中的每个元素值都有一个确切的内存地址。</p>
+<p>对切片字面量的切片结果值不可寻址是因为切片表达式总会返回一个新的切片值，而这个新的切片值在赋给变量之前属于临时结果。</p>
+<p>以上所说都是针对字面量的表达式会产生临时结果，如果针对的是变量，那么索引或者切片就不属于临时结果了，是可寻址的。</p>
+<p>注意，对字典类型的变量施加索引表达式，得到的结果值不属于临时结果，但也是不可寻址的。因为字典中的键-元素对的存储位置可能会变化。</p>
+<p>字典中有若干个哈希桶用于均匀存储键-元素对。当满足一定条件时，字典可能会改变哈希桶的数量，并把键-元素对重新分布到对应的新的哈希桶中。这样即使拿到字典中任何元素的地址值的指针都毫无意义，也是<strong>不安全的</strong>。我们不知道那个元素值会被分布到哪里，也不知道原来的地址上被存放什么东西。</p>
+<h3 id="不安全的">不安全的</h3>
+<p>不安全的操作可能会破坏程序一致性，引发不可预知的错误，从而严重影响程序的功能和稳定性。</p>
+<p>函数在 <code>Go</code> 语言中是一等公民，我们可以把代表函数或者方法的字面量或标识符赋给某个变量、传给某个函数或者从某个函数传出。但这样的函数和方法都是不可寻址的，因为函数就是代码，是不可变的。另一个原因就是，拿到指向一段代码的指针是不安全的。此外，函数或方法的调用结果值属于临时结果，它们也是不可寻址的。</p>
+<p>其他几种值，都是针对值的字面量的某种表达式的结果值，所以属于临时结果，都不可寻址。</p>
+<h3 id="小结">小结</h3>
+<ol>
+<li>不可变的值不可寻址。常量、基本类型值的字面量、字符串变量的值、函数以及方法的字面量都是如此。其实这样规定也有安全性方面的考虑。</li>
+<li>绝大多数被视为临时结果的值都是不可寻址的。算数操作的结果值属于临时结果，针对值字面量的结果表达式的值也属于临时结果。但有一个例外，对切片字面量的索引结果值虽然也属于临时结果，但确实可寻址的。</li>
+<li>若拿到某值的指针可能会破坏程序的一致性，那么就是不安全的，该值就不可寻址。由于字典的内部机制，对字典的索引结果值取址操作都是不安全的。另外，获取有字面量或标识符代表的函数或方法的地址显然也是不安全的。</li>
+</ol>
+<p>如果把临时结果赋给一个变量，那么它就是可寻址的了。取到的指针指向的就是这个变量持有的那个值了。</p>
+<h2 id="不可寻址的值有哪些使用限制">不可寻址的值有哪些使用限制</h2>
+<p>无法使用取址标识符 <code>&amp;</code> 获取指针。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">type</span> <span class="nx">Dog</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="nx">Dog</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">Dog</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">dog</span> <span class="o">*</span><span class="nx">Dog</span><span class="p">)</span> <span class="nf">SetName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">dog</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="nx">name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">dog</span> <span class="nx">Dog</span><span class="p">)</span> <span class="nf">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nf">New</span><span class="p">(</span><span class="s">&#34;little pig&#34;</span><span class="p">).</span><span class="nf">SetName</span><span class="p">(</span><span class="s">&#34;monster&#34;</span><span class="p">)</span> <span class="c1">// 不能调用不可寻址的值的指针方法。
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>通常在基础类型的值上调用指针方法时，<code>Go</code> 语言会自动获取它的指针值，但由于 <code>New</code> 函数的调用结果值是不可寻址的，所以这里无法自动转译，也无法对它进行取址操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">.</span><span class="err">\</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">call</span> <span class="nx">pointer</span> <span class="nx">method</span> <span class="nx">on</span> <span class="nf">New</span><span class="p">(</span><span class="s">&#34;little pig&#34;</span><span class="p">)</span>
+<span class="p">.</span><span class="err">\</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">19</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">take</span> <span class="nx">the</span> <span class="nx">address</span> <span class="nx">of</span> <span class="nf">New</span><span class="p">(</span><span class="s">&#34;little pig&#34;</span><span class="p">)</span>
+</code></pre></div><p>虽然 <code>Go</code> 语言规范中的语法定义是，只要在 <code>++</code> 或 <code>--</code> 的左边添加一个表达式，就可以组成一个自增语句或自减语句，但是，它还明确了一个很重要的限制，那就是这个表达式的结果值必须是可寻址的。这就使得针对值字面量的表达式几乎都无法被用在这里。</p>
+<p>不过这有一个例外，虽然对字典字面量和字典变量索引表达式的结果值都是不可寻址的，但是这样的表达式却可以被用在自增语句和自减语句中。</p>
+<p>与之类似的规则还有两个。一个是，在赋值语句中，赋值操作符左边的表达式的结果值必须可寻址的，但是对字典的索引结果值也是可以的。</p>
+<p>另一个是，在带有 <code>range</code> 子句的 <code>for</code> 语句中，在 <code>range</code> 关键字左边的表达式的结果值也都必须是可寻址的，不过对字典的索引结果值同样可以被用在这里。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&#34;the&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#34;word&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#34;counter&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}[</span><span class="s">&#34;word&#34;</span><span class="p">]</span><span class="o">++</span>
+<span class="nx">map1</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&#34;the&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#34;word&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#34;counter&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="nx">map1</span><span class="p">[</span><span class="s">&#34;word&#34;</span><span class="p">]</span><span class="o">++</span>
+</code></pre></div><h2 id="怎样通过-unsafepointer-操作可寻址的值">怎样通过 <code>unsafe.Pointer</code> 操作可寻址的值</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;unsafe&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">Dog</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">dog</span> <span class="o">*</span><span class="nx">Dog</span><span class="p">)</span> <span class="nf">SetName</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">dog</span><span class="p">.</span><span class="nx">name</span> <span class="p">=</span> <span class="nx">name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">dog</span> <span class="nx">Dog</span><span class="p">)</span> <span class="nf">Name</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nx">dog</span><span class="p">.</span><span class="nx">name</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// 示例1。
+</span><span class="c1"></span>	<span class="nx">dog</span> <span class="o">:=</span> <span class="nx">Dog</span><span class="p">{</span><span class="s">&#34;little pig&#34;</span><span class="p">}</span>
+	<span class="nx">dogP</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">dog</span>
+	<span class="nx">dogPtr</span> <span class="o">:=</span> <span class="nb">uintptr</span><span class="p">(</span><span class="nx">unsafe</span><span class="p">.</span><span class="nf">Pointer</span><span class="p">(</span><span class="nx">dogP</span><span class="p">))</span>
+
+	<span class="nx">namePtr</span> <span class="o">:=</span> <span class="nx">dogPtr</span> <span class="o">+</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nf">Offsetof</span><span class="p">(</span><span class="nx">dogP</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+	<span class="nx">nameP</span> <span class="o">:=</span> <span class="p">(</span><span class="o">*</span><span class="kt">string</span><span class="p">)(</span><span class="nx">unsafe</span><span class="p">.</span><span class="nf">Pointer</span><span class="p">(</span><span class="nx">namePtr</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;nameP == &amp;(dogP.name)? %v\n&#34;</span><span class="p">,</span>
+		<span class="nx">nameP</span> <span class="o">==</span> <span class="o">&amp;</span><span class="p">(</span><span class="nx">dogP</span><span class="p">.</span><span class="nx">name</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The name of dog is %q.\n&#34;</span><span class="p">,</span> <span class="o">*</span><span class="nx">nameP</span><span class="p">)</span>
+
+	<span class="o">*</span><span class="nx">nameP</span> <span class="p">=</span> <span class="s">&#34;monster&#34;</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;The name of dog is %q.\n&#34;</span><span class="p">,</span> <span class="nx">dogP</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+
+	<span class="c1">// 示例2。
+</span><span class="c1"></span>	<span class="c1">// 下面这种不匹配的转换虽然不会引发panic，但是其结果往往不符合预期。
+</span><span class="c1"></span>	<span class="nx">numP</span> <span class="o">:=</span> <span class="p">(</span><span class="o">*</span><span class="kt">int</span><span class="p">)(</span><span class="nx">unsafe</span><span class="p">.</span><span class="nf">Pointer</span><span class="p">(</span><span class="nx">namePtr</span><span class="p">))</span>
+	<span class="nx">num</span> <span class="o">:=</span> <span class="o">*</span><span class="nx">numP</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;This is an unexpected number: %d\n&#34;</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span>
+
+<span class="p">}</span>
+</code></pre></div><p>首先声明了一个 <code>Dog</code> 类型的变量 <code>dog</code>，然后用取址操作符 <code>&amp;</code>，取出了它的指针值，并把它赋给了变量 <code>dogP</code>。</p>
+<p>最后，我使用了两个类型转换，先把 <code>dogP</code> 转换成了一个 <code>unsafe.Pointer</code> 类型的值，然后紧接着又把后者转换成了一个 <code>uintptr</code> 的值，并把它赋给了变量 <code>dogPtr</code>。这背后隐藏着一些转换规则，如下：</p>
+<ol>
+<li>一个指针值（比如 <code>*Dog</code> 类型的值）可以被转换为一个 <code>unsafe.Pointer</code> 类型的值，反之亦然。</li>
+<li>一个 <code>uintptr</code> 类型的值也可以被转换为一个 <code>unsafe.Pointer</code> 类型的值，反之亦然。</li>
+<li>一个指针值无法被直接转换成一个 <code>uintptr</code> 类型的值，反过来也是如此。</li>
+</ol>
+<p>所以，对于指针值和 <code>uintptr</code> 类型值之间的转换，必须使用 <code>unsafe.Pointer</code> 类型的值作为中转。</p>
+<p><code>unsafe.Offsetof</code> 函数用于获取两个值在内存中的起始存储地址之间的偏移量，以字节为单位。</p>
+<p>这两个值一个是某个字段的值，另一个是该字段值所属的那个结构体值。我们在调用这个函数的时候，需要把针对字段的选择表达式传给它，比如 <code>dogP.name</code>。</p>
+<p>有了这个偏移量，又有了结构体值在内存中的起始存储地址（这里由 <code>dogPtr</code> 变量代表），把它们相加我们就可以得到 <code>dogP</code> 的 <code>name</code> 字段值的起始存储地址了。这个地址由变量 <code>namePtr</code> 代表。</p>
+<p>此后，我们可以再通过两次类型转换把 <code>namePtr</code> 的值转换成一个 <code>*string</code> 类型的值，这样就得到了指向 <code>dogP</code> 的 <code>name</code> 字段值的指针值。</p>
+<p><code>namePtr</code> 是一个无符号整数，但同时也是一个指向了程序内部数据的内存地址。它可能会给我们带来一些好处，比如可以直接修改埋藏得很深的内部数据。</p>
+<p>但是，一旦我们有意或无意地把这个内存地址泄露出去，那么其他人就能够肆意地改动 <code>dogP.name</code> 的值，以及周围的内存地址上存储的任何数据了。</p>
+<p>这可能造成灾难性的后果。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>接口类型的合理运用</title>

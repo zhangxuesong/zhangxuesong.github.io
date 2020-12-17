@@ -4,26 +4,36 @@
   
   <url>
     <loc>https://zhangxuesong.github.io/tags/go/</loc>
-    <lastmod>2020-12-16T16:14:01+08:00</lastmod>
+    <lastmod>2020-12-17T15:32:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/gocore/go_goroutine/</loc>
+    <lastmod>2020-12-17T15:32:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zhangxuesong.github.io/tags/</loc>
-    <lastmod>2020-12-16T16:14:01+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zhangxuesong.github.io/posts/gocore/go_interface/</loc>
-    <lastmod>2020-12-16T16:14:01+08:00</lastmod>
+    <lastmod>2020-12-17T15:32:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zhangxuesong.github.io/posts/</loc>
-    <lastmod>2020-12-16T16:14:01+08:00</lastmod>
+    <lastmod>2020-12-17T15:32:58+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zhangxuesong.github.io/</loc>
+    <lastmod>2020-12-17T15:32:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/gocore/go_pointer/</loc>
+    <lastmod>2020-12-17T09:06:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/gocore/go_interface/</loc>
     <lastmod>2020-12-16T16:14:01+08:00</lastmod>
   </url>
   
