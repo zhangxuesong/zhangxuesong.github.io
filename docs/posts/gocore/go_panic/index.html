@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Go 异常处理">
+<meta itemprop="description" content="运行时恐慌 panic 这种程序异常叫做 panic，我们把它翻译成运行时恐慌。其中恐慌是由 panic 直译过来的，之所以加上运行时是因为这种异常只会在程序运行时的">
+<meta itemprop="datePublished" content="2020-12-20T09:06:46+08:00" />
+<meta itemprop="dateModified" content="2020-12-20T09:06:46+08:00" />
+<meta itemprop="wordCount" content="1542">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="Go 异常处理" />
+<meta property="og:description" content="运行时恐慌 panic 这种程序异常叫做 panic，我们把它翻译成运行时恐慌。其中恐慌是由 panic 直译过来的，之所以加上运行时是因为这种异常只会在程序运行时的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_panic/" />
+<meta property="article:published_time" content="2020-12-20T09:06:46+08:00" />
+<meta property="article:modified_time" content="2020-12-20T09:06:46+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 异常处理"/>
+<meta name="twitter:description" content="运行时恐慌 panic 这种程序异常叫做 panic，我们把它翻译成运行时恐慌。其中恐慌是由 panic 直译过来的，之所以加上运行时是因为这种异常只会在程序运行时的"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Go 异常处理</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-20</span></div>
+				<h1>Go 异常处理</h1>
+			</header>
+			<div class="content">
+				<h2 id="运行时恐慌-panic">运行时恐慌 <code>panic</code><a href="#运行时恐慌-panic" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>这种程序异常叫做 <code>panic</code>，我们把它翻译成运行时恐慌。其中恐慌是由 <code>panic</code> 直译过来的，之所以加上运行时是因为这种异常只会在程序运行时的时候抛出来。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+<span class="p">}</span>
+
+<span class="c1">//panic: runtime error: index out of range [5] with length 5
+</span><span class="c1">//
+</span><span class="c1">//goroutine 1 [running]:
+</span><span class="c1">//main.main()
+</span><span class="c1">///Users/zhangxuesong/gowork/src/gocore/gopanic/main.go:7 +0x1b
+</span><span class="c1">//exit status 2
+</span></code></pre></div><p>上面这个切片只有 5 个元素，而用下标 5 取第 6 个元素肯定不对的。<code>Go</code> 运行时系统执行到这一句时会抛出 <code>panic</code>，以提示我们索引越界了。如果我们没有在程序里添加任何保护措施，程序打印出 <code>panic</code> 详细信息后就会终止运行。</p>
+<p>详情中 <code>runtime error</code> 表示这是一个 <code>runtime</code> 包抛出的 <code>panic</code>。其中包含了一个 <code>runtime.Error</code> 接口类型的值。<code>runtime.Error</code> 接口内嵌了 <code>error</code> 接口，并做了一点点扩展，<code>runtime</code> 包中有不少它的实现类型。</p>
+<p>详情中 <code>panic: </code> 右面的内容正是这个 <code>panic</code> 包含的 <code>runtime.Error</code> 类型值的字符串表示形式。</p>
+<p>此外，<code>panic</code> 详情中一般还会包含与它引发原因有关的 <code>goroutine</code> 的代码执行信息。正如详情中的 <code>goroutine 1 [running]:</code>，它表示有一个 ID 为 1 的 <code>goroutine</code> 在此 <code>panic</code> 被引发的时候正在运行。这里的 ID 并不重要，它只是 <code>Go</code> 运行时系统内部给予的一个编号，我们在程序中是无法获取和更改的。</p>
+<p><code>main.main()</code> 表示这个 <code>goroutine</code> 包装的 <code>go</code> 函数就是命令源码中的 <code>main</code> 函数，也就是说这里的 <code>goroutine</code> 正是主 <code>goroutine</code>。下面一行指出这个 <code>goroutine</code> 中的哪一行代码在此 <code>panic</code> 被引发时正在执行。这包含了此行代码所属的源码文件中的行数和文件所在的绝对路径。最后的 <code>+0x1b</code> 代表此行代码相对于其所属函数的入口程序计数偏移量。一般情况下用处不大。</p>
+<p>最后，<code>exit status 2</code> 表示这个程序是以退出状态码 2 结束运行的。在大多数操作系统中，只要退出状态码不为 0，都意味着程序运行的非正常结束。在 <code>Go</code> 语言中，因 <code>panic</code> 导致程序结束运行的退出状态码一般都会是 2。</p>
+<h2 id="从-panic-被引发到程序终止的过程">从 <code>panic</code> 被引发到程序终止的过程<a href="#从-panic-被引发到程序终止的过程" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>某个函数中的某行代码有意或无意的引发了一个 <code>panic</code>。这时，初始的 <code>panic</code> 详情会被建立起来，并且该程序的控制权会从此行代码转移至调用其所属函数的那行代码上，也就是调用栈的上一级。</p>
+<p>这也意味着，此行代码所属的函数的执行随即终止。紧接着，控制权并不会在此有片刻停留，它又会立即转移至再上一级的调用代码处。控制权如此一级一级的沿着调用栈的反方向传播至顶端，也就是我们编写的最外层函数那里。</p>
+<p>这里的最外层函数指的是 <code>go</code> 函数，对于主 <code>goroutine</code> 来说就是 <code>main</code> 函数。但是控制权也不会停留在那里，而是被 <code>Go</code> 运行时系统回收。</p>
+<p>随后，程序崩溃并终止运行，承载程序这次运行的进程也会随之死亡和消失。与此同时，在这个控制传播过程中，<code>panic</code> 详情会主键的积累和完善，并会在程序终止之前被打印出来。</p>
+<p><code>panic</code> 可能是我们在无意间引发的，如前文所属的索引越界。这类 <code>panic</code> 是真正的、在我们意料之外的程序异常。除此之外，我们还可以有意的引发 <code>panic</code>。</p>
+<p><code>Go</code> 语言内建函数 <code>panic</code> 是专门用于引发 <code>panic</code> 的。该函数使程序开发者可以在程序运行期间报告异常。注意，这与函数返回错误值的意义是完全不同的。当我们的函数返回一个非 <code>nil</code> 的错误值时，函数的调用放有权选择不处理，并且不处理的结果往往是不致命的。</p>
+<p>这里的不致命是说不至于使程序无法提供任何功能或者直接崩溃并终止运行。</p>
+<p>当一个 <code>panic</code> 发生时，如果我们不加任何保护措施，那么导致的后果可能是程序崩溃，这显然是致命的。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function main.&#34;</span><span class="p">)</span>
+	<span class="nf">caller1</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function main.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">caller1</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function caller1.&#34;</span><span class="p">)</span>
+	<span class="nf">caller2</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function caller1.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">caller2</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function caller2.&#34;</span><span class="p">)</span>
+	<span class="nx">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+	<span class="nx">e5</span> <span class="o">:=</span> <span class="nx">s1</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+	<span class="nx">_</span> <span class="p">=</span> <span class="nx">e5</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function caller2.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>提示：<code>panic</code> 详情会在控制权传播的过程中，被主键的积累和完善，并且，控制权会一级一级的沿着调用栈反方向传播至顶端。</p>
+<p>因此，在针对某个 <code>goroutine</code> 的代码执行信息中，调用栈底层的信息会先出现，然后是上一级的调用信息，以此类推，最后才是此调用栈顶端的信息。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Enter</span> <span class="nx">function</span> <span class="nx">main</span><span class="p">.</span>
+<span class="nx">Enter</span> <span class="nx">function</span> <span class="nx">caller1</span><span class="p">.</span>
+<span class="nx">Enter</span> <span class="nx">function</span> <span class="nx">caller2</span><span class="p">.</span>
+<span class="nx">panic</span><span class="p">:</span> <span class="nx">runtime</span> <span class="kt">error</span><span class="p">:</span> <span class="nx">index</span> <span class="nx">out</span> <span class="nx">of</span> <span class="k">range</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="nx">with</span> <span class="nx">length</span> <span class="mi">5</span>
+
+<span class="nx">goroutine</span> <span class="mi">1</span> <span class="p">[</span><span class="nx">running</span><span class="p">]:</span>
+<span class="nx">main</span><span class="p">.</span><span class="nf">caller2</span><span class="p">()</span>
+        <span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">zhangxuesong</span><span class="o">/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">gopanic</span><span class="o">/</span><span class="nx">main1</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">22</span> <span class="o">+</span><span class="mh">0x85</span>
+<span class="nx">main</span><span class="p">.</span><span class="nf">caller1</span><span class="p">()</span>
+        <span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">zhangxuesong</span><span class="o">/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">gopanic</span><span class="o">/</span><span class="nx">main1</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">15</span> <span class="o">+</span><span class="mh">0x7e</span>
+<span class="nx">main</span><span class="p">.</span><span class="nf">main</span><span class="p">()</span>
+        <span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">zhangxuesong</span><span class="o">/</span><span class="nx">gowork</span><span class="o">/</span><span class="nx">src</span><span class="o">/</span><span class="nx">gocore</span><span class="o">/</span><span class="nx">gopanic</span><span class="o">/</span><span class="nx">main1</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">9</span> <span class="o">+</span><span class="mh">0x7e</span>
+<span class="nx">exit</span> <span class="nx">status</span> <span class="mi">2</span>
+</code></pre></div><p><p class="md__image">
+  <img src=".././image/606ff433a6b58510f215e57792822bd7.png"
+    alt=""  />
+</p>
+</p>
+<p>深入地了解此过程，以及正确地解读 <code>panic</code> 详情应该是我们的必备技能，这在调试 <code>Go</code> 程序或者为 <code>Go</code> 程序排查错误的时候非常重要。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_errors2/">Go 语言错误处理 2</a></li>
+	
+	<li><a href="/posts/gocore/go_errors/">Go 语言错误处理</a></li>
+	
+	<li><a href="/posts/gocore/go_control/">Go 语言流程控制语句</a></li>
+	
+	<li><a href="/posts/gocore/go_goroutine2/">Go 语言及其执行规则 2</a></li>
+	
+	<li><a href="/posts/gocore/go_goroutine/">Go 语言及其执行规则</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1542 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-20 09:06 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#运行时恐慌-panic">运行时恐慌 <code>panic</code></a></li>
+    <li><a href="#从-panic-被引发到程序终止的过程">从 <code>panic</code> 被引发到程序终止的过程</a></li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_errors2/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Go 语言错误处理 2</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
