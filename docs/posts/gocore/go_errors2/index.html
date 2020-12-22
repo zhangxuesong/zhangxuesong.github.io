@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Go 语言错误处理 2">
+<meta itemprop="description" content="怎么根据实际情况给出恰当的错误值 构建错误值体系的基本方式有两种，即：创建立体的错误类型体系和创建扁平的错误值列表。 错误类型体系 由于在 Go 语言中">
+<meta itemprop="datePublished" content="2020-12-18T15:24:34+08:00" />
+<meta itemprop="dateModified" content="2020-12-18T15:24:34+08:00" />
+<meta itemprop="wordCount" content="1540">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="Go 语言错误处理 2" />
+<meta property="og:description" content="怎么根据实际情况给出恰当的错误值 构建错误值体系的基本方式有两种，即：创建立体的错误类型体系和创建扁平的错误值列表。 错误类型体系 由于在 Go 语言中" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_errors2/" />
+<meta property="article:published_time" content="2020-12-18T15:24:34+08:00" />
+<meta property="article:modified_time" content="2020-12-18T15:24:34+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 语言错误处理 2"/>
+<meta name="twitter:description" content="怎么根据实际情况给出恰当的错误值 构建错误值体系的基本方式有两种，即：创建立体的错误类型体系和创建扁平的错误值列表。 错误类型体系 由于在 Go 语言中"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Go 语言错误处理 2</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-18</span></div>
+				<h1>Go 语言错误处理 2</h1>
+			</header>
+			<div class="content">
+				<h2 id="怎么根据实际情况给出恰当的错误值">怎么根据实际情况给出恰当的错误值<a href="#怎么根据实际情况给出恰当的错误值" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>构建错误值体系的基本方式有两种，即：创建立体的错误类型体系和创建扁平的错误值列表。</p>
+<h3 id="错误类型体系">错误类型体系<a href="#错误类型体系" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>由于在 <code>Go</code> 语言中实现接口是非侵入式的，所以可以做的很灵活。比如，在标准库 <code>net</code> 代码包中有一个名为 <code>Error</code> 的接口类型。它算是内建接口类型 <code>error</code> 的一个扩展接口，因为 <code>error</code> 是 <code>net.Error</code> 的嵌入接口。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// An Error represents a network error.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Error</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="kt">error</span>
+	<span class="nf">Timeout</span><span class="p">()</span> <span class="kt">bool</span>   <span class="c1">// Is the error a timeout?
+</span><span class="c1"></span>	<span class="nf">Temporary</span><span class="p">()</span> <span class="kt">bool</span> <span class="c1">// Is the error temporary?
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p><code>net.Error</code> 接口除了拥有 <code>error</code> 接口的 <code>Error</code> 方法之外，还有两个自己声明的方法：<code>Timeout</code> 和 <code>Temporary</code>。</p>
+<p><code>net</code> 包中很多错误类型都实现了 <code>net.Error</code> 接口，如：</p>
+<ol>
+<li><code>*net.OpError</code></li>
+<li><code>*net.AddrError</code></li>
+<li><code>net.UnKnownNetworkError</code> 等</li>
+</ol>
+<p>我们可以把这些错误类型想象成一棵树，内建函数 <code>error</code> 就是树的根，而 <code>net.Error</code> 就是树一个在根上延伸的第一级非叶子节点。</p>
+<p>同时，也可以把这看作是一种多层分类的手段。当 <code>net</code> 包的使用者拿到一个错误值的时候，可以判断它是否是 <code>net.Error</code> 类型的，也就是说该值是否代表了一个网络相关的错误。如果是，还可以再进一步判断它的类型是哪一个更具体的错误类型，这样就能知道这个网络相关的错误是由于操作不当引起的，还是因为网络地址错误引起的，又或是由于网络协议不正确引起的。</p>
+<p>当我们细看 <code>net</code> 包中的这些具体错误类型的实现时，还会发现与 <code>os</code> 包中的一些错误类型相似，它们也都有一个名为 <code>Err</code> 类型为 <code>error</code> 接口类型的字段，代表也是当前错误的潜在错误。</p>
+<p>所以说，这些错误值之间还可以有另一种关系，链式关系。比如，使用者调用 <code>net.DialTCP</code> 之类的函数时，<code>net</code> 包中的代码可能返回一个 <code>*net.OpError</code> 类型的错误值，以表示由于他的操作不当造成了一个错误。同时，这些代码还可能把一个 <code>*net.AddrError</code> 或 <code>net.UnKnownNetworkError</code> 类型的值赋给该错误值的 <code>Err</code> 字段，以表明导致这个错误的潜在原因。如此，这里的潜在错误值的 <code>Err</code> 字段也有非 <code>nil</code> 的值，那么将会指向更深层次的错误原因。这样一级又一级就像链条一样最终指向问题的根源。</p>
+<p>以上这些内容总结成一句话就是，用类型建立起树形结果的错误体系，用统一字段建立起可追根溯源的链式错误关联。这是 <code>Go</code> 语言标准库给与我们的优秀范本，非常有借鉴意义。</p>
+<p>注意，如果不希望包外代码改动返回的错误值的话，一定要小写其中字段名称首字母。我们可以通过暴露某些方法让包外代码有进一步获取错误信息的权限，比如编写一个可以返回一个包级私有的 <code>err</code> 字段值的公开方法 <code>Err</code>。</p>
+<h3 id="错误值列表">错误值列表<a href="#错误值列表" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>当我们只想预先创建一些代表已知错误的错误值时，用这种扁平化的方式就很恰当了。不过，由于 <code>error</code> 是接口类型，所以通过 <code>errors.New</code> 函数生成的错误值只能赋给变量，而不能赋给常量，又由于这些代表错误的变量需要给包外代码使用，所以其访问权限只能是公开的。</p>
+<p>这就带来一个问题，如果有恶意代码修改了这些公开变量的值，那么程序就必然会受到影响。因为这种情况下我们往往会通过判等操作来判断拿到的错误值具体是哪一个错误，如果这些公开变量的值被改变了，那么相应的判等操作也会随之改变。</p>
+<p>这里有两个解决方案：</p>
+<h4 id="第一个方案">第一个方案<a href="#第一个方案" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>先私有化此类变量。也就是说，让它们名称首字母变成小写，然后编写公开的用于获取错误值以及用于判等错误值的函数。</p>
+<p>比如，对于错误值 <code>os.ErrClosed</code>，先改写它的名称，让其变成 <code>os.errClosed</code>，然后再编写 <code>ErrClosed</code> 函数和 <code>IsErrClosed</code> 函数。</p>
+<p>当然了，这不是说让我们去改动标准库中已有的代码，这样做的危害会很大，甚至是致命的。只能说，对于我们可控的代码，最好还是要尽量收紧访问权限。</p>
+<h4 id="第二个方案">第二个方案<a href="#第二个方案" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>此方案存在于 <code>syscall</code> 包中。该包中有一个类型叫做 <code>Errno</code>，该类型代表了系统调用时可能发生的底层错误。这个错误类型是 <code>error</code> 接口的实现类型，同时也是对内建类型 <code>uintptr</code> 的在定义类型。</p>
+<p>由于 <code>uintptr</code> 可以作为常量的类型，所以 <code>syscall.Errno</code> 自然也可以。<code>syscall</code> 包中声明有大量的 <code>Errno</code> 类型的常量，每个常量对应一种系统调用错误。<code>syscall</code> 包外的代码可以拿到这些代表错误的常量，但无法改变它们。</p>
+<p>我们可以仿照这种声明方式来构建我们自己的错误值列表，这样就可以保证错误值的只读特性了。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_panic2/">Go 异常处理 2</a></li>
+	
+	<li><a href="/posts/gocore/go_panic/">Go 异常处理</a></li>
+	
+	<li><a href="/posts/gocore/go_errors/">Go 语言错误处理</a></li>
+	
+	<li><a href="/posts/gocore/go_control/">Go 语言流程控制语句</a></li>
+	
+	<li><a href="/posts/gocore/go_goroutine2/">Go 语言及其执行规则 2</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1540 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-18 15:24 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#怎么根据实际情况给出恰当的错误值">怎么根据实际情况给出恰当的错误值</a>
+      <ul>
+        <li><a href="#错误类型体系">错误类型体系</a></li>
+        <li><a href="#错误值列表">错误值列表</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://zhangxuesong.github.io/posts/gocore/go_panic/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;新</span><br><span>Go 异常处理</span>
+			</a>
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_errors/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Go 语言错误处理</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
