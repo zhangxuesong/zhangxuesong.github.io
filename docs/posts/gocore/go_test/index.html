@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="测试的基本规则和流程">
+<meta itemprop="description" content="Go 程序测试基础知识 单元测试，又称程序员测试。顾名思义，就是程序员们本该做的自我检查工作之一。 Go 语言的缔造者们从一开始就非常重视程序测试，并且">
+<meta itemprop="datePublished" content="2020-12-22T09:50:10+08:00" />
+<meta itemprop="dateModified" content="2020-12-22T09:50:10+08:00" />
+<meta itemprop="wordCount" content="1370">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="测试的基本规则和流程" />
+<meta property="og:description" content="Go 程序测试基础知识 单元测试，又称程序员测试。顾名思义，就是程序员们本该做的自我检查工作之一。 Go 语言的缔造者们从一开始就非常重视程序测试，并且" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_test/" />
+<meta property="article:published_time" content="2020-12-22T09:50:10+08:00" />
+<meta property="article:modified_time" content="2020-12-22T09:50:10+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="测试的基本规则和流程"/>
+<meta name="twitter:description" content="Go 程序测试基础知识 单元测试，又称程序员测试。顾名思义，就是程序员们本该做的自我检查工作之一。 Go 语言的缔造者们从一开始就非常重视程序测试，并且"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>测试的基本规则和流程</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-22</span></div>
+				<h1>测试的基本规则和流程</h1>
+			</header>
+			<div class="content">
+				<h2 id="go-程序测试基础知识"><code>Go</code> 程序测试基础知识<a href="#go-程序测试基础知识" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>单元测试，又称程序员测试。顾名思义，就是程序员们本该做的自我检查工作之一。</p>
+<p><code>Go</code> 语言的缔造者们从一开始就非常重视程序测试，并且为 <code>Go</code> 程序的开发者们提供了丰富的 <code>API</code> 和工具。利用这些 <code>API</code> 和工具，我们可以创建测试源码文件，并且为命令源码文件和库源码文件中的程序实体编写测试用例。</p>
+<p>在 <code>Go</code> 语言中，一个测试用例往往会由一个或多个测试函数来代表，大多情况下每个测试用例仅用一个测试函数就足够了。测试函数往往用于描述和保障某个程序实体的某方面功能，比如，该功能在什么情况下会因什么样的输入，产生什么样的输出，又比如，该功能会在什么情况下报错或表现异常等等。</p>
+<p>我们可以为 <code>Go</code> 程序编写三类测试，即：功能测试（test）、基准测试（benchmark，也称性能测试）以及示例测试（example）。对于前两类测试，从名称上就应该可以猜到它们的用途，而示例测试严格来讲也是一种功能测试，只不过它更关注程序打印出来的内容。</p>
+<p>一般情况下，一个测试源码文件只会针对于某个命令源码文件，或库源码文件做测试，所以我们总会（并且应该）把它们放在同一个代码包内。测试源码文件的名称应该以被测试源码文件的主名称为前导，并且必须以 <code>_test</code> 为后缀。比如，如果被测源码文件的名称为 <code>demo.go</code>，那么针对它的测试源码文件的名称就应该是 <code>demo_test.go</code>。</p>
+<p>每个测试源码文件都必须至少包含一个测试函数。并且，从语法上来讲，每个测试源码文件中，都可以包含用来做任何一类测试的测试函数，即使把这三类测试函数都塞进去也没有问题。只要把控好测试函数的分组和数量就可以了。</p>
+<p>我们可以根据这些测试函数针对的不同程序实体，把它们分成不同的逻辑组，并且利用注释以及帮助类的变量或函数来做分割。同时，我们还可以根据被测试源码文件中程序实体的先后顺序，来安排测试源码文件中测试函数的顺序。</p>
+<h2 id="go-语言对测试函数的名称和签名的规定"><code>Go</code> 语言对测试函数的名称和签名的规定<a href="#go-语言对测试函数的名称和签名的规定" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ul>
+<li>对于测试功能函数来说，其名称必须以 <code>Test</code> 为前缀，并且参数列表中只应有一个 <code>*testing.T</code> 类型的参数声明。</li>
+<li>对于性能测试函数来说，其名称必须以 <code>Benchmark</code> 为前缀，并且唯一参数的类型必须是 <code>*testing.B</code> 类型的。</li>
+<li>对于示例测试函数来说，其名称必须以 <code>Example</code> 为前缀，但对函数的参数列表没有强制规定。</li>
+</ul>
+<p>只有测试源码文件的名称对了，测试函数的名称和签名也对了，当我们运行 <code>go test</code> 命令的时候，其中的测试代码才有可能被运行。</p>
+<h3 id="go-test-执行的测试流程"><code>go test</code> 执行的测试流程<a href="#go-test-执行的测试流程" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><code>go test</code> 命令在开始运行的时候，会先做一些准备工作。比如，确定内部需要用到的命令，检查我们指定的代码包或源码文件的有效性，以及判断我们给予的标记是否合法等等。</p>
+<p>准备工作完成后，<code>go test</code> 命令就会针对每个被测试代码包，依次进行构建、执行包中符合要求的测试函数，清理临时文件，打印测试结果。这就是通常情况下的主要测试流程。</p>
+<p>对于每个代码包，<code>go test</code> 命令会串行的执行测试流程中的每个步骤。但是，为了加快速度，它通常会并发的对多个被测代码包进行功能测试。只是在最后打印测试结果时会依照我们给定的顺序逐个进行，这会让我们感觉到它是完全串行的执行测试流程。</p>
+<p>另一方面，由于并发的测试会让性能测试的结果存在偏差，所以性能测试一般都是串行进行的。更具体的说，只有在所有的构建步骤都做完之后，<code>go test</code> 命令才会真正的开始进行性能测试。</p>
+<p>并且，下一个代码包性能测试的进行，总会等到上一个代码包性能测试的结果打印完成才会开始，而且性能测试函数的执行也都会是串行化的。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_test3/">更多的测试手法</a></li>
+	
+	<li><a href="/posts/gocore/go_test2/">测试的基本规则和流程 2</a></li>
+	
+	<li><a href="/posts/gocore/go_panic2/">Go 异常处理 2</a></li>
+	
+	<li><a href="/posts/gocore/go_panic/">Go 异常处理</a></li>
+	
+	<li><a href="/posts/gocore/go_errors2/">Go 语言错误处理 2</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1370 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-22 09:50 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#go-程序测试基础知识"><code>Go</code> 程序测试基础知识</a></li>
+    <li><a href="#go-语言对测试函数的名称和签名的规定"><code>Go</code> 语言对测试函数的名称和签名的规定</a>
+      <ul>
+        <li><a href="#go-test-执行的测试流程"><code>go test</code> 执行的测试流程</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://zhangxuesong.github.io/posts/gocore/go_test2/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;新</span><br><span>测试的基本规则和流程 2</span>
+			</a>
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_panic2/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Go 异常处理 2</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>

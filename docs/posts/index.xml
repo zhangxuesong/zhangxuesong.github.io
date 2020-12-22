@@ -6,8 +6,179 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Mon, 21 Dec 2020 16:22:57 +0800</lastBuildDate>
+		<lastBuildDate>Tue, 22 Dec 2020 17:04:57 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>更多的测试手法</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_test3/</link>
+			<pubDate>Tue, 22 Dec 2020 17:04:57 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_test3/</guid>
+			<description>-cpu 的功能 go test 命令的标记 -cpu，它是用来设置测试执行最大 P 数量的列表的。 这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适</description>
+			<content type="html"><![CDATA[<h2 id="-cpu-的功能"><code>-cpu</code> 的功能</h2>
+<p><code>go test</code> 命令的标记 <code>-cpu</code>，它是用来设置测试执行最大 <code>P</code> 数量的列表的。</p>
+<blockquote>
+<p>这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适时地与 M 进行对接并得到真正运行的中介。正是由于 P 的存在，G 和 M 才可以呈现出多对多的关系，并能够及时、灵活地进行组合和分离。这里的 G 就是 goroutine 的缩写，可以被理解为 Go 语言自己实现的用户级线程。M 即为 machine 的缩写，代表着系统级线程，或者说操作系统内核级别的线程。</p>
+</blockquote>
+<p><code>Go</code> 语言并发模型中的 <code>P</code>，正是 <code>goroutine</code> 的数量能够数十万计的关键。<code>P</code> 的数量意味着 <code>Go</code> 程序背后的运行时系统中，会有多少个用于承载可运行的 <code>G</code> 的队列存在。</p>
+<p>每一个队列相当于一条流水线，它会源源不断的把可运行的 G 输送给空闲的 M，并使这两者对接。</p>
+<p>一旦完成对接，被对接的 G 就真正运行在操作系统的内核级线程上了，每条流水线之间虽然会有联系，但都是独立运作的。</p>
+<p>因此，最大 P 数量就代表着 Go 语言运行时系统同时运行 goroutine 的能力，也可以被视为其中逻辑 CPU 的最大个数。而 go test 命令的 -cpu 标记正是用于设置这个最大个数的。</p>
+<p>默认情况下，最大 P 数量就等于当前计算机 CPU 核心的实际数量。我们可以通过使用 -cpu 模拟被测程序在计算能力不同的计算机中的表现。</p>
+<h2 id="怎样设置--cpu-的值它会对测试流程产生怎样的影响">怎样设置 -cpu 的值，它会对测试流程产生怎样的影响</h2>
+<p>标记 -cpu 的值应该是一个正整数的列表，该列表的表现形式为，以英文半角逗号分隔的多个整数字面量。如：1,2,4。</p>
+<p>针对于此值中的每一个正整数，go test 命令都会先设置最大 P 数量为该数，然后在执行测试函数。</p>
+<p>如果测试函数有多个，那么 go test 命令会依照此方式逐个执行。</p>
+<blockquote>
+<p>以1,2,4为例，go test 命令会先以 1,2,4 为最大 P 数量分别去执行第一个测试函数，之后再用同样的方式执行第二个测试函数，以此类推。</p>
+</blockquote>
+<p>go test 命令在进行准备工作的时候会读取 -cpu 标记的值，并把它转换为一个以 int 为元素类型的切片，我们也可以称它为逻辑 CPU 切片。</p>
+<p>如果该命令发现我们并没有追加这个标记，那么就会让逻辑 CPU 切片只包含一个元素，即最大 P 数量的默认值，也就是当前计算机 CPU 的实际数量。</p>
+<p>当准备执行某个测试函数的时候，go test 命令都会迭代逻辑 CPU 切片，并在每次迭代时，根据当前元素值设置最大 P 数量，然后再去执行测试函数。</p>
+<p>注意，对于性能测试函数，这里可能不止执行了一次。概括来讲，go test 命令对每一次性能测试函数的执行，都是一个探索过程。它会在测试函数的执行时间上限不变的前提下，尝试找到被测程序的最大执行次数。在这个过程中，性能测试函数可能会被执行多次。</p>
+<blockquote>
+<p>对性能测试函数的一次探索式执行，这其中包含了对该函数的若干次执行，当然也包括了对被测程序的更多次执行。</p>
+</blockquote>
+<h2 id="-count-标记">-count 标记</h2>
+<p>-count 标记是专门用于重复执行测试函数的。它的值必须大于或等于 0，并且默认值为 1。</p>
+<p>如果我们在运行 go test 命令时追加了 -count 5，那么对于每个测试函数，命令都会在预设不同条件下分别重复执行五次。</p>
+<p>如果我们把前文所述的 -cpu 标记、-count 标记，以及探索式执行联合起来看，就可以用一个公式来描述单个性能测试函数，在 go test 命令的一次运行过程中的执行次数，即：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">性能测试函数的执行次数</span> <span class="p">=</span> <span class="s">`-cpu`</span><span class="nx">标记的值中正整数的个数</span> <span class="nx">x</span> <span class="s">`-count`</span><span class="nx">标记的值</span> <span class="nx">x</span> <span class="nx">探索式执行中测试函数的实际执行次数</span>
+</code></pre></div><p>对于功能测试函数来说，这个公式会更简单一些，即：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">功能测试函数的执行次数</span> <span class="p">=</span> <span class="s">`-cpu`</span><span class="nx">标记的值中正整数的个数</span> <span class="nx">x</span> <span class="s">`-count`</span><span class="nx">标记的值</span>
+</code></pre></div><p><p class="md__image">
+  <img src=".././image/8dc543c7ac67dca3dae3eebc53067c56.png"
+    alt=""  />
+</p>
+</p>
+<h2 id="-parallel-标记">-parallel 标记</h2>
+<p>我们在运行 go test 命令的时候，可以追加标记 -parallel，该标记的作用是：设置同一个被测代码包中的功能测试函数的最大并发执行数。该标记的默认值是测试运行时的最大 P 数量（这可以通过调用表达式 runtime.GOMAXPROCS(0) 获得）。</p>
+<p>对于功能测试，为了加快测试速度，命令通常会并发地测试多个被测代码包。但是，在默认情况下，对于同一个被测代码包中的多个功能测试函数，命令会串行地执行它们。除非我们在一些功能测试函数中显式地调用 t.Parallel 方法。</p>
+<p>这个时候，这些包含了 t.Parallel 方法调用的功能测试函数就会被 go test 命令并发地执行，而并发执行的最大数量正是由 -parallel 标记值决定的。不过要注意，同一个功能测试函数的多次执行之间一定是串行的。</p>
+<p>最后，强调一下，-parallel 标记对性能测试是无效的。当然了，对于性能测试来说，也是可以并发进行的，不过机制上会有所不同。</p>
+<p>概括地讲，这涉及了 b.RunParallel 方法、b.SetParallelism 方法和 -cpu 标记的联合运用。</p>
+<h2 id="性能测试函数中的计时器">性能测试函数中的计时器</h2>
+<p>testing 包中的 testing.B 类型有这么几个指针方法：StartTimer、StopTimer 和 ResetTimer。这些方法都是用于操作当前的性能测试函数专属的计时器的。</p>
+<p>所谓的计时器，是一个逻辑上的概念，它其实是 testing.B 类型中一些字段的统称。这些字段用于记录：当前测试函数在当次执行过程中耗费的时间、分配的堆内存的字节数以及分配次数。</p>
+<p>这三个方法在开始记录、停止记录或重新记录执行时间的同时，也会对堆内存分配字节数和分配次数的记录起到相同的作用。</p>
+<p>实际上，go test 命令本身就会用到这样的计时器。当准备执行某个性能测试函数的时候，命令会重置并启动该函数专属的计时器。一旦这个函数执行完毕，命令又会立即停止这个计时器。</p>
+<p>如此一来，命令就能够准确地记录下测试函数执行时间了。然后，命令就会将这个时间与执行时间上限进行比较，并决定是否在改大 b.N 的值之后，再次执行测试函数。</p>
+<p>显然，如果我们在测试函数中自行操作这个计时器，就一定会影响到这个探索式执行的结果。也就是说，这会让命令找到被测程序的最大执行次数有所不同。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">BenchmarkGetPrimes</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">StopTimer</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span> <span class="c1">// 模拟某个耗时但与被测程序关系不大的操作。
+</span><span class="c1"></span>	<span class="nx">max</span> <span class="o">:=</span> <span class="mi">10000</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">StartTimer</span><span class="p">()</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nf">GetPrimes</span><span class="p">(</span><span class="nx">max</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>这里先停止了当前测试函数的计时器，然后通过调用 time.Sleep 函数，模拟了一个比较耗时的额外操作，并且在给变量 max 赋值之后又启动了该计时器。</p>
+<p>想象一下，我们需要耗费额外的时间去确定 max 变量的值，虽然在后面它会被传入 GetPrimes 函数，但是，针对 GetPrimes 函数本身的性能测试并不应该包含确定参数值的过程。</p>
+<p>因此，我们需要把这个过程所耗费的时间，从当前测试函数的执行时间中去除掉。这样就能够避免这一过程对测试结果的不良影响了。</p>
+<p>每当这个测试函数执行完毕后，go test 命令拿到的执行时间都只应该包含调用 GetPrimes 函数所耗费的那些时间。只有依据这个时间做出的后续判断，以及找到被测程序的最大执行次数才是准确的。</p>
+<p>在性能测试函数中，我们可以通过对 b.StartTimer 和 b.StopTimer 方法的联合运用，再去除掉任何一段代码的执行时间。</p>
+<p>相比之下，b.ResetTimer 方法的灵活性就要差一些了，它只能用于：去除在调用它之前那些代码的执行时间。不过，无论在调用它的时候，计时器是不是正在运行，它都可以起作用。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>测试的基本规则和流程 2</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_test2/</link>
+			<pubDate>Tue, 22 Dec 2020 15:39:09 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_test2/</guid>
+			<description>怎样解释功能测试的结果 go test gocore/gotest ok gocore/gotest 0.204s 第一行是输入的命令，表示对 gocore/gotest 代码包进行测试。下面一行是此次测试的简要结果，共有三块内容，首先是本次测试结果</description>
+			<content type="html"><![CDATA[<h2 id="怎样解释功能测试的结果">怎样解释功能测试的结果</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">test</span> <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span>
+<span class="nx">ok</span>      <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span>   <span class="mf">0.204</span><span class="nx">s</span>
+</code></pre></div><p>第一行是输入的命令，表示对 <code>gocore/gotest</code> 代码包进行测试。下面一行是此次测试的简要结果，共有三块内容，首先是本次测试结果，<code>ok</code> 表示测试成功，也就是说没有发现不符合预期的情况。中间是被测试代码包的导入路径，最后展现的是本次测试所耗费的时间，不过当我们第二次运行这个命令时，输出的测试结果会有不同：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">test</span> <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span>
+<span class="nx">ok</span>      <span class="nx">gocore</span><span class="o">/</span><span class="nf">gotest</span>   <span class="p">(</span><span class="nx">cached</span><span class="p">)</span>
+</code></pre></div><p>可以看到，结果最右边的不再是测试耗时，而是 <code>(cached)</code>。这表明，由于测试代码与被测试代码都没有任何改动，所以 <code>go test</code> 命令直接把之前换成测试成功的结果打印出来了。</p>
+<p><code>go</code> 命令通常会缓存程序构建的结果，以便在将来的构建中重用。我们可以通过运行 <code>go env GOCACHE</code> 命令来查看缓存目录的路径。缓存的数据总是能够正确的反应出当时的各种源码文件、构建环境、编译器选项等真实情况。</p>
+<p>一旦有任何改动，缓存数据就会失效，<code>go</code> 命令就会再次真正的执行操作。所以我们不用担心打印出的缓存数据不是实时的结果。<code>go</code> 命令会定期的删除最近未使用的缓存数据，但是，如果你想手动删除所有的缓存数据，运行一下 <code>go clean --cache</code> 命令就好了。</p>
+<p>对于测试成功的结果，<code>go</code> 命令也是会缓存的。运行 <code>go clean --testcache</code> 命令将会删除所有的测试结果缓存。而这样并不会删除任何构建结果。</p>
+<blockquote>
+<p>设置环境变量 <code>GODEBUG</code> 的值可以稍稍的改变 <code>go</code> 命令的缓存行为。比如，设置值为 <code>gocacheverify=1</code> 将会导致 <code>go</code> 命令绕过任何的缓存数据，而真正的执行操作并重新生成所有的结果，然后再去检查新的结果与现有的缓存数据是否一致。</p>
+</blockquote>
+<p>我们并不需要在意缓存数据的存在，它们并不会妨碍 <code>go test</code> 命令打印正确的测试结果。</p>
+<p>当我们在功能测试函数中调用 <code>t.Fail</code> 方法时，虽然当前的测试函数会继续执行下去，但是结果会显示测试失败：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">test</span> <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span>
+<span class="o">---</span> <span class="nx">FAIL</span><span class="p">:</span> <span class="nf">TestFail</span> <span class="p">(</span><span class="mf">0.00</span><span class="nx">s</span><span class="p">)</span>
+    <span class="nx">main_test</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span> <span class="nx">Failed</span><span class="p">.</span>
+<span class="nx">FAIL</span>
+<span class="nx">FAIL</span>    <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span>   <span class="mf">0.201</span><span class="nx">s</span>
+</code></pre></div><p>对于失败测试的结果，<code>go test</code> 命令并不会进行缓存，这种情况下每次测试都会产生新的结果。另外，<code>go test</code> 会把失败的测试函数中的常规测试日志一并打印出来。想在测试成功时查看的话需要执行 <code>go test -v</code> 命令。</p>
+<blockquote>
+<p>如果想让某个测试函数在执行过程中立即失败，则可以在函数中使用 <code>t.FailNow</code> 方法。该方法执行后函数会立即终止运行，之后的代码都失去执行机会。</p>
+</blockquote>
+<p>如果需要在测试失败的同时打印失败测试日志，可以直接调用 <code>t.Error</code> 或者 <code>t.Errorf</code>。前者相当于 <code>t.Log</code> 和 <code>t.Fail</code> 连续调用，后者也类似。</p>
+<p>还有 <code>t.Fatal</code> 和 <code>t.Fatalf</code>，它们的作用是在打印失败错误日志之后即终止当前测试函数的执行并宣告测试失败。具体的说，相当于它们最后调用了 <code>t.FailNow</code>。</p>
+<h2 id="怎样解释性能测试的结果">怎样解释性能测试的结果</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">go</span> <span class="nx">test</span> <span class="o">-</span><span class="nx">bench</span><span class="p">=.</span> <span class="o">-</span><span class="nx">run</span><span class="p">=^</span><span class="err">$</span> <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span><span class="o">/</span><span class="nx">xingneng</span>
+<span class="nx">goos</span><span class="p">:</span> <span class="nx">windows</span>
+<span class="nx">goarch</span><span class="p">:</span> <span class="nx">amd64</span>
+<span class="nx">pkg</span><span class="p">:</span> <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span><span class="o">/</span><span class="nx">xingneng</span>
+<span class="nx">BenchmarkGetPrimes</span><span class="o">-</span><span class="mi">4</span>      <span class="mi">444450</span>              <span class="mi">2390</span> <span class="nx">ns</span><span class="o">/</span><span class="nx">op</span>
+<span class="nx">PASS</span>
+<span class="nx">ok</span>      <span class="nx">gocore</span><span class="o">/</span><span class="nx">gotest</span><span class="o">/</span><span class="nx">xingneng</span>  <span class="mf">1.301</span><span class="nx">s</span>
+</code></pre></div><p>我们运行 <code>go test</code> 命令时加了两个标记。第一个标记及其值是 <code>-bench=.</code>，只有有了这个标记，命令才会进行性能测试。该标记的值 <code>.</code>  表明需要执行任意名称的性能测试函数，当然了，函数名称还是要符合 <code>Go</code> 程序测试的基本规则的。</p>
+<p>第二个标记及其值 <code>-run=^$</code> 表明需要执行哪些功能测试函数，同样以函数名称为依据的。该标记的值 <code>^$</code> 表明只执行名称为空的功能测试函数，也就是说不执行任何功能测试函数。</p>
+<p>这两个标记的值都是正则表达式，如果运行 <code>go test</code> 命令的时候不加 <code>-run</code> 标记，那么会使它执行被测试代码包中所有的功能测试函数。</p>
+<p>在看测试结果，重点看倒数第三行。<code>BenchmarkGetPrimes-4</code> 被称为单个性能测试的名称，它表示命令执行了性能测试函数 <code>BenchmarkGetPrimes</code>，并且当时所用的最大 <code>P</code> 数量是 4。</p>
+<p>最大 <code>P</code> 数量相当于可以同时运行 <code>goroutine</code> 的逻辑 <code>CPU</code> 的最大个数。这里的逻辑 <code>CPU</code>，也可以被称为 <code>CPU</code> 核心，但它并不等同于计算机中真正的 <code>CPU</code> 核心，只是 <code>Go</code> 语言运行时系统内部的一个概念，代表着它同时运行 <code>goroutine</code> 的能力。</p>
+<p>我们可以通过调用 <code>runtime.GOMAXPROCS</code> 函数改变最大 <code>P</code> 数量，也可以在运行 <code>go test</code> 命令时，加入标记 <code>-cpu</code> 来设置一个最大 <code>P</code> 数量的列表，以供命令在多次测试时使用。</p>
+<p>在性能测试函数名称右边的是，<code>go test</code> 命令最后一次执行性能测试函数的时候被测函数被执行的时间次数。</p>
+<p><code>go test</code> 命令在执行性能测试函数的时候会给它一个正整数，若该测试函数的唯一参数的名称为 <code>b</code>，则该正整数就由 <code>b.N</code> 代表。我们应该在测试函数中配合着编码，如：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="nf">GetPrimes</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>我们在一个会迭代 <code>b.N</code> 次的循环中调用了 <code>GetPrimes</code> 函数，并给予它参数值 1000。<code>go test</code> 命令会先尝试把 <code>b.N</code> 设置为 1，然后执行测试函数。</p>
+<p>如果测试函数的执行时间没有超过上限，此上限默认为 1 秒，那么命令就会改大 <code>b.N</code> 的值，然后再次执行测试函数，如此往复，直到这个时间大于或等于上限为止。</p>
+<p>当某次执行的时间大于或等于上限时，我们就说这是命令此次对该测试函数的最后一次执行。这时的 <code>b.N</code> 的值就会被包含在测试结果中，也就是上述测试结果中的 444450。</p>
+<p>我们可以简称该值为执行次数，但要注意，它指的是被测函数的执行次数，而不是性能测试函数的执行次数。</p>
+<p>最后再看这个执行次数的右边，<code>2390 ns/op</code> 表明单次执行 <code>GetPrimes</code> 函数的平均耗时为 2390 纳秒。这其实就是通过将最后一次执行测试函数时的执行时间，除以（被测函数的）执行次数而得出的。</p>
+<p><p class="md__image">
+  <img src=".././image/78d4c73a9aa9d48b59d3fd304d4b2069.png"
+    alt=""  />
+</p>
+</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>测试的基本规则和流程</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_test/</link>
+			<pubDate>Tue, 22 Dec 2020 09:50:10 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_test/</guid>
+			<description>Go 程序测试基础知识 单元测试，又称程序员测试。顾名思义，就是程序员们本该做的自我检查工作之一。 Go 语言的缔造者们从一开始就非常重视程序测试，并且</description>
+			<content type="html"><![CDATA[<h2 id="go-程序测试基础知识"><code>Go</code> 程序测试基础知识</h2>
+<p>单元测试，又称程序员测试。顾名思义，就是程序员们本该做的自我检查工作之一。</p>
+<p><code>Go</code> 语言的缔造者们从一开始就非常重视程序测试，并且为 <code>Go</code> 程序的开发者们提供了丰富的 <code>API</code> 和工具。利用这些 <code>API</code> 和工具，我们可以创建测试源码文件，并且为命令源码文件和库源码文件中的程序实体编写测试用例。</p>
+<p>在 <code>Go</code> 语言中，一个测试用例往往会由一个或多个测试函数来代表，大多情况下每个测试用例仅用一个测试函数就足够了。测试函数往往用于描述和保障某个程序实体的某方面功能，比如，该功能在什么情况下会因什么样的输入，产生什么样的输出，又比如，该功能会在什么情况下报错或表现异常等等。</p>
+<p>我们可以为 <code>Go</code> 程序编写三类测试，即：功能测试（test）、基准测试（benchmark，也称性能测试）以及示例测试（example）。对于前两类测试，从名称上就应该可以猜到它们的用途，而示例测试严格来讲也是一种功能测试，只不过它更关注程序打印出来的内容。</p>
+<p>一般情况下，一个测试源码文件只会针对于某个命令源码文件，或库源码文件做测试，所以我们总会（并且应该）把它们放在同一个代码包内。测试源码文件的名称应该以被测试源码文件的主名称为前导，并且必须以 <code>_test</code> 为后缀。比如，如果被测源码文件的名称为 <code>demo.go</code>，那么针对它的测试源码文件的名称就应该是 <code>demo_test.go</code>。</p>
+<p>每个测试源码文件都必须至少包含一个测试函数。并且，从语法上来讲，每个测试源码文件中，都可以包含用来做任何一类测试的测试函数，即使把这三类测试函数都塞进去也没有问题。只要把控好测试函数的分组和数量就可以了。</p>
+<p>我们可以根据这些测试函数针对的不同程序实体，把它们分成不同的逻辑组，并且利用注释以及帮助类的变量或函数来做分割。同时，我们还可以根据被测试源码文件中程序实体的先后顺序，来安排测试源码文件中测试函数的顺序。</p>
+<h2 id="go-语言对测试函数的名称和签名的规定"><code>Go</code> 语言对测试函数的名称和签名的规定</h2>
+<ul>
+<li>对于测试功能函数来说，其名称必须以 <code>Test</code> 为前缀，并且参数列表中只应有一个 <code>*testing.T</code> 类型的参数声明。</li>
+<li>对于性能测试函数来说，其名称必须以 <code>Benchmark</code> 为前缀，并且唯一参数的类型必须是 <code>*testing.B</code> 类型的。</li>
+<li>对于示例测试函数来说，其名称必须以 <code>Example</code> 为前缀，但对函数的参数列表没有强制规定。</li>
+</ul>
+<p>只有测试源码文件的名称对了，测试函数的名称和签名也对了，当我们运行 <code>go test</code> 命令的时候，其中的测试代码才有可能被运行。</p>
+<h3 id="go-test-执行的测试流程"><code>go test</code> 执行的测试流程</h3>
+<p><code>go test</code> 命令在开始运行的时候，会先做一些准备工作。比如，确定内部需要用到的命令，检查我们指定的代码包或源码文件的有效性，以及判断我们给予的标记是否合法等等。</p>
+<p>准备工作完成后，<code>go test</code> 命令就会针对每个被测试代码包，依次进行构建、执行包中符合要求的测试函数，清理临时文件，打印测试结果。这就是通常情况下的主要测试流程。</p>
+<p>对于每个代码包，<code>go test</code> 命令会串行的执行测试流程中的每个步骤。但是，为了加快速度，它通常会并发的对多个被测代码包进行功能测试。只是在最后打印测试结果时会依照我们给定的顺序逐个进行，这会让我们感觉到它是完全串行的执行测试流程。</p>
+<p>另一方面，由于并发的测试会让性能测试的结果存在偏差，所以性能测试一般都是串行进行的。更具体的说，只有在所有的构建步骤都做完之后，<code>go test</code> 命令才会真正的开始进行性能测试。</p>
+<p>并且，下一个代码包性能测试的进行，总会等到上一个代码包性能测试的结果打印完成才会开始，而且性能测试函数的执行也都会是串行化的。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>Go 异常处理 2</title>
