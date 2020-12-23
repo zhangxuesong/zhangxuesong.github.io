@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Go 异常处理 2">
+<meta itemprop="description" content="怎样让 panic 包含一个值，应该让它包含什么值 在调用 panic 函数时，把某个值作为参数传给该函数就可以了。由于 panic 函数的唯一一个参数是空接口类型的，从语法上讲">
+<meta itemprop="datePublished" content="2020-12-21T16:22:57+08:00" />
+<meta itemprop="dateModified" content="2020-12-21T16:22:57+08:00" />
+<meta itemprop="wordCount" content="2048">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="Go 异常处理 2" />
+<meta property="og:description" content="怎样让 panic 包含一个值，应该让它包含什么值 在调用 panic 函数时，把某个值作为参数传给该函数就可以了。由于 panic 函数的唯一一个参数是空接口类型的，从语法上讲" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_panic2/" />
+<meta property="article:published_time" content="2020-12-21T16:22:57+08:00" />
+<meta property="article:modified_time" content="2020-12-21T16:22:57+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go 异常处理 2"/>
+<meta name="twitter:description" content="怎样让 panic 包含一个值，应该让它包含什么值 在调用 panic 函数时，把某个值作为参数传给该函数就可以了。由于 panic 函数的唯一一个参数是空接口类型的，从语法上讲"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Go 异常处理 2</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-21</span></div>
+				<h1>Go 异常处理 2</h1>
+			</header>
+			<div class="content">
+				<h2 id="怎样让-panic-包含一个值应该让它包含什么值">怎样让 <code>panic</code> 包含一个值，应该让它包含什么值<a href="#怎样让-panic-包含一个值应该让它包含什么值" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在调用 <code>panic</code> 函数时，把某个值作为参数传给该函数就可以了。由于 <code>panic</code> 函数的唯一一个参数是空接口类型的，从语法上讲，它可以接受任何类型的值。但是我们最好传入 <code>error</code> 类型的错误值，或者其他可以被有效序列化的值。这里的有效序列化指的是可以更易读的去表示形式转换。</p>
+<p>对于 <code>fmt</code> 包下的各种打印函数来说，<code>error</code> 类型值的 <code>Error</code> 方法与其他类型值的 <code>String</code> 函数是等价的，它们的唯一结果都是 <code>string</code> 类型的。我们在通过占位符 <code>%s</code> 打印这些值的时候，它们的字符串表示形式分别都是这两种方法产出的。</p>
+<p>一旦程序异常了，我们就一定要把异常的相关信息记录下来，这通常都是记录到程序日志里。我们在排查错误时，首先要做的就是查看和解读程序日志。而最常用也是最方便的日志记录方式，就是记录下相关值的字符串表示形式。</p>
+<p>所以，如果你觉得某个值可能被记到日志里，那么就应该为它关联 <code>String</code> 方法。如果这个值是 <code>error</code> 类型的，那么让它的 <code>Error</code> 方法返回你为它定制的字符串表示形式就可以了。</p>
+<p>对于 <code>fmt.Sprintf</code>，以及 <code>fmt.Fprintf</code> 这类可以格式化输出参数的函数，它们本身就可以被用来输出值的某种表示形式。不过，它们在功能上肯定不如我们自己定义的 <code>String</code> 方法或者 <code>Error</code> 方法。因此，为不同的数据类型分别编写这两种方法总是首选。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;errors&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function main.&#34;</span><span class="p">)</span>
+	<span class="nf">caller</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function main.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">caller</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function caller.&#34;</span><span class="p">)</span>
+	<span class="nb">panic</span><span class="p">(</span><span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;something wrong&#34;</span><span class="p">))</span> <span class="c1">// 正例。
+</span><span class="c1"></span>	<span class="nb">panic</span><span class="p">(</span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">)</span>                   <span class="c1">// 反例。
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function caller.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>同理，在程序崩溃的时候，将 <code>panic</code> 包含的那个值字符串表示形式打印出来。另外还可以施加某种保护措施，避免程序崩溃。这时，<code>panic</code> 包含的值会被取出然后打印出来或者记录到日志里。</p>
+<h2 id="panic-保护措施"><code>panic</code> 保护措施<a href="#panic-保护措施" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><code>Go</code> 语言的内建函数 <code>recover</code> 专用于恢复 <code>panic</code>，或者说平息运行时恐慌。<code>recover</code> 函数无需任何参数，并且会返回一个空接口类型的值。</p>
+<p>如果用法正确，这个值实际上就是即将恢复的 <code>panic</code> 包含的值。并且，如果这个 <code>panic</code> 是因我们调用 <code>panic</code> 函数而引发的，那么该值同时也会是我们此次调用 <code>panic</code> 函数时，传入的参数副本。请注意，这里强调用法的正确。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;errors&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function main.&#34;</span><span class="p">)</span>
+	<span class="c1">// 引发panic。
+</span><span class="c1"></span>	<span class="nb">panic</span><span class="p">(</span><span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;something wrong&#34;</span><span class="p">))</span>
+	<span class="nx">p</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">()</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;panic: %s\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function main.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>在上面这个 <code>main</code> 函数里，我们先通过调用 <code>panic</code> 引发了一个 <code>panic</code>，紧接着想调用 <code>recover</code> 函数恢复这个 <code>panic</code>。可是结果依旧崩溃，这个 <code>recover</code> 函数调用并不会起到任何作用，甚至都没有机会执行。</p>
+<p>因为 <code>panic</code> 一旦发生，控制权就会迅速的沿着调用栈的反方向传播。所以，在 <code>panic</code> 函数调用之后的代码，根本就没有执行的机会。</p>
+<p>即使我们把 <code>recover</code> 函数提前，就是说先调用 <code>recover</code> 函数，在调用 <code>panic</code> 函数也是不行的。如果我们在调用 <code>recover</code> 时根本没发生 <code>panic</code>，那么该函数不会做任何事，只会返回一个 <code>nil</code>。</p>
+<p><code>defer</code> 语句就是被用来延迟执行代码的。它将代码延迟到该语句所在函数即将执行结束的那一刻，无论结束执行的原因是什么。与 <code>go</code> 语句类似，一个 <code>defer</code> 语句总是由一个 <code>defer</code> 关键字和一个调用表达式组成。</p>
+<p>这里存在一些限制，有一些调用表达式是不能出现在这里的，包括：针对 <code>Go</code> 语言内建函数的调用表达式，以及针对 <code>unsafe</code> 包中的函数调用表达式。对于 <code>go</code> 语句中的调用表达式，限制也是一样的。另外，在这里被调用的函数可以是有名称的，也可以是匿名的。我们可以把这里的函数叫做 <code>defer</code> 函数或者延迟函数。注意，被延迟执行的是 <code>defer</code> 函数，而不是 <code>defer</code> 语句。</p>
+<p>无论结束执行的原因是什么，其中的 <code>defer</code> 函数都会在它即将结束执行的那一刻执行。即使导致它执行结束的原因是一个 <code>panic</code> 也会是这样。所以，我们需要联用 <code>defer</code> 语句和 <code>recover</code> 函数调用，才能够恢复一个已经发生的 <code>panic</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;errors&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter function main.&#34;</span><span class="p">)</span>
+	<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Enter defer function.&#34;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">p</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="nx">p</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;panic: %s\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit defer function.&#34;</span><span class="p">)</span>
+	<span class="p">}()</span>
+	<span class="c1">// 引发panic。
+</span><span class="c1"></span>	<span class="nb">panic</span><span class="p">(</span><span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;something wrong&#34;</span><span class="p">))</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Exit function main.&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>在这个 <code>main</code> 函数中，我们首先编写了一条 <code>defer</code> 语句，并在 <code>defer</code> 函数中调用了 <code>recover</code> 函数。仅当调用的结果不为 <code>nil</code> 时，也就是说只有 <code>panic</code> 确实已发生时，才会打印一行以 <code>panic:</code> 为前缀的内容。</p>
+<p>紧接着调用了 <code>panic</code> 函数，并传入了一个 <code>error</code> 类型值。这里注意尽量把 <code>defer</code> 语句写在函数体的开始处，因为在引发 <code>panic</code> 的语句之后的所有语句，都不会有任何机会执行。只有这样，<code>defer</code> 函数中的 <code>recover</code> 函数调用才会拦截，并恢复 <code>defer</code> 语句所属的函数及其调用的代码中所发生的 <code>panic</code>。</p>
+<h2 id="当有多条-defer-时的执行顺序">当有多条 <code>defer</code> 时的执行顺序<a href="#当有多条-defer-时的执行顺序" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在同一个函数中，<code>defer</code> 函数调用的执行顺序与他们分别所属的 <code>defer</code> 语句的出现顺序（更严谨的说，是执行顺序）完全相反。</p>
+<p>当一个函数即将结束执行时，其中的写在最下面的 <code>defer</code> 函数调用会被先执行，其次是写在它上面、与它距离最近的那个 <code>defer</code> 函数调用，以此类推，最上边的 <code>defer</code> 会最后一个执行。</p>
+<p>如果函数中有一条 <code>for</code> 语句，并且这条 <code>for</code> 语句中包含了一条 <code>defer</code> 语句，那么，显然这条 <code>defer</code> 语句的执行次数就取决于 <code>for</code> 语句的迭代次数。</p>
+<p>在 <code>defer</code> 语句每次执行的时候，<code>Go</code> 语言会把它携带的 <code>defer</code> 函数及其参数值另行存储到一个链表中。这个链表与该 <code>defer</code> 语句所属的函数是对应的，它是先进后出的（FILO），相当于一个栈。</p>
+<p>在需要执行某个函数中的 <code>defer</code> 函数调用时，<code>Go</code> 语言会先拿到对应的链表，然后从中一个个的取出 <code>defer</code> 函数及其参数值，并逐个执行调用。这也是上述的：<code>defer</code> 函数调用与其所属的 <code>defer</code> 语句的执行顺序完全相反的原因了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;first defer&#34;</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;defer in for [%d]\n&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;last defer&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//last defer
+</span><span class="c1">//defer in for [2]
+</span><span class="c1">//defer in for [1]
+</span><span class="c1">//defer in for [0]
+</span><span class="c1">//first defer
+</span></code></pre></div>
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_sync_mutex/">sync.Mutex与sync.RWMutex</a></li>
+	
+	<li><a href="/posts/gocore/go_test3/">更多的测试手法</a></li>
+	
+	<li><a href="/posts/gocore/go_test2/">测试的基本规则和流程 2</a></li>
+	
+	<li><a href="/posts/gocore/go_test/">测试的基本规则和流程</a></li>
+	
+	<li><a href="/posts/gocore/go_panic/">Go 异常处理</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>2048 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-21 16:22 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#怎样让-panic-包含一个值应该让它包含什么值">怎样让 <code>panic</code> 包含一个值，应该让它包含什么值</a></li>
+    <li><a href="#panic-保护措施"><code>panic</code> 保护措施</a></li>
+    <li><a href="#当有多条-defer-时的执行顺序">当有多条 <code>defer</code> 时的执行顺序</a></li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://zhangxuesong.github.io/posts/gocore/go_test/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;新</span><br><span>测试的基本规则和流程</span>
+			</a>
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_panic/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Go 异常处理</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>

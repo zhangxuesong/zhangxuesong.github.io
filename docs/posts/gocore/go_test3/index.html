@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="更多的测试手法">
+<meta itemprop="description" content="-cpu 的功能 go test 命令的标记 -cpu，它是用来设置测试执行最大 P 数量的列表的。 这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适">
+<meta itemprop="datePublished" content="2020-12-22T17:04:57+08:00" />
+<meta itemprop="dateModified" content="2020-12-22T17:04:57+08:00" />
+<meta itemprop="wordCount" content="2618">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="更多的测试手法" />
+<meta property="og:description" content="-cpu 的功能 go test 命令的标记 -cpu，它是用来设置测试执行最大 P 数量的列表的。 这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_test3/" />
+<meta property="article:published_time" content="2020-12-22T17:04:57+08:00" />
+<meta property="article:modified_time" content="2020-12-22T17:04:57+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="更多的测试手法"/>
+<meta name="twitter:description" content="-cpu 的功能 go test 命令的标记 -cpu，它是用来设置测试执行最大 P 数量的列表的。 这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>更多的测试手法</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-22</span></div>
+				<h1>更多的测试手法</h1>
+			</header>
+			<div class="content">
+				<h2 id="-cpu-的功能"><code>-cpu</code> 的功能<a href="#-cpu-的功能" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p><code>go test</code> 命令的标记 <code>-cpu</code>，它是用来设置测试执行最大 <code>P</code> 数量的列表的。</p>
+<blockquote>
+<p>这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适时地与 M 进行对接并得到真正运行的中介。正是由于 P 的存在，G 和 M 才可以呈现出多对多的关系，并能够及时、灵活地进行组合和分离。这里的 G 就是 goroutine 的缩写，可以被理解为 Go 语言自己实现的用户级线程。M 即为 machine 的缩写，代表着系统级线程，或者说操作系统内核级别的线程。</p>
+</blockquote>
+<p><code>Go</code> 语言并发模型中的 <code>P</code>，正是 <code>goroutine</code> 的数量能够数十万计的关键。<code>P</code> 的数量意味着 <code>Go</code> 程序背后的运行时系统中，会有多少个用于承载可运行的 <code>G</code> 的队列存在。</p>
+<p>每一个队列相当于一条流水线，它会源源不断的把可运行的 G 输送给空闲的 M，并使这两者对接。</p>
+<p>一旦完成对接，被对接的 G 就真正运行在操作系统的内核级线程上了，每条流水线之间虽然会有联系，但都是独立运作的。</p>
+<p>因此，最大 P 数量就代表着 Go 语言运行时系统同时运行 goroutine 的能力，也可以被视为其中逻辑 CPU 的最大个数。而 go test 命令的 -cpu 标记正是用于设置这个最大个数的。</p>
+<p>默认情况下，最大 P 数量就等于当前计算机 CPU 核心的实际数量。我们可以通过使用 -cpu 模拟被测程序在计算能力不同的计算机中的表现。</p>
+<h2 id="怎样设置--cpu-的值它会对测试流程产生怎样的影响">怎样设置 -cpu 的值，它会对测试流程产生怎样的影响<a href="#怎样设置--cpu-的值它会对测试流程产生怎样的影响" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>标记 -cpu 的值应该是一个正整数的列表，该列表的表现形式为，以英文半角逗号分隔的多个整数字面量。如：1,2,4。</p>
+<p>针对于此值中的每一个正整数，go test 命令都会先设置最大 P 数量为该数，然后在执行测试函数。</p>
+<p>如果测试函数有多个，那么 go test 命令会依照此方式逐个执行。</p>
+<blockquote>
+<p>以1,2,4为例，go test 命令会先以 1,2,4 为最大 P 数量分别去执行第一个测试函数，之后再用同样的方式执行第二个测试函数，以此类推。</p>
+</blockquote>
+<p>go test 命令在进行准备工作的时候会读取 -cpu 标记的值，并把它转换为一个以 int 为元素类型的切片，我们也可以称它为逻辑 CPU 切片。</p>
+<p>如果该命令发现我们并没有追加这个标记，那么就会让逻辑 CPU 切片只包含一个元素，即最大 P 数量的默认值，也就是当前计算机 CPU 的实际数量。</p>
+<p>当准备执行某个测试函数的时候，go test 命令都会迭代逻辑 CPU 切片，并在每次迭代时，根据当前元素值设置最大 P 数量，然后再去执行测试函数。</p>
+<p>注意，对于性能测试函数，这里可能不止执行了一次。概括来讲，go test 命令对每一次性能测试函数的执行，都是一个探索过程。它会在测试函数的执行时间上限不变的前提下，尝试找到被测程序的最大执行次数。在这个过程中，性能测试函数可能会被执行多次。</p>
+<blockquote>
+<p>对性能测试函数的一次探索式执行，这其中包含了对该函数的若干次执行，当然也包括了对被测程序的更多次执行。</p>
+</blockquote>
+<h2 id="-count-标记">-count 标记<a href="#-count-标记" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>-count 标记是专门用于重复执行测试函数的。它的值必须大于或等于 0，并且默认值为 1。</p>
+<p>如果我们在运行 go test 命令时追加了 -count 5，那么对于每个测试函数，命令都会在预设不同条件下分别重复执行五次。</p>
+<p>如果我们把前文所述的 -cpu 标记、-count 标记，以及探索式执行联合起来看，就可以用一个公式来描述单个性能测试函数，在 go test 命令的一次运行过程中的执行次数，即：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">性能测试函数的执行次数</span> <span class="p">=</span> <span class="s">`-cpu`</span><span class="nx">标记的值中正整数的个数</span> <span class="nx">x</span> <span class="s">`-count`</span><span class="nx">标记的值</span> <span class="nx">x</span> <span class="nx">探索式执行中测试函数的实际执行次数</span>
+</code></pre></div><p>对于功能测试函数来说，这个公式会更简单一些，即：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">功能测试函数的执行次数</span> <span class="p">=</span> <span class="s">`-cpu`</span><span class="nx">标记的值中正整数的个数</span> <span class="nx">x</span> <span class="s">`-count`</span><span class="nx">标记的值</span>
+</code></pre></div><p><p class="md__image">
+  <img src=".././image/8dc543c7ac67dca3dae3eebc53067c56.png"
+    alt=""  />
+</p>
+</p>
+<h2 id="-parallel-标记">-parallel 标记<a href="#-parallel-标记" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>我们在运行 go test 命令的时候，可以追加标记 -parallel，该标记的作用是：设置同一个被测代码包中的功能测试函数的最大并发执行数。该标记的默认值是测试运行时的最大 P 数量（这可以通过调用表达式 runtime.GOMAXPROCS(0) 获得）。</p>
+<p>对于功能测试，为了加快测试速度，命令通常会并发地测试多个被测代码包。但是，在默认情况下，对于同一个被测代码包中的多个功能测试函数，命令会串行地执行它们。除非我们在一些功能测试函数中显式地调用 t.Parallel 方法。</p>
+<p>这个时候，这些包含了 t.Parallel 方法调用的功能测试函数就会被 go test 命令并发地执行，而并发执行的最大数量正是由 -parallel 标记值决定的。不过要注意，同一个功能测试函数的多次执行之间一定是串行的。</p>
+<p>最后，强调一下，-parallel 标记对性能测试是无效的。当然了，对于性能测试来说，也是可以并发进行的，不过机制上会有所不同。</p>
+<p>概括地讲，这涉及了 b.RunParallel 方法、b.SetParallelism 方法和 -cpu 标记的联合运用。</p>
+<h2 id="性能测试函数中的计时器">性能测试函数中的计时器<a href="#性能测试函数中的计时器" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>testing 包中的 testing.B 类型有这么几个指针方法：StartTimer、StopTimer 和 ResetTimer。这些方法都是用于操作当前的性能测试函数专属的计时器的。</p>
+<p>所谓的计时器，是一个逻辑上的概念，它其实是 testing.B 类型中一些字段的统称。这些字段用于记录：当前测试函数在当次执行过程中耗费的时间、分配的堆内存的字节数以及分配次数。</p>
+<p>这三个方法在开始记录、停止记录或重新记录执行时间的同时，也会对堆内存分配字节数和分配次数的记录起到相同的作用。</p>
+<p>实际上，go test 命令本身就会用到这样的计时器。当准备执行某个性能测试函数的时候，命令会重置并启动该函数专属的计时器。一旦这个函数执行完毕，命令又会立即停止这个计时器。</p>
+<p>如此一来，命令就能够准确地记录下测试函数执行时间了。然后，命令就会将这个时间与执行时间上限进行比较，并决定是否在改大 b.N 的值之后，再次执行测试函数。</p>
+<p>显然，如果我们在测试函数中自行操作这个计时器，就一定会影响到这个探索式执行的结果。也就是说，这会让命令找到被测程序的最大执行次数有所不同。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">BenchmarkGetPrimes</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">StopTimer</span><span class="p">()</span>
+	<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span> <span class="c1">// 模拟某个耗时但与被测程序关系不大的操作。
+</span><span class="c1"></span>	<span class="nx">max</span> <span class="o">:=</span> <span class="mi">10000</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nf">StartTimer</span><span class="p">()</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">N</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nf">GetPrimes</span><span class="p">(</span><span class="nx">max</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>这里先停止了当前测试函数的计时器，然后通过调用 time.Sleep 函数，模拟了一个比较耗时的额外操作，并且在给变量 max 赋值之后又启动了该计时器。</p>
+<p>想象一下，我们需要耗费额外的时间去确定 max 变量的值，虽然在后面它会被传入 GetPrimes 函数，但是，针对 GetPrimes 函数本身的性能测试并不应该包含确定参数值的过程。</p>
+<p>因此，我们需要把这个过程所耗费的时间，从当前测试函数的执行时间中去除掉。这样就能够避免这一过程对测试结果的不良影响了。</p>
+<p>每当这个测试函数执行完毕后，go test 命令拿到的执行时间都只应该包含调用 GetPrimes 函数所耗费的那些时间。只有依据这个时间做出的后续判断，以及找到被测程序的最大执行次数才是准确的。</p>
+<p>在性能测试函数中，我们可以通过对 b.StartTimer 和 b.StopTimer 方法的联合运用，再去除掉任何一段代码的执行时间。</p>
+<p>相比之下，b.ResetTimer 方法的灵活性就要差一些了，它只能用于：去除在调用它之前那些代码的执行时间。不过，无论在调用它的时候，计时器是不是正在运行，它都可以起作用。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_sync_mutex/">sync.Mutex与sync.RWMutex</a></li>
+	
+	<li><a href="/posts/gocore/go_test2/">测试的基本规则和流程 2</a></li>
+	
+	<li><a href="/posts/gocore/go_test/">测试的基本规则和流程</a></li>
+	
+	<li><a href="/posts/gocore/go_panic2/">Go 异常处理 2</a></li>
+	
+	<li><a href="/posts/gocore/go_panic/">Go 异常处理</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>2618 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-22 17:04 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#-cpu-的功能"><code>-cpu</code> 的功能</a></li>
+    <li><a href="#怎样设置--cpu-的值它会对测试流程产生怎样的影响">怎样设置 -cpu 的值，它会对测试流程产生怎样的影响</a></li>
+    <li><a href="#-count-标记">-count 标记</a></li>
+    <li><a href="#-parallel-标记">-parallel 标记</a></li>
+    <li><a href="#性能测试函数中的计时器">性能测试函数中的计时器</a></li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://zhangxuesong.github.io/posts/gocore/go_sync_mutex/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;新</span><br><span>sync.Mutex与sync.RWMutex</span>
+			</a>
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_test2/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>测试的基本规则和流程 2</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>
