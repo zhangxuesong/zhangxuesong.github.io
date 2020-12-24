@@ -6,8 +6,195 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Wed, 23 Dec 2020 15:58:04 +0800</lastBuildDate>
+		<lastBuildDate>Thu, 24 Dec 2020 15:04:15 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>条件变量 sync.Cond</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</link>
+			<pubDate>Thu, 24 Dec 2020 15:04:15 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</guid>
+			<description>条件变量的 Wait方法做了什么 条件变量的 Wait 方法主要做了四件事： 把调用它的 goroutine 加入到当前条件变量的通知队列中。 解锁当前条件变量基于的互斥锁。 让当</description>
+			<content type="html"><![CDATA[<h2 id="条件变量的-wait方法做了什么">条件变量的 Wait方法做了什么</h2>
+<p>条件变量的 Wait 方法主要做了四件事：</p>
+<ul>
+<li>把调用它的 goroutine 加入到当前条件变量的通知队列中。</li>
+<li>解锁当前条件变量基于的互斥锁。</li>
+<li>让当前的 goroutine 处于等待状态，等到通知到来时再决定是否要唤醒它。这时，goroutine 会阻塞在调用 Wait 方法的那行代码上。</li>
+<li>如果通知到来并决定唤醒 goroutine，那面唤醒它之后重新锁定当前条件变量基于的互斥锁。当前的 goroutine 就可以继续执行后面的代码了。</li>
+</ul>
+<p>条件变量的 Wait 方法在阻塞当前 goroutine 之前，会解锁它基于的互斥锁，所以在调用 Wait 方法之前，我们必须先锁定那个互斥锁，否则调用 Wait 方法时就会引发一个不可恢复的 panic。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Wait atomically unlocks c.L and suspends execution
+</span><span class="c1">// of the calling goroutine. After later resuming execution,
+</span><span class="c1">// Wait locks c.L before returning. Unlike in other systems,
+</span><span class="c1">// Wait cannot return unless awoken by Broadcast or Signal.
+</span><span class="c1">//
+</span><span class="c1">// Because c.L is not locked when Wait first resumes, the caller
+</span><span class="c1">// typically cannot assume that the condition is true when
+</span><span class="c1">// Wait returns. Instead, the caller should Wait in a loop:
+</span><span class="c1">//
+</span><span class="c1">//    c.L.Lock()
+</span><span class="c1">//    for !condition() {
+</span><span class="c1">//        c.Wait()
+</span><span class="c1">//    }
+</span><span class="c1">//    ... make use of condition ...
+</span><span class="c1">//    c.L.Unlock()
+</span><span class="c1">//
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">Cond</span><span class="p">)</span> <span class="nf">Wait</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">c</span><span class="p">.</span><span class="nx">checker</span><span class="p">.</span><span class="nf">check</span><span class="p">()</span>
+	<span class="nx">t</span> <span class="o">:=</span> <span class="nf">runtime_notifyListAdd</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">c</span><span class="p">.</span><span class="nx">notify</span><span class="p">)</span>
+	<span class="nx">c</span><span class="p">.</span><span class="nx">L</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nf">runtime_notifyListWait</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">c</span><span class="p">.</span><span class="nx">notify</span><span class="p">,</span> <span class="nx">t</span><span class="p">)</span>
+	<span class="nx">c</span><span class="p">.</span><span class="nx">L</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div><p>所以说，如果条件变量的 Wait 不先解锁互斥锁的话，只会造成两种后果：不是当前程序因 panic 而崩溃，就是相关的 goroutine 全面阻塞。</p>
+<h2 id="为什么要用-for-而不是-if-来包裹-wait-方法">为什么要用 for 而不是 if 来包裹 Wait 方法</h2>
+<p>很显然，if 语句只会对共享资源的状态检查一次，而 for 语句可以多次检查。如果一个 goroutine 因收到通知而被唤醒，却发现共享资源的状态依然不符合它的要求，那面就应该再次调用 Wait 方法继续等待下次通知。</p>
+<p>有几种场景可能发生这样的情况：</p>
+<ol>
+<li>有多个 goroutine 在等待共享资源的同一种状态。虽然有多个 G 同时等待，但每次只能成功一个。因为条件变量的 Wait 方法会在当前的 G 醒来后重新锁定互斥锁。那别的 G 进入临界区后发现状态依然不是它们想要的，于是只能继续等待。</li>
+<li>共享资源的状态不是两个而是多个。这种情况下，由于状态在每次改变后的结果只可能有一个，所以，在设计合理的前提下，单一的结果一定不可能满足所有 goroutine 的条件。那些未被满足的 G 显然还需要继续等待和检查。</li>
+<li>共享资源状态有两个，并且每种状态都只有一个 G 在关注。在一些多 CPU 核心的计算机系统中，即使没收到条件变量的通知，调用 Wait 方法的 G 也是有可能被唤醒的。这是由计算机硬件层面决定的，即使操作系统本身提供的条件变量也会如此。</li>
+</ol>
+<h2 id="条件变量的-signal-和-broadcast-方法有什么区别">条件变量的 Signal 和 Broadcast 方法有什么区别</h2>
+<p>条件变量的 Signal 和 Broadcast 方法都是用来发送通知的，不同的是，前者的通知只会唤醒一个因此而等待的 G，而后者的通知会唤醒所有因此而等待的 G。</p>
+<p>条件变量的 Wait 方法总会把当前的 G 添加到通知队列的队尾，而它的 Signal 方法总会通知队列的队首开始查找可被唤醒的 G。所以 Signal 唤醒的一般都是最早等待的那个。</p>
+<p>此外，与 Wait 方法不同，条件变量的 Signal 和 Broadcast 方法并不需要在互斥锁的保护下执行。我们最好在解锁条件变量基于的那个互斥锁之后再去调用它的这两个方法。这更有利于程序运行的效率。</p>
+<p>最后，条件变量的通知具有即时性。就是说发送通知的时候没有 G 因此而等待时，通知就会被直接丢弃。在这之后开始等待的 G 只能被后续通知唤醒。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>条件变量 sync.Cond</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_sync_cond/</link>
+			<pubDate>Thu, 24 Dec 2020 08:58:23 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_sync_cond/</guid>
+			<description>条件变量与互斥锁 条件变量是基于互斥锁的，它必须有互斥锁的支撑才能发挥作用。 条件变量并不是被用来保护临界区和共享资源的，它是用于协调想要访问共</description>
+			<content type="html"><![CDATA[<h2 id="条件变量与互斥锁">条件变量与互斥锁</h2>
+<p>条件变量是基于互斥锁的，它必须有互斥锁的支撑才能发挥作用。</p>
+<p>条件变量并不是被用来保护临界区和共享资源的，它是用于协调想要访问共享资源的那些线程的。当共享资源的状态发生变化时，它可以被用来通知被互斥锁阻塞的线程。</p>
+<p>比如，我们两个人在共同执行一项秘密任务，这需要在不直接联系和见面的前提下进行。我需要向一个信箱里放置情报，你需要从这个信箱里获取情报。这个信箱就相当于一个共享资源，而我们就分别是进行写操作和读操作的线程。</p>
+<p>如果我在放置情报的时候发现信箱里还有未被取走的情报，那就不再放置并且先返回。另一面，如果你在获取情报的时候发现信箱里没有情报，也只能先回去了。这就相当于写操作和读操作线程阻塞。</p>
+<p>虽然我们俩都有信箱的钥匙，但同一时刻只能有一个人插入钥匙打开信箱，这就是锁的作用了。更何况我们两个人不能直接见面，所以这个信箱本身可以视为一个临界区。</p>
+<p>尽管没有协调好，咱们俩仍然要想办法完成任务。所以，如果信箱里有情报，而你却一直没取走，那我就需要每隔一段时间带着新情报去检查一次，若发现信箱空了，我要及时的把新情报放进去。</p>
+<p>另一面，如果信箱里一直没有情报，你也要每隔一段时间去查看，一旦有了情报要及时取走。这么做是可以的，但是很危险，容易被敌人发现。</p>
+<p>后来，我们又想了一个计策，各自雇了一个不起眼的小孩儿。如果早上七点有个戴红色帽子的小孩儿从你家楼下路过，那面就意味着信箱里有了新的情报。如果上午九点有个戴蓝色帽子的小孩儿从我家楼下路过，那说明你已经从信箱里取走了情报。</p>
+<p>这样，执行任务的隐蔽性高多了，并且效率的提升非常显著。这两个戴不同颜色帽子的小孩儿就相当于条件变量，在共享资源的状态发生变化时，起到了通知的作用。</p>
+<p>条件变量在这里最大的优势就是效率方面的提升。当共享资源的状态不满足条件时，想操作它的线程再也不用循环往复的做检查了，只要等待通知就好了。</p>
+<h2 id="条件变量怎样配合互斥锁">条件变量怎样配合互斥锁</h2>
+<p>条件变量的初始化离不开互斥锁，并且它的方法有的也是基于互斥锁的。</p>
+<p>条件变量提供的方法有三个：等待通知（wait）、单发通知（signal）和广播通知（broadcast）。</p>
+<p>我们再利用条件变量等待通知的时候，需要在它基于的那个互斥锁保护下进行。而在进行单发或者广播通知的时候，需要在对应的互斥锁解锁之后再做操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;log&#34;</span>
+	<span class="s">&#34;sync&#34;</span>
+	<span class="s">&#34;time&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//信箱，0表示空，1表示非空
+</span><span class="c1"></span>	<span class="kd">var</span> <span class="nx">mailBox</span> <span class="kt">uint8</span>
+	<span class="c1">//互斥锁
+</span><span class="c1"></span>	<span class="kd">var</span> <span class="nx">lock</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+	<span class="c1">//发送条件
+</span><span class="c1"></span>	<span class="nx">sendCond</span> <span class="o">:=</span> <span class="nx">sync</span><span class="p">.</span><span class="nf">NewCond</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">lock</span><span class="p">)</span>
+	<span class="c1">//接收条件
+</span><span class="c1"></span>	<span class="nx">recvCond</span> <span class="o">:=</span> <span class="nx">sync</span><span class="p">.</span><span class="nf">NewCond</span><span class="p">(</span><span class="nx">lock</span><span class="p">.</span><span class="nf">RLocker</span><span class="p">())</span>
+
+	<span class="c1">//信号通道
+</span><span class="c1"></span>	<span class="nx">sign</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{},</span> <span class="mi">3</span><span class="p">)</span>
+	<span class="nx">max</span> <span class="o">:=</span> <span class="mi">5</span>
+
+	<span class="c1">//发送方
+</span><span class="c1"></span>	<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">max</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">sign</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}</span>
+		<span class="p">}()</span>
+		<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">max</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Nanosecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
+			<span class="c1">//加写锁，我要开始放置信箱了
+</span><span class="c1"></span>			<span class="nx">lock</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+			<span class="c1">//查看信箱是否空，空就放置新消息，非空就等待
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nx">mailBox</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">{</span>
+				<span class="nx">sendCond</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+			<span class="p">}</span>
+			<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;发送方 [%d]:邮箱是空的.&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+			<span class="c1">//放置消息了，信箱状态设置非空
+</span><span class="c1"></span>			<span class="nx">mailBox</span> <span class="p">=</span> <span class="mi">1</span>
+			<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;发送方 [%d]: 我放置消息了.&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+			<span class="c1">//解锁，释放资源
+</span><span class="c1"></span>			<span class="nx">lock</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+			<span class="c1">//通知接收方
+</span><span class="c1"></span>			<span class="nx">recvCond</span><span class="p">.</span><span class="nf">Signal</span><span class="p">()</span>
+		<span class="p">}</span>
+	<span class="p">}(</span><span class="nx">max</span><span class="p">)</span>
+
+	<span class="c1">//接收方
+</span><span class="c1"></span>	<span class="k">go</span> <span class="kd">func</span><span class="p">(</span><span class="nx">max</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">defer</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">sign</span> <span class="o">&lt;-</span> <span class="kd">struct</span><span class="p">{}{}</span>
+		<span class="p">}()</span>
+		<span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;=</span> <span class="nx">max</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+			<span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Nanosecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
+			<span class="c1">//加读锁
+</span><span class="c1"></span>			<span class="nx">lock</span><span class="p">.</span><span class="nf">RLock</span><span class="p">()</span>
+			<span class="c1">//查看信箱是否有消息，没有则等待，有则取走
+</span><span class="c1"></span>			<span class="k">if</span> <span class="nx">mailBox</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+				<span class="nx">recvCond</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+			<span class="p">}</span>
+			<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;接收方 [%d]: 邮箱里有消息.&#34;</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+			<span class="c1">//取走消息
+</span><span class="c1"></span>			<span class="nx">mailBox</span> <span class="p">=</span> <span class="mi">0</span>
+			<span class="nx">log</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;接收方 [%d]: 我取走消息了.&#34;</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+			<span class="c1">//解读锁
+</span><span class="c1"></span>			<span class="nx">lock</span><span class="p">.</span><span class="nf">RUnlock</span><span class="p">()</span>
+			<span class="c1">//通知发送方
+</span><span class="c1"></span>			<span class="nx">sendCond</span><span class="p">.</span><span class="nf">Signal</span><span class="p">()</span>
+		<span class="p">}</span>
+	<span class="p">}(</span><span class="nx">max</span><span class="p">)</span>
+
+	<span class="o">&lt;-</span><span class="nx">sign</span>
+	<span class="c1">//&lt;-sign
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>变量 mailbox 代表信箱，是 uint8 类型的。若它的值是 0 则表示信箱中没有情报，当它的值是 1 时，说明信箱中有情报。lock 是一个读写锁类型的变量，可以视为信箱上的那把锁。</p>
+<p>基于这把锁还有两个代表条件变量的变量：sendCond 和 reveCond。都是 *sync.Cond 类型的，同时也都是由 sync.NewCond 函数来初始化的。</p>
+<p>与 互斥锁和读写互斥锁不同，sync.Cond类型并不能开箱即用，我们只能利用 sync.NewCond 函数创建它的指针值。这个函数需要一个 sync.Locker 类型的参数。这里的参数值是不可或缺的，它会参与到条件变量的方法实现中。</p>
+<p>sync.Locker 其实是一个接口，在它的声明中只包含了两个方法定义，即：Lock 和 Unlock。互斥锁和读写互斥锁都拥有这两个方法，只不过它们都是指针方法。所以说，这两个类型的指针类型才是 sync.Locker 接口的实现类型。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// A Locker represents an object that can be locked and unlocked.
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Locker</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="nf">Lock</span><span class="p">()</span>
+	<span class="nf">Unlock</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div><p>我们在为 sendCond 变量做初始化的时候，把基于 lock 变量的指针值传给了 sync.NewCond 函数。lock 变量的 Lock 方法和 Unlock 方法分别用于对其中写锁的锁定和解锁，它们与 sendCond 变量的含义是对应的。sendCond 是专门为放置情报而准备的条件变量，向信箱里放置情报，可以被视为对共享资源的写操作。</p>
+<p>相应的，recvCond 变量代表的是专门为获取情报而准备的条件变量。 虽然获取情报也会涉及对信箱状态的改变，但是好在做这件事的人只会有你一个，而且我们也需要借此了解一下，条件变量与读写锁中的读锁的联用方式。所以，在这里，我们暂且把获取情报看做是对共享资源的读操作。</p>
+<p>因此，为了初始化 recvCond 这个条件变量，我们需要的是 lock 变量中的读锁，并且还需要是 sync.Locker 类型的。可是，lock 变量中用于对读锁进行锁定和解锁的方法却是 RLock 和 RUnlock，它们与 sync.Locker 接口中定义的方法并不匹配。</p>
+<p>好在 sync.RWMutex 类型的 RLocker 方法可以实现这一需求。我们只要在调用 sync.NewCond 函数时，传入调用表达式 lock.RLocker() 的结果值，就可以使该函数返回符合要求的条件变量了。</p>
+<p>为什么说通过 lock.RLocker() 得来的值就是 lock 变量中的读锁呢？实际上，这个值所拥有的 Lock 方法和 Unlock 方法，在其内部会分别调用 lock 变量的 RLock 方法和 RUnlock 方法。也就是说，前两个方法仅仅是后两个方法的代理而已。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// RLocker returns a Locker interface that implements
+</span><span class="c1">// the Lock and Unlock methods by calling rw.RLock and rw.RUnlock.
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">rw</span> <span class="o">*</span><span class="nx">RWMutex</span><span class="p">)</span> <span class="nf">RLocker</span><span class="p">()</span> <span class="nx">Locker</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="nx">rlocker</span><span class="p">)(</span><span class="nx">rw</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">rlocker</span> <span class="nx">RWMutex</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">rlocker</span><span class="p">)</span> <span class="nf">Lock</span><span class="p">()</span>   <span class="p">{</span> <span class="p">(</span><span class="o">*</span><span class="nx">RWMutex</span><span class="p">)(</span><span class="nx">r</span><span class="p">).</span><span class="nf">RLock</span><span class="p">()</span> <span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">rlocker</span><span class="p">)</span> <span class="nf">Unlock</span><span class="p">()</span> <span class="p">{</span> <span class="p">(</span><span class="o">*</span><span class="nx">RWMutex</span><span class="p">)(</span><span class="nx">r</span><span class="p">).</span><span class="nf">RUnlock</span><span class="p">()</span> <span class="p">}</span>
+</code></pre></div><p>我们现在有四个变量。一个是代表信箱的 mailbox，一个是代表信箱上的锁的 lock。还有两个是，代表了蓝帽子小孩儿的 sendCond，以及代表了红帽子小孩儿的 recvCond。</p>
+<p><p class="md__image">
+  <img src=".././image/3619456ade9d45a4d9c0fbd22bb6fd5d.png"
+    alt=""  />
+</p>
+</p>
+<p>我现在是一个 goroutine，想要适时的向信箱里放置情报并通知你，那么肯定要先调用 lock 变量的 Lock 方法。这意味着持有信箱上的锁，并且有打开信箱的权利，并不是锁上这个信箱。</p>
+<p>然后我要检查 mailbox 变量的值是不是 1，也就是信箱里是不是存在情报，如果还有，那么我就回家等蓝帽子小孩儿了，也就是 sendCond.Wait 了。如果信箱里没有情报，那么我就把新情报放进去，关上信箱、释放锁，然后离开。</p>
+<p>离开之后就让红帽子小孩儿去你家楼下路过，也就是及时通知你，信箱里有新情报了。而你要做的和我在流程上基本一致。只不过操作对象不同。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>sync.Mutex与sync.RWMutex</title>

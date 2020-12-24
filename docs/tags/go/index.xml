@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Wed, 23 Dec 2020 15:58:04 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 24 Dec 2020 15:04:15 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>条件变量 sync.Cond</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</link>
+      <pubDate>Thu, 24 Dec 2020 15:04:15 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</guid>
+      <description>条件变量的 Wait方法做了什么 条件变量的 Wait 方法主要做了四件事： 把调用它的 goroutine 加入到当前条件变量的通知队列中。 解锁当前条件变量基于的互斥锁。 让当</description>
+    </item>
+    
+    <item>
+      <title>条件变量 sync.Cond</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_cond/</link>
+      <pubDate>Thu, 24 Dec 2020 08:58:23 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_cond/</guid>
+      <description>条件变量与互斥锁 条件变量是基于互斥锁的，它必须有互斥锁的支撑才能发挥作用。 条件变量并不是被用来保护临界区和共享资源的，它是用于协调想要访问共</description>
+    </item>
+    
     <item>
       <title>sync.Mutex与sync.RWMutex</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_sync_mutex/</link>
@@ -78,24 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/go_errors/</guid>
       <description>error 类型是一个接口类型，也是一个 Go 语言的内建类型。在这个接口类型的声明中只包含了一个方法 Error。它不接受任何参数，但是返回一个 string 类型的结果</description>
-    </item>
-    
-    <item>
-      <title>Go 语言流程控制语句</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_control/</link>
-      <pubDate>Fri, 18 Dec 2020 09:33:24 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_control/</guid>
-      <description>for 语句 带 range 的 for 有哪些细节 range 左边的变量只有一个时代表索引值，有两个时，一个索引值，一个元素值。 数组的 range 不会修改原值，切片的 range 会影响底层数组。 numbers</description>
-    </item>
-    
-    <item>
-      <title>Go 语言及其执行规则 2</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_goroutine2/</link>
-      <pubDate>Thu, 17 Dec 2020 16:59:29 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_goroutine2/</guid>
-      <description>怎样让主 goroutine 等待其他 goroutine 一旦主 goroutine 执行完毕，当前的 Go 程序就会结束运行，无论其他的 goroutine 是否已经在运行了。很多时候我们需要等待其他的 goroutine 的执行结果才让主 goroutine</description>
     </item>
     
   </channel>
