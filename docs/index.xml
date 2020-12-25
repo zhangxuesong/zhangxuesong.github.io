@@ -7,7 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Thu, 24 Dec 2020 15:04:15 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Dec 2020 19:52:27 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>原子操作 sync/atomic 2</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/</link>
+      <pubDate>Fri, 25 Dec 2020 19:52:27 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/</guid>
+      <description>比较并交换和比较有什么不同 比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。 所谓的交换指的是，把新值赋给变</description>
+    </item>
+    
+    <item>
+      <title>原子操作 sync/atomic</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic/</link>
+      <pubDate>Fri, 25 Dec 2020 12:28:41 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic/</guid>
+      <description>原子性执行和原子操作 对于一个 Go 程序来说，Go 语言运行时系统中的调度器会恰当的安排其中所有的 goroutine 的运行。但是在同一时刻，只可能有少数的 G 真正处于</description>
+    </item>
+    
     <item>
       <title>条件变量 sync.Cond 2</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</link>
@@ -78,24 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/go_panic/</guid>
       <description>运行时恐慌 panic 这种程序异常叫做 panic，我们把它翻译成运行时恐慌。其中恐慌是由 panic 直译过来的，之所以加上运行时是因为这种异常只会在程序运行时的</description>
-    </item>
-    
-    <item>
-      <title>Go 语言错误处理 2</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_errors2/</link>
-      <pubDate>Fri, 18 Dec 2020 15:24:34 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_errors2/</guid>
-      <description>怎么根据实际情况给出恰当的错误值 构建错误值体系的基本方式有两种，即：创建立体的错误类型体系和创建扁平的错误值列表。 错误类型体系 由于在 Go 语言中</description>
-    </item>
-    
-    <item>
-      <title>Go 语言错误处理</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_errors/</link>
-      <pubDate>Fri, 18 Dec 2020 14:12:32 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_errors/</guid>
-      <description>error 类型是一个接口类型，也是一个 Go 语言的内建类型。在这个接口类型的声明中只包含了一个方法 Error。它不接受任何参数，但是返回一个 string 类型的结果</description>
     </item>
     
   </channel>

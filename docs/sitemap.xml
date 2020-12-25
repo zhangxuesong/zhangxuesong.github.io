@@ -4,26 +4,36 @@
   
   <url>
     <loc>https://zhangxuesong.github.io/tags/go/</loc>
-    <lastmod>2020-12-24T15:04:15+08:00</lastmod>
+    <lastmod>2020-12-25T19:52:27+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zhangxuesong.github.io/tags/</loc>
-    <lastmod>2020-12-24T15:04:15+08:00</lastmod>
+    <lastmod>2020-12-25T19:52:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/</loc>
+    <lastmod>2020-12-25T19:52:27+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zhangxuesong.github.io/posts/</loc>
-    <lastmod>2020-12-24T15:04:15+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</loc>
-    <lastmod>2020-12-24T15:04:15+08:00</lastmod>
+    <lastmod>2020-12-25T19:52:27+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://zhangxuesong.github.io/</loc>
+    <lastmod>2020-12-25T19:52:27+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic/</loc>
+    <lastmod>2020-12-25T12:28:41+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://zhangxuesong.github.io/posts/gocore/go_sync_cond2/</loc>
     <lastmod>2020-12-24T15:04:15+08:00</lastmod>
   </url>
   

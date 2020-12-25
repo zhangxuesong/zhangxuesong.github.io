@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="原子操作 sync/atomic 2">
+<meta itemprop="description" content="比较并交换和比较有什么不同 比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。 所谓的交换指的是，把新值赋给变">
+<meta itemprop="datePublished" content="2020-12-25T19:52:27+08:00" />
+<meta itemprop="dateModified" content="2020-12-25T19:52:27+08:00" />
+<meta itemprop="wordCount" content="1951">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="原子操作 sync/atomic 2" />
+<meta property="og:description" content="比较并交换和比较有什么不同 比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。 所谓的交换指的是，把新值赋给变" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/" />
+<meta property="article:published_time" content="2020-12-25T19:52:27+08:00" />
+<meta property="article:modified_time" content="2020-12-25T19:52:27+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="原子操作 sync/atomic 2"/>
+<meta name="twitter:description" content="比较并交换和比较有什么不同 比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。 所谓的交换指的是，把新值赋给变"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>原子操作 sync/atomic 2</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2020-12-25</span></div>
+				<h1>原子操作 sync/atomic 2</h1>
+			</header>
+			<div class="content">
+				<h2 id="比较并交换和比较有什么不同">比较并交换和比较有什么不同<a href="#比较并交换和比较有什么不同" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。</p>
+<p>所谓的交换指的是，把新值赋给变量，并返回变量的旧值。</p>
+<p>在进行 CAS 操作时，函数会先判断被操作变量的当前值是否与我们预期的旧值相等。如果相等就把新值赋给变量，并返回 true 表明交换操作已进行，否则就忽略交换操作，返回 false。</p>
+<p>CAS 操作并不是单一操作，而是一种操作组合。和其他的原子操作不同，它的用途更加广泛。例如，跟 for 语句联用可以实现自旋锁（spinlock）。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">CompareAndSwapInt32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">num</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The number has gone to zero.&#34;</span><span class="p">)</span>
+    <span class="k">break</span>
+  <span class="p">}</span>
+  <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>for 语句中的 CAS 操作不停的检查某个需要满足的条件，一旦满足条件就退出 for 循环。只要条件未被满足，当前的流程就一直阻塞在这里。</p>
+<p>所以使用 CAS 操作的时候，我们还是要多加注意的，因为它可以被用来模仿锁，并有可能“阻塞”流程。</p>
+<p>这里的效果与互斥锁类似，但使用场景不同。使用互斥锁时，假设共享资源的状态会被其他 goroutine 频繁的修改。而 for 语句加 CAS 操作假设的往往是共享资源的状态改变不频繁，或者总是会变成期望的那样。这是一种更加乐观或者更加宽松的做法。</p>
+<h2 id="变量的写已经是原子操作了读还需要吗">变量的写已经是原子操作了，读还需要吗<a href="#变量的写已经是原子操作了读还需要吗" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>是需要的，参照读写锁的读写互斥。读操作还没有完成时，写操作把值修改了，那面读到的值必然是错的。这显然破坏了数据的完整性。所以，一旦决定了要对共享资源进行保护，就要做到完全保护。不完全的保护和不保护基本没区别。</p>
+<p>由于原子操作函数只支持非常有限的数据类型，所以在很多应用场景下互斥锁往往是更加合适的。如果是只涉及并发的读写单一整数类型的值，或者多个互不相关的整数类型值时，就不要在考虑互斥锁了。</p>
+<p>因为原子操作函数的执行速度比互斥锁快得多。而且使用简单，不涉及临界区的选择以及死锁问题。</p>
+<h2 id="怎样用好-syncatomicvalue">怎样用好 sync/atomic.Value<a href="#怎样用好-syncatomicvalue" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>为了扩大原子操作的适用范围，Go 语言在 1.4 版本发布的时候向 sync/atomic 包中添加了一个新的类型 Value。此类型的值相当于一个容器，可以被用来原子的存储和加载任意的值。</p>
+<p>atomic.Value 类型是开箱即用的，我们声明一个该类型的值之后就可以直接使用了。这个类型只有两个指针方法 Store 和 Load。</p>
+<p>一旦我们使用 atomic.Value 类型来存储值，那面它就不应该再被复制了。因为该类型是结构类型是属于值类型的，复制该类型的值会产生一个完全分离的新值。这个新值和旧值完全没有关系，怎么改都不会影响旧值。</p>
+<h3 id="不能用原子值存储-nil">不能用原子值存储 nil<a href="#不能用原子值存储-nil" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>我们不能把 nil 作为参数值传入原子值的 Store 方法，否则就会引发一个 panic。</p>
+<p>注意，如果有一个接口类型的变量，它的动态值是 nil，但动态类型却不是 nil，那么它的值就不等于 nil。这样一个变量的值是可以被存入原子值的。</p>
+<h3 id="我们向原子值存储的第一个值决定了它今后能且只能存储哪一个类型的值">我们向原子值存储的第一个值，决定了它今后能且只能存储哪一个类型的值<a href="#我们向原子值存储的第一个值决定了它今后能且只能存储哪一个类型的值" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>例如，我第一次向一个原子值存储了一个 string 类型的值，那我在后面就只能用该原子值来存储字符串了。如果我又想用它存储结构体，那么在调用它的 Store 方法的时候就会引发一个 panic。这个 panic 会告诉我，这次存储的值的类型与之前的不一致。</p>
+<p>原子值内部是依据被存储值的实际类型来做判断的，即使是实现了同一个接口的不同类型，它们的值也不能被先后存储到同一个原子值中。</p>
+<p>我们无法通过某个方法获知一个原子值是否已经被真正使用，并且，也没有办法通过常规的途径得到一个原子值可以存储值的实际类型。这使得我们误用原子值的可能性大大增加，尤其是在多个地方使用同一个原子值的时候。</p>
+<h3 id="使用建议">使用建议<a href="#使用建议" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>不要把内部使用的原子值暴露给外界。比如，声明一个全局的原子变量并不是一个正确的做法。这个变量的访问权限最起码也应该是包级私有的。</li>
+<li>如果不得不让包外，或模块外的代码使用你的原子值，那么可以声明一个包级私有的原子变量，然后再通过一个或多个公开的函数，让外界间接地使用到它。注意，这种情况下不要把原子值传递到外界，不论是传递原子值本身还是它的指针值。</li>
+<li>如果通过某个函数可以向内部的原子值存储值的话，那么就应该在这个函数中先判断被存储值类型的合法性。若不合法，则应该直接返回对应的错误值，从而避免 panic 的发生。</li>
+<li>如果可能的话，我们可以把原子值封装到一个数据类型中，比如一个结构体类型。这样，我们既可以通过该类型的方法更加安全地存储值，又可以在该类型中包含可存储值的合法类型信息。</li>
+</ol>
+<p>尽量不要向原子值中存储引用类型的值。因为这很容易造成安全漏洞。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">box6</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+<span class="nx">v6</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">box6</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="nx">v6</span><span class="p">)</span>
+<span class="nx">v6</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mi">4</span> <span class="c1">// 注意，此处的操作不是并发安全的！
+</span></code></pre></div><p>把一个 []int 类型的切片值 v6, 存入了原子值 box6。注意，切片类型属于引用类型。所以，在外面改动这个切片值，就等于修改了 box6 中存储的那个值。这相当于绕过了原子值而进行了非并发安全的操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">store</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+ <span class="nx">replica</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">v</span><span class="p">))</span>
+ <span class="nb">copy</span><span class="p">(</span><span class="nx">replica</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+ <span class="nx">box6</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="nx">replica</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nf">store</span><span class="p">(</span><span class="nx">v6</span><span class="p">)</span>
+<span class="nx">v6</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">=</span> <span class="mi">5</span> <span class="c1">// 此处的操作是安全的。
+</span></code></pre></div><p>应该先为切片值 v6 创建了一个完全的副本。这个副本涉及的数据已经与原值毫不相干了。然后，我再把这个副本存入 box6。如此一来，无论我再对 v6 的值做怎样的修改，都不会破坏 box6 提供的安全保护。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_sync_atomic/">原子操作 sync/atomic</a></li>
+	
+	<li><a href="/posts/gocore/go_sync_cond2/">条件变量 sync.Cond 2</a></li>
+	
+	<li><a href="/posts/gocore/go_sync_cond/">条件变量 sync.Cond</a></li>
+	
+	<li><a href="/posts/gocore/go_sync_mutex/">sync.Mutex与sync.RWMutex</a></li>
+	
+	<li><a href="/posts/gocore/go_test3/">更多的测试手法</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1951 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-12-25 19:52 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#比较并交换和比较有什么不同">比较并交换和比较有什么不同</a></li>
+    <li><a href="#变量的写已经是原子操作了读还需要吗">变量的写已经是原子操作了，读还需要吗</a></li>
+    <li><a href="#怎样用好-syncatomicvalue">怎样用好 sync/atomic.Value</a>
+      <ul>
+        <li><a href="#不能用原子值存储-nil">不能用原子值存储 nil</a></li>
+        <li><a href="#我们向原子值存储的第一个值决定了它今后能且只能存储哪一个类型的值">我们向原子值存储的第一个值，决定了它今后能且只能存储哪一个类型的值</a></li>
+        <li><a href="#使用建议">使用建议</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_sync_atomic/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>原子操作 sync/atomic</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2020 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>

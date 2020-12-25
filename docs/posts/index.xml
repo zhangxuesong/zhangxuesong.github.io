@@ -6,8 +6,138 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en</language>
 		<copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-		<lastBuildDate>Thu, 24 Dec 2020 15:04:15 +0800</lastBuildDate>
+		<lastBuildDate>Fri, 25 Dec 2020 19:52:27 +0800</lastBuildDate>
 		<atom:link href="https://zhangxuesong.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>原子操作 sync/atomic 2</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/</link>
+			<pubDate>Fri, 25 Dec 2020 19:52:27 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/</guid>
+			<description>比较并交换和比较有什么不同 比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。 所谓的交换指的是，把新值赋给变</description>
+			<content type="html"><![CDATA[<h2 id="比较并交换和比较有什么不同">比较并交换和比较有什么不同</h2>
+<p>比较并交换操作即 CAS 操作，是有条件的交换操作，只有在条件满足的情况下才会进行交换操作。</p>
+<p>所谓的交换指的是，把新值赋给变量，并返回变量的旧值。</p>
+<p>在进行 CAS 操作时，函数会先判断被操作变量的当前值是否与我们预期的旧值相等。如果相等就把新值赋给变量，并返回 true 表明交换操作已进行，否则就忽略交换操作，返回 false。</p>
+<p>CAS 操作并不是单一操作，而是一种操作组合。和其他的原子操作不同，它的用途更加广泛。例如，跟 for 语句联用可以实现自旋锁（spinlock）。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">for</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">CompareAndSwapInt32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">num</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;The number has gone to zero.&#34;</span><span class="p">)</span>
+    <span class="k">break</span>
+  <span class="p">}</span>
+  <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Millisecond</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>for 语句中的 CAS 操作不停的检查某个需要满足的条件，一旦满足条件就退出 for 循环。只要条件未被满足，当前的流程就一直阻塞在这里。</p>
+<p>所以使用 CAS 操作的时候，我们还是要多加注意的，因为它可以被用来模仿锁，并有可能“阻塞”流程。</p>
+<p>这里的效果与互斥锁类似，但使用场景不同。使用互斥锁时，假设共享资源的状态会被其他 goroutine 频繁的修改。而 for 语句加 CAS 操作假设的往往是共享资源的状态改变不频繁，或者总是会变成期望的那样。这是一种更加乐观或者更加宽松的做法。</p>
+<h2 id="变量的写已经是原子操作了读还需要吗">变量的写已经是原子操作了，读还需要吗</h2>
+<p>是需要的，参照读写锁的读写互斥。读操作还没有完成时，写操作把值修改了，那面读到的值必然是错的。这显然破坏了数据的完整性。所以，一旦决定了要对共享资源进行保护，就要做到完全保护。不完全的保护和不保护基本没区别。</p>
+<p>由于原子操作函数只支持非常有限的数据类型，所以在很多应用场景下互斥锁往往是更加合适的。如果是只涉及并发的读写单一整数类型的值，或者多个互不相关的整数类型值时，就不要在考虑互斥锁了。</p>
+<p>因为原子操作函数的执行速度比互斥锁快得多。而且使用简单，不涉及临界区的选择以及死锁问题。</p>
+<h2 id="怎样用好-syncatomicvalue">怎样用好 sync/atomic.Value</h2>
+<p>为了扩大原子操作的适用范围，Go 语言在 1.4 版本发布的时候向 sync/atomic 包中添加了一个新的类型 Value。此类型的值相当于一个容器，可以被用来原子的存储和加载任意的值。</p>
+<p>atomic.Value 类型是开箱即用的，我们声明一个该类型的值之后就可以直接使用了。这个类型只有两个指针方法 Store 和 Load。</p>
+<p>一旦我们使用 atomic.Value 类型来存储值，那面它就不应该再被复制了。因为该类型是结构类型是属于值类型的，复制该类型的值会产生一个完全分离的新值。这个新值和旧值完全没有关系，怎么改都不会影响旧值。</p>
+<h3 id="不能用原子值存储-nil">不能用原子值存储 nil</h3>
+<p>我们不能把 nil 作为参数值传入原子值的 Store 方法，否则就会引发一个 panic。</p>
+<p>注意，如果有一个接口类型的变量，它的动态值是 nil，但动态类型却不是 nil，那么它的值就不等于 nil。这样一个变量的值是可以被存入原子值的。</p>
+<h3 id="我们向原子值存储的第一个值决定了它今后能且只能存储哪一个类型的值">我们向原子值存储的第一个值，决定了它今后能且只能存储哪一个类型的值</h3>
+<p>例如，我第一次向一个原子值存储了一个 string 类型的值，那我在后面就只能用该原子值来存储字符串了。如果我又想用它存储结构体，那么在调用它的 Store 方法的时候就会引发一个 panic。这个 panic 会告诉我，这次存储的值的类型与之前的不一致。</p>
+<p>原子值内部是依据被存储值的实际类型来做判断的，即使是实现了同一个接口的不同类型，它们的值也不能被先后存储到同一个原子值中。</p>
+<p>我们无法通过某个方法获知一个原子值是否已经被真正使用，并且，也没有办法通过常规的途径得到一个原子值可以存储值的实际类型。这使得我们误用原子值的可能性大大增加，尤其是在多个地方使用同一个原子值的时候。</p>
+<h3 id="使用建议">使用建议</h3>
+<ol>
+<li>不要把内部使用的原子值暴露给外界。比如，声明一个全局的原子变量并不是一个正确的做法。这个变量的访问权限最起码也应该是包级私有的。</li>
+<li>如果不得不让包外，或模块外的代码使用你的原子值，那么可以声明一个包级私有的原子变量，然后再通过一个或多个公开的函数，让外界间接地使用到它。注意，这种情况下不要把原子值传递到外界，不论是传递原子值本身还是它的指针值。</li>
+<li>如果通过某个函数可以向内部的原子值存储值的话，那么就应该在这个函数中先判断被存储值类型的合法性。若不合法，则应该直接返回对应的错误值，从而避免 panic 的发生。</li>
+<li>如果可能的话，我们可以把原子值封装到一个数据类型中，比如一个结构体类型。这样，我们既可以通过该类型的方法更加安全地存储值，又可以在该类型中包含可存储值的合法类型信息。</li>
+</ol>
+<p>尽量不要向原子值中存储引用类型的值。因为这很容易造成安全漏洞。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">box6</span> <span class="nx">atomic</span><span class="p">.</span><span class="nx">Value</span>
+<span class="nx">v6</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">box6</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="nx">v6</span><span class="p">)</span>
+<span class="nx">v6</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mi">4</span> <span class="c1">// 注意，此处的操作不是并发安全的！
+</span></code></pre></div><p>把一个 []int 类型的切片值 v6, 存入了原子值 box6。注意，切片类型属于引用类型。所以，在外面改动这个切片值，就等于修改了 box6 中存储的那个值。这相当于绕过了原子值而进行了非并发安全的操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">store</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+ <span class="nx">replica</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">v</span><span class="p">))</span>
+ <span class="nb">copy</span><span class="p">(</span><span class="nx">replica</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+ <span class="nx">box6</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="nx">replica</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nf">store</span><span class="p">(</span><span class="nx">v6</span><span class="p">)</span>
+<span class="nx">v6</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">=</span> <span class="mi">5</span> <span class="c1">// 此处的操作是安全的。
+</span></code></pre></div><p>应该先为切片值 v6 创建了一个完全的副本。这个副本涉及的数据已经与原值毫不相干了。然后，我再把这个副本存入 box6。如此一来，无论我再对 v6 的值做怎样的修改，都不会破坏 box6 提供的安全保护。</p>
+]]></content>
+		</item>
+		
+		<item>
+			<title>原子操作 sync/atomic</title>
+			<link>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic/</link>
+			<pubDate>Fri, 25 Dec 2020 12:28:41 +0800</pubDate>
+			
+			<guid>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic/</guid>
+			<description>原子性执行和原子操作 对于一个 Go 程序来说，Go 语言运行时系统中的调度器会恰当的安排其中所有的 goroutine 的运行。但是在同一时刻，只可能有少数的 G 真正处于</description>
+			<content type="html"><![CDATA[<h2 id="原子性执行和原子操作">原子性执行和原子操作</h2>
+<p>对于一个 Go 程序来说，Go 语言运行时系统中的调度器会恰当的安排其中所有的 goroutine 的运行。但是在同一时刻，只可能有少数的 G 真正处于运行状态，这个数量只会与 M（系统级线程）的数量一致，而不会随着 G 的增多而增长。</p>
+<p>为了公平起见，调度器总会频繁的换上或换下这些 G。换上是说让一个 G 由非运行状态转为运行状态，并促使其中的代码在某个 CPU 上执行。换下则相反，让一个 G 中的代码终端执行，并由运行状态转为非原型状态。</p>
+<p>这个终端的时机有很多，任何两条语句执行的间隙，甚至某条语句执行的过程中都是可以的。即使这些语句在临界区也是如此。所以，互斥锁虽然能保证临界区的代码串行执行，但却不能保证这些代码的原子性执行。</p>
+<p>能够保证原子性执行的只有原子操作（atomic operation）。原子操作在运行过程中是不允许终端的。在底层，这会由 CPU 提供芯片级别的支持，所以绝对有效。即使在拥有多 CPU 核心或者多 CPU 的计算机系统中，原子操作的保证也是不可撼动的。</p>
+<p>这使得原子操作可以完全的消除竞态条件，并能够觉得的保证并发安全性。并且，它的执行速度要比其他同步工具快的多，通常会高出好几个数量级。</p>
+<p>它的缺点也是明显的。具体的说就是因为原子操作不能被中断，所以它需要足够简单并且快速。如果原子操作迟迟不能完成，而且又不会被中断，那面将会给计算机执行指令的效率带来巨大的影响。因此，操作系统层面只针对二进制位或整数的原子操作提供支持。</p>
+<p>Go 语言的原子操作当然是基于 CPU 和操作系统的，所以它也只针对少数数据类型的值提供了原子操作函数。这些函数都存在于标准库代码包 sync/atomic 中。</p>
+<h2 id="syncatomic-包中提供的原子操作以及可操作的数据类型">sync/atomic 包中提供的原子操作以及可操作的数据类型</h2>
+<p>sync/atomic 包中的函数可以做的原子操作有：加法（add）、比较并交换（compare and swap，简称 CAS）、加载（load）、存储（store）和交换（swap）。</p>
+<p>这些函数针对的数据类型并不多，对这些类型中的每一个，sync/atomic 包都会有一套函数给予支持。数据类型有：int32、int64、uint32、uint64、uintptr 以及 unsafe 包中的 Pointer。不过针对 unsafe.Pointer 类型并没有提供加法原子操作的函数。此外该包还提供了一个名为 Value 的类型，可以被用来存储任意类型的值。</p>
+<h3 id="原子操作函数的第一个参数要求传指针">原子操作函数的第一个参数要求传指针</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// AddInt32 atomically adds delta to *addr and returns the new value.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">AddInt32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int32</span><span class="p">,</span> <span class="nx">delta</span> <span class="kt">int32</span><span class="p">)</span> <span class="p">(</span><span class="nx">new</span> <span class="kt">int32</span><span class="p">)</span>
+
+<span class="c1">// CompareAndSwapInt32 executes the compare-and-swap operation for an int32 value.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">CompareAndSwapInt32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int32</span><span class="p">,</span> <span class="nx">old</span><span class="p">,</span> <span class="nx">new</span> <span class="kt">int32</span><span class="p">)</span> <span class="p">(</span><span class="nx">swapped</span> <span class="kt">bool</span><span class="p">)</span>
+
+<span class="c1">// LoadInt32 atomically loads *addr.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">LoadInt32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int32</span><span class="p">)</span> <span class="p">(</span><span class="nx">val</span> <span class="kt">int32</span><span class="p">)</span>
+
+<span class="c1">// StoreInt32 atomically stores val into *addr.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">StoreInt32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int32</span><span class="p">,</span> <span class="nx">val</span> <span class="kt">int32</span><span class="p">)</span>
+
+<span class="c1">// SwapInt32 atomically stores new into *addr and returns the previous *addr value.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">SwapInt32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int32</span><span class="p">,</span> <span class="nx">new</span> <span class="kt">int32</span><span class="p">)</span> <span class="p">(</span><span class="nx">old</span> <span class="kt">int32</span><span class="p">)</span>
+</code></pre></div><p>原子操作函数需要的是被操作值的指针，而不是这个值本身。被传入函数的参数值都会被复制，像这种基本类型的值一旦传入函数，就已经与函数外面那个值毫无关系了。</p>
+<p>unsafe.Pointer 类型虽然本身就是指针类型，但是原子函数要操作的是指针值，而不是它指向的那个值，所以需要的仍然是指向这个指针值的指针。</p>
+<p>只要原子操作函数拿到了被操作值的指针，就可以定位到存储该值的内存地址。然后才能通过底层的指令，准确的操作这个内存地址上的数据。</p>
+<h3 id="原子加法函数做原子减法">原子加法函数做原子减法</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// AddInt32 atomically adds delta to *addr and returns the new value.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">AddInt32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int32</span><span class="p">,</span> <span class="nx">delta</span> <span class="kt">int32</span><span class="p">)</span> <span class="p">(</span><span class="nx">new</span> <span class="kt">int32</span><span class="p">)</span>
+
+<span class="c1">// AddUint32 atomically adds delta to *addr and returns the new value.
+</span><span class="c1">// To subtract a signed positive constant value c from x, do AddUint32(&amp;x, ^uint32(c-1)).
+</span><span class="c1">// In particular, to decrement x, do AddUint32(&amp;x, ^uint32(0)).
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">AddUint32</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">uint32</span><span class="p">,</span> <span class="nx">delta</span> <span class="kt">uint32</span><span class="p">)</span> <span class="p">(</span><span class="nx">new</span> <span class="kt">uint32</span><span class="p">)</span>
+
+<span class="c1">// AddInt64 atomically adds delta to *addr and returns the new value.
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">AddInt64</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">int64</span><span class="p">,</span> <span class="nx">delta</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="nx">new</span> <span class="kt">int64</span><span class="p">)</span>
+
+<span class="c1">// AddUint64 atomically adds delta to *addr and returns the new value.
+</span><span class="c1">// To subtract a signed positive constant value c from x, do AddUint64(&amp;x, ^uint64(c-1)).
+</span><span class="c1">// In particular, to decrement x, do AddUint64(&amp;x, ^uint64(0)).
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">AddUint64</span><span class="p">(</span><span class="nx">addr</span> <span class="o">*</span><span class="kt">uint64</span><span class="p">,</span> <span class="nx">delta</span> <span class="kt">uint64</span><span class="p">)</span> <span class="p">(</span><span class="nx">new</span> <span class="kt">uint64</span><span class="p">)</span>
+</code></pre></div><p>atomic.AddInt32 和 atomic.AddInt64 函数的第二个参数代表差量，是有符号的数据类型，如果需要做原子减法，把这个差量设置为负整数就可以了。</p>
+<p>atomic.AddUint32 和 atomic.AddUint64 函数做原子减法就不能这么直接。 因为他们的第二个参数都是无符号的，这里需要转换下。</p>
+<p>比如想对 uint32 类型的被操作值 18 做原子减法，差量是 -3，那么可以先把差量转换为有符号的 int32 类型的值，然后再把该值的类型转换为 uint32，即：<code>uint32(int32(-3))</code>。</p>
+<p>不过要注意，直接这样写会使 Go 语言的编译器报错，它会告诉你：“常量 -3 不在 uint32 类型可表示的范围内”，换句话说，这样做会让表达式的结果值溢出。</p>
+<p>不过，如果我们先把 int32(-3) 的结果值赋给变量 delta，再把 delta 的值转换为 uint32 类型的值，就可以绕过编译器的检查并得到正确的结果了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">num</span> <span class="o">:=</span> <span class="nb">uint32</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+<span class="nx">delta</span> <span class="o">:=</span> <span class="nb">int32</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<span class="nx">ret</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">num</span><span class="p">,</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">delta</span><span class="p">))</span>
+</code></pre></div><p>还有一种方式更直接：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">^</span><span class="nb">uint32</span><span class="p">(</span><span class="o">-</span><span class="nx">N</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div><p>其中 N 代表由负整数表示的差量。就是说，我们先把差量的绝对值减去 1，然后再把这个无类型的结果常量转为 uint32 类型的值，最后在这个值上做按位异或操作就可以获得最终的参数值了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">num</span> <span class="o">:=</span> <span class="nb">uint32</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+<span class="nx">ret</span> <span class="o">:=</span> <span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">num</span><span class="p">,</span> <span class="p">^</span><span class="nb">uint32</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div><p>简单来说，此表达式的结果值的补码，与使用前一种方法得到的值的补码相同，所以这两种方式是等价的。我们都知道，整数在计算机中是以补码的形式存在的，所以在这里，结果值的补码相同就意味着表达式的等价。</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>条件变量 sync.Cond 2</title>
