@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Fri, 25 Dec 2020 19:52:27 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Dec 2020 18:54:51 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>sync.WaitGroup 和 sync.Once</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_waitgroup/</link>
+      <pubDate>Sat, 26 Dec 2020 18:54:51 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_waitgroup/</guid>
+      <description>sync 包的 WaitGroup 类型 主 goroutine 等待其他手动启动的 goroutine 时可以考虑 sync.WaitGroup 类型，它比通道更适合实现这种一对多的 goroutine 协作流程。 sync.WaitGroup 是开箱即用的，也是并发安全的。同时，它一旦</description>
+    </item>
+    
     <item>
       <title>原子操作 sync/atomic 2</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_sync_atomic2/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/go_panic2/</guid>
       <description>怎样让 panic 包含一个值，应该让它包含什么值 在调用 panic 函数时，把某个值作为参数传给该函数就可以了。由于 panic 函数的唯一一个参数是空接口类型的，从语法上讲</description>
-    </item>
-    
-    <item>
-      <title>Go 异常处理</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_panic/</link>
-      <pubDate>Sun, 20 Dec 2020 09:06:46 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_panic/</guid>
-      <description>运行时恐慌 panic 这种程序异常叫做 panic，我们把它翻译成运行时恐慌。其中恐慌是由 panic 直译过来的，之所以加上运行时是因为这种异常只会在程序运行时的</description>
     </item>
     
   </channel>
