@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="并发安全字典 sync.Map">
+<meta itemprop="description" content="前言 Go，语言自带的字典类型 map 并不是并发安全的。经过大家多年的建议和吐槽，Go 语言官方在 Go 1.9 正式加入了并发安全的字典类型 sync.Map。 这">
+<meta itemprop="datePublished" content="2021-01-04T12:07:06+08:00" />
+<meta itemprop="dateModified" content="2021-01-04T12:07:06+08:00" />
+<meta itemprop="wordCount" content="1595">
+
+
+
+<meta itemprop="keywords" content="Go," />
+<meta property="og:title" content="并发安全字典 sync.Map" />
+<meta property="og:description" content="前言 Go，语言自带的字典类型 map 并不是并发安全的。经过大家多年的建议和吐槽，Go 语言官方在 Go 1.9 正式加入了并发安全的字典类型 sync.Map。 这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zhangxuesong.github.io/posts/gocore/go_sync_map/" />
+<meta property="article:published_time" content="2021-01-04T12:07:06+08:00" />
+<meta property="article:modified_time" content="2021-01-04T12:07:06+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="并发安全字典 sync.Map"/>
+<meta name="twitter:description" content="前言 Go，语言自带的字典类型 map 并不是并发安全的。经过大家多年的建议和吐槽，Go 语言官方在 Go 1.9 正式加入了并发安全的字典类型 sync.Map。 这"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>并发安全字典 sync.Map</title>
+	<link rel="stylesheet" href="https://zhangxuesong.github.io/css/style.min.c93d3bbbeab0af97e10163628d8a2092fda60072c68e69319100a31830e52dd7.css" integrity="sha256-yT07u+qwr5fhAWNijYogkv2mAHLGjmkxkQCjGDDlLdc=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://zhangxuesong.github.io">码农Joseph</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+  <a href="https://zhangxuesong.github.io/posts/">文章</a>
+  <a href="https://zhangxuesong.github.io/tags/">标签</a>
+  <a href="https://zhangxuesong.github.io/about/">关于</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="目录"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="https://github.com/zhangxuesong" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://twitter.com/zhangxuesong" target="_blank" rel="noopener me" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="菜单"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://zhangxuesong.github.io/posts/">文章</a></li>
+			<li><a href="https://zhangxuesong.github.io/tags/">标签</a></li>
+			<li><a href="https://zhangxuesong.github.io/about/">关于</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>2021-01-04</span></div>
+				<h1>并发安全字典 sync.Map</h1>
+			</header>
+			<div class="content">
+				<h2 id="前言">前言<a href="#前言" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>Go，语言自带的字典类型 map 并不是并发安全的。经过大家多年的建议和吐槽，Go 语言官方在 Go 1.9 正式加入了并发安全的字典类型 sync.Map。</p>
+<p>这个字典类型提供了一些常用的键值存取操作方法，并保证了这些操作的并发安全。同时，它的存、取、删等操作都可以保证在基本常识时间内执行完毕。就是说，其算法复杂度与 map 一样都是 O(1) 的。</p>
+<p>在有些时候，与单纯使用原生 map 和互斥锁的方案比，使用 sync.Map 可以显著减少锁的争用。sync.Map 本身虽然也用到了锁，但是它其实在尽可能的避免使用锁。</p>
+<p>我们都知道，使用锁就意味着要把一些并发的操作强制串行化。这往往会降低程序的性能，尤其在计算机拥有多个 CPU 核心的情况下。</p>
+<p>因此，我们能用原子操作就不要用锁，不过这很有局限性，毕竟原子操作只能对一些基本数据类型提供支持。</p>
+<p>无论在何种场景下使用 sync.Map，都要注意，与原生 map 明显不同，它只是 Go 语言标准库中的一员，而不是语言层面的东西。因此，Go 语言编译器并不会对它的键和值进行特殊的类型检查。</p>
+<p>sync.Map 的所有方法涉及的键和值都是 interface{} 类型，也就是空接口。这意味着可以包罗万象。所以，我们必须在程序中自行保证它的键和值类型的正确性。</p>
+<h2 id="并发安全字典对键类型的要求">并发安全字典对键类型的要求<a href="#并发安全字典对键类型的要求" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>和原生 map 类型一样，键的类型不能是函数类型、字典类型和切片类型。</p>
+<p>由于并发安全字典内部使用的存储介质正是原生字典，又因为它使用的原生字典键类型也是可以包罗万象的 interface{}，所以，我们绝不能带着任何实际类型为函数类型、字典类型或切片类型的键值去操作并发安全字典。</p>
+<p>由于这些键值的实际类型只有在程序运行期间才能确定，所以 Go 语言编译器是无法在编译期间对它们进行检查，不正确的键值实际类型肯定会引发 panic。</p>
+<p>因此，我们在这里一定不要违反上述规则。我们应该在每次操作并发安全字典时，都去显式的检查键值的实际类型。无论是存、取还是删都应如此。</p>
+<p>更好的做法是把针对一个并发安全字典的这几种操作集中起来统一编写检查代码。除此之外，把并发安全字典封装在一个结构体类型中也是一个很好的选择。</p>
+<p>总之，我们要保证键的类型是可比较的。如果实在拿不准，可以先通过调用 reflect.TypeOf 函数得到一个键值对应的反射类型值，然后在调用这个值的 Comparable 方法得到确切的判断结果。</p>
+<h2 id="怎样保证并发安全字典的键和值的类型正确性">怎样保证并发安全字典的键和值的类型正确性<a href="#怎样保证并发安全字典的键和值的类型正确性" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>简单的说，可以使用类型断言表达式或反射操作来保证它们的类型正确性。</p>
+<p>为了进一步明确并发安全字典中键值的实际类型，这里大致有两种方案可选。</p>
+<h3 id="让并发安全字典只能存储某个特定类型的键">让并发安全字典只能存储某个特定类型的键<a href="#让并发安全字典只能存储某个特定类型的键" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>比如，指定这里的键只能是 int 类型的，或者只能是字符串类型。一旦完全确定了键的类型，就可以在进行存、取、删操作的时候使用类型断言表达式去对键的类型做检查。</p>
+<p>一般情况下这种判断并不复杂，如果把并发安全字典封装在一个结构体类型里面就更方便了。这时完全可以让 Go 语言编译器来做类型检查：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">IntStrMap</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">m</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Map</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">iMap</span> <span class="o">*</span><span class="nx">IntStrMap</span><span class="p">)</span> <span class="nf">Delete</span><span class="p">(</span><span class="nx">key</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">iMap</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Delete</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">iMap</span> <span class="o">*</span><span class="nx">IntStrMap</span><span class="p">)</span> <span class="nf">Load</span><span class="p">(</span><span class="nx">key</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="nx">value</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">ok</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">v</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">iMap</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Load</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">v</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">value</span> <span class="p">=</span> <span class="nx">v</span><span class="p">.(</span><span class="kt">string</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">iMap</span> <span class="o">*</span><span class="nx">IntStrMap</span><span class="p">)</span> <span class="nf">LoadOrStore</span><span class="p">(</span><span class="nx">key</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">actual</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">loaded</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">a</span><span class="p">,</span> <span class="nx">loaded</span> <span class="o">:=</span> <span class="nx">iMap</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">LoadOrStore</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+	<span class="nx">actual</span> <span class="p">=</span> <span class="nx">a</span><span class="p">.(</span><span class="kt">string</span><span class="p">)</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">iMap</span> <span class="o">*</span><span class="nx">IntStrMap</span><span class="p">)</span> <span class="nf">Range</span><span class="p">(</span><span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="nx">key</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">f1</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">bool</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nf">f</span><span class="p">(</span><span class="nx">key</span><span class="p">.(</span><span class="kt">int</span><span class="p">),</span> <span class="nx">value</span><span class="p">.(</span><span class="kt">string</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="nx">iMap</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="nx">f1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">iMap</span> <span class="o">*</span><span class="nx">IntStrMap</span><span class="p">)</span> <span class="nf">Store</span><span class="p">(</span><span class="nx">key</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">value</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">iMap</span><span class="p">.</span><span class="nx">m</span><span class="p">.</span><span class="nf">Store</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>如上所示，我们编写了一个名为 IntStrMap 的结构体类型，它代表了键类型为 int、值类型为 string 的并发安全字典。在这个结构体类型中，只有一个 sync.Map 类型的字段 m。并且，这个类型拥有的所有方法，都与 sync.Map 类型的方法非常类似。</p>
+<p>两者对应的方法名称完全一致，方法签名也非常相似，只不过，与键和值相关的那些参数和结果的类型不同而已。在 IntStrMap 类型的方法签名中，明确了键的类型为 int，且值的类型为 string。</p>
+<p>这样，这些方法在接受键和值的时候，就不用再做类型检查了。另外，这些方法在从 m 中取出键和值的时候，完全不用担心它们的类型会不正确，因为它的正确性在当初存入的时候，就已经由 Go 语言编译器保证了。</p>
+<p>这种方案适用于我们可以完全确定键和值的具体类型的情况。在这种情况下，我们可以利用 Go 语言编译器去做类型检查，并用类型断言表达式作为辅助，就像 IntStrMap 那样。</p>
+
+			</div><div class="content">
+	<br>
+	<img src="https://zhangxuesong.github.io/joseph-qrcode-soso-s.png">
+</div>
+
+<div class="related-posts thin">
+	<h2>相关推荐</h2>
+	<ul>
+	
+	<li><a href="/posts/gocore/go_sync_pool/">临时对象池 sync.Pool</a></li>
+	
+	<li><a href="/posts/gocore/go_context/">context.Context 类型</a></li>
+	
+	<li><a href="/posts/gocore/go_sync_waitgroup/">sync.WaitGroup 和 sync.Once</a></li>
+	
+	<li><a href="/posts/gocore/go_sync_atomic2/">原子操作 sync/atomic 2</a></li>
+	
+	<li><a href="/posts/gocore/go_sync_atomic/">原子操作 sync/atomic</a></li>
+	
+	</ul>
+</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://zhangxuesong.github.io/tags/go">Go</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1595 字</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2021-01-04 12:07 &#43;0800</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">目录</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#并发安全字典对键类型的要求">并发安全字典对键类型的要求</a></li>
+    <li><a href="#怎样保证并发安全字典的键和值的类型正确性">怎样保证并发安全字典的键和值的类型正确性</a>
+      <ul>
+        <li><a href="#让并发安全字典只能存储某个特定类型的键">让并发安全字典只能存储某个特定类型的键</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://zhangxuesong.github.io/posts/gocore/go_sync_pool/">
+				<span class="post-nav-label">旧&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>临时对象池 sync.Pool</span>
+			</a>
+		</div>
+		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
+	repo="polaris1119/polarisxu"
+	issue-term="pathname"
+	theme="github-light"
+	crossorigin="anonymous"
+	async>
+</script>
+</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 - 2021 <a href="https://zhangxuesong.github.io">Joseph</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://zhangxuesong.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+		<span id="busuanzi_container" style="color: #666;">
+			本站总访客数/访问量：<span id="busuanzi_value_site_uv"></span>/<span id="busuanzi_value_site_pv"></span>
+		</span>
+	</footer>
+
+
+
+	<script src="https://zhangxuesong.github.io/js/main.min.35ccbf1cdceb91e4c64c06b5d009d6e2977fafe56beda7762febd4e67528d2ac.js" integrity="sha256-Ncy/HNzrkeTGTAa10AnW4pd/r+Vr7ad2L+vU5nUo0qw=" crossorigin="anonymous"></script>
+	<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?224c227cd9239761ec770bc8c1fb134c";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</body>
+
+</html>

@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Mon, 28 Dec 2020 18:20:06 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Jan 2021 12:07:06 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>并发安全字典 sync.Map</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_map/</link>
+      <pubDate>Mon, 04 Jan 2021 12:07:06 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_map/</guid>
+      <description>前言 Go，语言自带的字典类型 map 并不是并发安全的。经过大家多年的建议和吐槽，Go 语言官方在 Go 1.9 正式加入了并发安全的字典类型 sync.Map。 这</description>
+    </item>
+    
     <item>
       <title>临时对象池 sync.Pool</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_sync_pool/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/go_test3/</guid>
       <description>-cpu 的功能 go test 命令的标记 -cpu，它是用来设置测试执行最大 P 数量的列表的。 这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适</description>
-    </item>
-    
-    <item>
-      <title>测试的基本规则和流程 2</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_test2/</link>
-      <pubDate>Tue, 22 Dec 2020 15:39:09 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_test2/</guid>
-      <description>怎样解释功能测试的结果 go test gocore/gotest ok gocore/gotest 0.204s 第一行是输入的命令，表示对 gocore/gotest 代码包进行测试。下面一行是此次测试的简要结果，共有三块内容，首先是本次测试结果</description>
     </item>
     
   </channel>
