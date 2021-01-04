@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>本文采用知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议进行许可，转载请注明 码农Joseph 和出处链接。</copyright>
-    <lastBuildDate>Mon, 04 Jan 2021 12:07:06 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Jan 2021 13:37:25 +0800</lastBuildDate><atom:link href="https://zhangxuesong.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>并发安全字典 sync.Map 2</title>
+      <link>https://zhangxuesong.github.io/posts/gocore/go_sync_map2/</link>
+      <pubDate>Mon, 04 Jan 2021 13:37:25 +0800</pubDate>
+      
+      <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_map2/</guid>
+      <description>怎样保证并发安全字典的键和值的类型正确性 上一篇文章中提到了第一种方案，在编码时就完全确定键和值的类型，然后利用 Go 语言的编译器帮我们做检查。 不</description>
+    </item>
+    
     <item>
       <title>并发安全字典 sync.Map</title>
       <link>https://zhangxuesong.github.io/posts/gocore/go_sync_map/</link>
@@ -87,15 +96,6 @@
       
       <guid>https://zhangxuesong.github.io/posts/gocore/go_sync_mutex/</guid>
       <description>静态条件、临界区和同步工具 相比于 Go 语言宣扬的 用通讯的方式共享数据，通过共享数据的方式来传递信息和协调线程运行的做法其实更加主流，毕竟大多数的</description>
-    </item>
-    
-    <item>
-      <title>更多的测试手法</title>
-      <link>https://zhangxuesong.github.io/posts/gocore/go_test3/</link>
-      <pubDate>Tue, 22 Dec 2020 17:04:57 +0800</pubDate>
-      
-      <guid>https://zhangxuesong.github.io/posts/gocore/go_test3/</guid>
-      <description>-cpu 的功能 go test 命令的标记 -cpu，它是用来设置测试执行最大 P 数量的列表的。 这里的 P 是 processor 的缩写，每个 processor 都是一个可以承载若干个 G，且能够使这些 G 适</description>
     </item>
     
   </channel>
